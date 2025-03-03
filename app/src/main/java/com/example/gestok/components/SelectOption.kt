@@ -12,13 +12,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.R
+import com.example.gestok.ui.theme.Blue
 
 @Composable
 fun SelectOption(description: String, list: List<String>) {
     var expanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf(list.firstOrNull() ?: "") }
 
-    Text(text = description, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.Blue)
+    Text(text = description, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Blue)
 
     Box {
 
