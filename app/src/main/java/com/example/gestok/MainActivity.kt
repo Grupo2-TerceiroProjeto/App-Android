@@ -25,12 +25,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             GestokTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    OrderScreen()
+
+//                    Greeting(
+//                        name = "Android",
+//                        modifier = Modifier.padding(innerPadding)
+//                    )
+//                }
             }
         }
     }
@@ -39,17 +41,19 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Column (modifier = modifier.padding(50.dp)) {
+
         Text(
             text = "Oi $name!",
             modifier = modifier
         )
     }
 }
-
-@Preview(showBackground = true, showSystemUi = true, device = Devices.PIXEL_2)
+@Preview(showBackground = true, showSystemUi = true,
+    device = "spec:parent=pixel_2"
+)
 @Composable
 fun GreetingPreview() {
     GestokTheme {
-        Greeting("Android")
+        OrderScreen()
     }
 }
