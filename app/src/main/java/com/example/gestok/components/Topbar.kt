@@ -38,7 +38,7 @@ fun Topbar(
 
 
     ){
-        Text (text = "Olá, pessoa",
+        Text (text = "Olá, Jéssica",
             color = Color.White,
             fontSize = 20.sp,
             modifier = Modifier.padding(end = 210.dp)

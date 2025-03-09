@@ -25,35 +25,19 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             GestokTheme {
-//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    OrderScreen()
-
-//                    Greeting(
-//                        name = "Android",
-//                        modifier = Modifier.padding(innerPadding)
-//                    )
-//                }
+                    LayoutScreen()
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Column (modifier = modifier.padding(50.dp)) {
 
-        Text(
-            text = "Oi $name!",
-            modifier = modifier
-        )
-    }
-}
 @Preview(showBackground = true, showSystemUi = true,
-    device = "spec:parent=pixel_2"
+    device = "spec:parent=pixel_2,navigation=buttons", backgroundColor = 0xFF3F3F3F
 )
 @Composable
 fun GreetingPreview() {
     GestokTheme {
-        OrderScreen()
+        LayoutScreen()
     }
 }

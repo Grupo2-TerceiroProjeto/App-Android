@@ -46,12 +46,11 @@ fun BottomNavBar(
 
     BottomAppBar(
         modifier = modifier
-            .padding(top = 40.dp,
-                    bottom = 49.dp,
-                    start = 40.dp,
-                    end = 40.dp)
-            .clip(RoundedCornerShape(100))
-            .height(80.dp)
+//            .padding(bottom = 49.dp)
+
+
+//            .clip(RoundedCornerShape(100))
+            .height(130.dp)
 
 
         ,
@@ -59,16 +58,16 @@ fun BottomNavBar(
         contentColor = Color.White
     ){
 
-        Row(modifier = Modifier.offset(y = 1.dp),
+        Row(modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.SpaceEvenly
         ){
 
             navItemList.forEachIndexed { index, navItem ->
                 IconButton(onClick = {},
                     modifier = Modifier
                         .height(50.dp)
-                        .weight(1f)
+//                        .weight(1f)
 //                        .align(Alignment.CenterVertically)
 
                 ) {
