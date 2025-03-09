@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.example.gestok.teste
+import com.example.gestok.components.teste
 
 @Composable
 fun OrderContent(modifier: Modifier = Modifier) {
