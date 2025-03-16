@@ -1,0 +1,47 @@
+name: Deploy Backend Kotlin
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    types: [labeled]
+
+jobs:
+  deploy:
+    if: github.event.label.name == 'deploy' || github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Build Backend Kotlin
+      run: |
+        cd Gestok 
+        chmod +x mvnw 
+        ./mvnw clean package -DskipTests 
+        docker build -t backend-kotlin .
+        docker save backend-kotlin -o backend-kotlin.tar
+
+    - name: Transfer Backend Kotlin to EC2
+      uses: appleboy/scp-action@v0.1.0
+      with:
+        host: ${{ secrets.KOTLIN_EC2_HOST }}
+        username: ${{ secrets.KOTLIN_EC2_USER }}
+        key: ${{ secrets.KOTLIN_EC2_PRIVATE_KEY }}
+        port: 22
+        source: backend/kotlin/backend-kotlin.tar
+        target: /home/ec2-user/
+
+    - name: Deploy Backend Kotlin on EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.KOTLIN_EC2_HOST }}
+        username: ${{ secrets.KOTLIN_EC2_USER }}
+        key: ${{ secrets.KOTLIN_EC2_PRIVATE_KEY }}
+        port: 22
+        script: |
+          docker load -i /home/ec2-user/backend-kotlin.tar
+          docker stop backend-kotlin || true
+          docker rm backend-kotlin || true
+          docker run -d -p 8081:8080 --name backend-kotlin backend-kotlin
