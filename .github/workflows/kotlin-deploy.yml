@@ -15,11 +15,14 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
+    - name: Set up Gradle
+      uses: gradle/wrapper-validation-action@v1
+
     - name: Build Backend Kotlin
       run: |
-        cd Gestok 
-        chmod +x mvnw 
-        ./mvnw clean package -DskipTests 
+        cd Gestok
+        chmod +x gradlew  
+        ./gradlew build -x test
         docker build -t backend-kotlin .
         docker save backend-kotlin -o backend-kotlin.tar
 
@@ -30,7 +33,7 @@ jobs:
         username: ${{ secrets.KOTLIN_EC2_USER }}
         key: ${{ secrets.KOTLIN_EC2_PRIVATE_KEY }}
         port: 22
-        source: backend/kotlin/backend-kotlin.tar
+        source: Gestok/backend-kotlin.tar
         target: /home/ec2-user/
 
     - name: Deploy Backend Kotlin on EC2
