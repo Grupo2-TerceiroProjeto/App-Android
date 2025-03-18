@@ -14,9 +14,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.gestok.components.LayoutScreen
-import com.example.gestok.screens.BodyLayoutLogin
+import com.example.gestok.components.BodyLayoutLogin
 import com.example.gestok.screens.Login
+import com.example.gestok.screens.internalscreens.InternalScreensNavigation
 import com.example.gestok.screens.passwordrecovery.PasswordRecoveryNavigation
 import com.example.gestok.ui.theme.GestokTheme
 
@@ -26,23 +26,26 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             GestokTheme {
-                LayoutScreen()
-//                val navController = rememberNavController()
-//
-//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                    NavHost(
-//                        navController = navController,
-//                        startDestination = "login",
-//                        modifier = Modifier.padding(innerPadding)
-//                    ) {
-//                        composable("login") {
-//                            BodyLayoutLogin ("Faça seu login") { Login(navController) }
-//                        }
-//                        composable("passwordRecovery") {
-//                            PasswordRecoveryNavigation(navController)
-//                        }
-//                    }
-//                }
+                val navController = rememberNavController()
+
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    NavHost(
+                        navController = navController,
+                        startDestination = "login",
+                        modifier = Modifier.padding(innerPadding)
+                    ) {
+                        composable("login") {
+                            BodyLayoutLogin ("Faça seu login") { Login(navController) }
+                        }
+                        composable("passwordRecovery") {
+                            PasswordRecoveryNavigation(navController)
+                        }
+
+                        composable("internalScreens") {
+                            InternalScreensNavigation(navController)
+                        }
+                    }
+                }
             }
         }
     }
@@ -53,6 +56,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun GreetingPreview() {
     GestokTheme {
-       LayoutScreen()
+
     }
 }

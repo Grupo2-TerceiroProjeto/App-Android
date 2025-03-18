@@ -71,7 +71,7 @@ fun Login(navController: NavController) {
                         .padding(top = 12.dp, bottom = 48.dp)
                 )
 
-                PrimaryButton("Entrar") { navController.navigate("dashboard") }
+                PrimaryButton("Entrar") { navController.navigate("internalScreens") }
 
             }
 

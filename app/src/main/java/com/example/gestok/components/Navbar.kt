@@ -23,25 +23,28 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.gestok.R
 
 data class NavItem(
     val label : String,
-    @DrawableRes val iconRes: Int
+    @DrawableRes val iconRes: Int,
+    val route: String
 )
 
 val navItemList = listOf(
-    NavItem("Produtos", R.drawable.produtos),
-    NavItem("Config", R.drawable.administracao),
-    NavItem("Dashboard", R.drawable.dashboard),
-    NavItem("Pedidos", R.drawable.pedidos),
-    NavItem("Perfil", R.drawable.perfil),
+    NavItem("Produtos", R.drawable.produtos, "produtos"),
+    NavItem("Config", R.drawable.administracao, "config"),
+    NavItem("Dashboard", R.drawable.dashboard, "dashboard"),
+    NavItem("Pedidos", R.drawable.pedidos, "pedidos"),
+    NavItem("Perfil", R.drawable.perfil, "perfil")
 )
 
 @Composable
 fun BottomNavBar(
+    internalScreensNavController: NavController,
     modifier: Modifier = Modifier,
-    onItemClick: (NavItem) -> Unit
+//    onItemClick: (NavItem) -> Unit
 ){
 
     BottomAppBar(
@@ -64,7 +67,7 @@ fun BottomNavBar(
         ){
 
             navItemList.forEachIndexed { index, navItem ->
-                IconButton(onClick = {},
+                IconButton(onClick = {internalScreensNavController.navigate(navItem.route)},
                     modifier = Modifier
                         .height(50.dp)
 //                        .weight(1f)
