@@ -57,5 +57,26 @@ class MainActivity : ComponentActivity() {
 fun GreetingPreview() {
     GestokTheme {
 
+        val navController = rememberNavController()
+
+        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+            NavHost(
+                navController = navController,
+                startDestination = "login",
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                composable("login") {
+                    BodyLayoutLogin ("Faça seu login") { Login(navController) }
+                }
+                composable("passwordRecovery") {
+                    PasswordRecoveryNavigation(navController)
+                }
+
+                composable("internalScreens") {
+                    InternalScreensNavigation(navController)
+                }
+            }
+        }
+
     }
 }
