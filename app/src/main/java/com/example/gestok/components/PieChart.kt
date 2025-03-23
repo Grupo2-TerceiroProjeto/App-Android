@@ -21,14 +21,17 @@ import co.yml.charts.ui.piechart.models.PieChartConfig
 import co.yml.charts.ui.piechart.models.PieChartData
 
 @Composable
-fun PieChartScreen() {
+fun PieChartScreen(
+    title : String,
+    data: List<Float>
+) {
     var selectedSlice by remember { mutableStateOf<Pair<String, Int>?>(null) }
 
     val slices = listOf(
-        PieChartData.Slice("Pendente", 30f, Color(0xFF196BAD)),
-        PieChartData.Slice("Em Produção", 25f, Color(0xFF4CAF50)),
-        PieChartData.Slice("Concluído", 20f, Color(0xFFFFD700)),
-        PieChartData.Slice("Cancelado", 15f, Color(0xFFEF5350))
+        PieChartData.Slice("Pendente", data.getOrElse(0) { 0f }, Color(0xFF196BAD)),
+        PieChartData.Slice("Em Produção", data.getOrElse(1) { 0f }, Color(0xFF4CAF50)),
+        PieChartData.Slice("Concluído", data.getOrElse(2) { 0f }, Color(0xFFFFD700)),
+        PieChartData.Slice("Cancelado", data.getOrElse(3) { 0f }, Color(0xFFEF5350))
     )
 
     val pieChartData = PieChartData(
@@ -46,7 +49,7 @@ fun PieChartScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            "Quantidade de pedidos por status",
+            title,
             color = Color.Black,
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold

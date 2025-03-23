@@ -30,14 +30,14 @@ import co.yml.charts.ui.linechart.model.ShadowUnderLine
 @Composable
 fun LineChartScreen(
     title: String,
-    dataBaseValues: List<Number>,
+    data: List<Number>,
     xLabels: List<String>
 ) {
 
 
-    val isIntData = dataBaseValues.all { it is Int }
+    val isIntData = data.all { it is Int }
 
-    val valuesAsFloat = dataBaseValues.map { it.toFloat() }
+    val valuesAsFloat = data.map { it.toFloat() }
 
     val minY = valuesAsFloat.minOrNull() ?: 0f
     val maxY = valuesAsFloat.maxOrNull() ?: 500f
@@ -110,6 +110,7 @@ fun LineChartScreen(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Text(
             title,
             color = Color.Black,

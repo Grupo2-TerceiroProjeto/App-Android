@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -58,7 +59,8 @@ fun Profile() {
 
           Column(
               modifier = Modifier
-                  .fillMaxSize()
+                  .width(340.dp)
+                  .fillMaxHeight()
                   .padding(30.dp)
           ) {
 
@@ -75,7 +77,8 @@ fun Profile() {
 
               InputLabel(
                   "Email",
-                  Modifier.padding(top = 20.dp),
+                  modifierLabel = Modifier
+                      .padding(top = 20.dp),
                   value = email,
                   enabled = false,
                   trailingIcon = {

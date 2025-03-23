@@ -242,13 +242,16 @@ fun Dashboard() {
 
                    Spacer(modifier = Modifier.height(15.dp))
 
-                   PieChartScreen()
+                   PieChartScreen(
+                       title = "Quantidade de Pedidos por Status",
+                       data = listOf(30f, 25f, 20f, 15f),
+                   )
 
                    Spacer(modifier = Modifier.height(15.dp))
 
                    LineChartScreen(
                        title = "Valor Arrecadado por Mês (R$)",
-                       dataBaseValues = listOf(20f, 250f, 300f),
+                       data = listOf(20f, 250f, 300f),
                        xLabels = listOf("Jan 2025", "Fev 2025", "Mar 2025")
                    )
 
@@ -256,7 +259,7 @@ fun Dashboard() {
 
                    LineChartScreen(
                        title = "Quantidade de pedidos por mês",
-                       dataBaseValues = listOf(5, 25, 50),
+                       data = listOf(5, 25, 50),
                        xLabels = listOf("Jan 2025", "Fev 2025", "Mar 2025")
                    )
 
