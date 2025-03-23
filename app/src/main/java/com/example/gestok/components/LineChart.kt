@@ -104,7 +104,7 @@ fun LineChartScreen(
         xAxisData = xAxisData,
         yAxisData = yAxisData,
         gridLines = GridLines(color = MaterialTheme.colorScheme.outlineVariant),
-        backgroundColor = MaterialTheme.colorScheme.surface
+        backgroundColor = Color.White
     )
 
     Column(

@@ -41,7 +41,7 @@ fun PieChartScreen(
 
     val pieChartConfig = PieChartConfig(
         isAnimationEnable = true,
-        backgroundColor = Color.Transparent,
+        backgroundColor = Color.White,
         showSliceLabels = false
     )
 

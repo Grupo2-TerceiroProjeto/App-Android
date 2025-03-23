@@ -19,6 +19,7 @@ import com.example.gestok.ui.theme.Blue
 fun InputLabel(
     description : String,
     modifierLabel: Modifier = Modifier,
+    modifier: Modifier,
     value : String,
     onValueChange: (String) -> Unit = {},
     singleLine : Boolean = true,
@@ -41,6 +42,7 @@ fun InputLabel(
         visualTransformation = visualTransformation,
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType),
         enabled = enabled,
-        trailingIcon = trailingIcon
+        trailingIcon = trailingIcon,
+        modifier = modifier
     )
 }

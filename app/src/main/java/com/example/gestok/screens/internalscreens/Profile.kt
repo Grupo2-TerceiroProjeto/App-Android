@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import com.example.gestok.R
 import com.example.gestok.components.InputLabel
 import com.example.gestok.ui.theme.Black
+import com.example.gestok.ui.theme.LightGray
 
 @Composable
 fun Profile() {
@@ -73,7 +74,9 @@ fun Profile() {
                           painter = painterResource(id = R.drawable.bloqueado),
                           contentDescription = "Blocked"
                       )
-                  })
+                  },
+                  modifier = Modifier
+                      .background(LightGray))
 
               InputLabel(
                   "Email",
@@ -86,7 +89,9 @@ fun Profile() {
                           painter = painterResource(id = R.drawable.bloqueado),
                           contentDescription = "Blocked"
                       )
-                  })
+                  },
+                  modifier = Modifier
+                      .background(LightGray))
 
               InputLabel(
                   "Cargo",
@@ -98,7 +103,9 @@ fun Profile() {
                           painter = painterResource(id = R.drawable.bloqueado),
                           contentDescription = "Blocked"
                       )
-                  })
+                  },
+                  modifier = Modifier
+                      .background(LightGray))
 
           }
 

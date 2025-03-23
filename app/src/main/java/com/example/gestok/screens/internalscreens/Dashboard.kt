@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -83,6 +84,7 @@ fun Dashboard() {
 
                        Box(
                            modifier = Modifier
+                               .shadow(6.dp, RoundedCornerShape(8.dp))
                                .background(White)
                                .fillMaxHeight()
                                .weight(0.6f),
@@ -116,6 +118,7 @@ fun Dashboard() {
 
                        Box(
                            modifier = Modifier
+                               .shadow(6.dp, RoundedCornerShape(8.dp))
                                .background(LightBlue)
                                .fillMaxHeight()
                                .weight(0.4f)
@@ -168,6 +171,7 @@ fun Dashboard() {
 
                        Box(
                            modifier = Modifier
+                               .shadow(6.dp, RoundedCornerShape(8.dp))
                                .background(White)
                                .fillMaxHeight()
                                .weight(0.4f)
@@ -201,6 +205,7 @@ fun Dashboard() {
 
                        Box(
                            modifier = Modifier
+                               .shadow(6.dp, RoundedCornerShape(8.dp))
                                .background(White)
                                .fillMaxHeight()
                                .weight(0.6f)

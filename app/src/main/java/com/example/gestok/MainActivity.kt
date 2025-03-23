@@ -57,7 +57,5 @@ class MainActivity : ComponentActivity() {
 fun GreetingPreview() {
     GestokTheme {
 
-
-
-    }
+   }
 }

@@ -1,5 +1,6 @@
 package com.example.gestok.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
+import com.example.gestok.ui.theme.LightGray
 
 @Composable
 fun NutritionalDataDialog(
@@ -78,7 +80,9 @@ fun NutritionalDataDialog(
                     description = "Ingredientes",
                     value = ingredients.joinToString(", "),
                     singleLine = false,
-                    enabled = false
+                    enabled = false,
+                    modifier = Modifier
+                        .background(LightGray)
                 )
 
                 Spacer(modifier = Modifier
@@ -109,7 +113,8 @@ fun NutritionalDataDialog(
                                 Text(
                                     name,
                                     color = LightBlue,
-                                    fontSize = 14.sp)
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold)
                                 Text(
                                     quantity,
                                     fontSize = 14.sp)
