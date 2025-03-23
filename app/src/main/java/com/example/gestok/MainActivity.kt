@@ -11,9 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+//import androidx.navigation.compose.NavHost
+//import androidx.navigation.compose.composable
+//import androidx.navigation.compose.rememberNavController
 import com.example.gestok.components.LayoutScreen
 import com.example.gestok.screens.BodyLayoutLogin
 import com.example.gestok.screens.Login
@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
 }
 
 
-@Preview(showBackground = true, device = Devices.PIXEL_4)
+@Preview(device = "id:pixel_9")
 @Composable
 fun GreetingPreview() {
     GestokTheme {

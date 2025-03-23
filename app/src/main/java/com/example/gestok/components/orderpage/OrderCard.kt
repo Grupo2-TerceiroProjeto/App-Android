@@ -29,17 +29,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.R
 import com.example.gestok.components.orderpage.dialogs.EditarPedidoDialog
+import com.example.gestok.ui.theme.Blue
 
 @Composable
-fun PedidoCard(
-    nomeSolicitante: String,
-    contato: String,
-    statusPedido: String,
-    dataEntrega: String,
-    itens: List<String>
-) {
+fun OrderCard(pedido: OrderData) {
 
-    var showEditDialog by remember { mutableStateOf(true) }
+    var showEditDialog by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
@@ -64,30 +59,30 @@ fun PedidoCard(
                     Text(
                         text = "Solicitante",
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF196BAD)
+                        color = Blue
                     )
                     Text(
-                        text = nomeSolicitante,
+                        text = pedido.nomeSolicitante,
                         fontWeight = FontWeight.W300,
-                        color = Color(0xFF196BAD)
+                        color = Blue
                     )
 
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    Text(text = "Contato", fontWeight = FontWeight.Bold, color = Color(0xFF196BAD))
-                    Text(text = contato, fontWeight = FontWeight.W300, color = Color(0xFF196BAD))
+                    Text(text = "Contato", fontWeight = FontWeight.Bold, color = Blue)
+                    Text(text = pedido.contato, fontWeight = FontWeight.W300, color = Blue)
                 }
 
                 Column {
                     Text(
                         text = "Status do pedido",
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF196BAD)
+                        color = Blue
                     )
                     Text(
-                        text = statusPedido,
+                        text = pedido.statusPedido,
                         fontWeight = FontWeight.W300,
-                        color = Color(0xFF196BAD)
+                        color = Blue
                     )
 
                     Spacer(modifier = Modifier.height(4.dp))
@@ -95,12 +90,12 @@ fun PedidoCard(
                     Text(
                         text = "Data entrega",
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF196BAD)
+                        color = Blue
                     )
                     Text(
-                        text = dataEntrega,
+                        text = pedido.dataEntrega,
                         fontWeight = FontWeight.W300,
-                        color = Color(0xFF196BAD)
+                        color = Blue
                     )
                 }
             }
@@ -111,15 +106,15 @@ fun PedidoCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Column() {
+            Column(Modifier.padding(top = 16.dp)) {
                 Row {
                     Column {
-                        itens.forEach { item ->
+                        pedido.itens.forEach { item ->
                             Text(
                                 text = "• $item",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.W500,
-                                color = Color(0xFF196BAD)
+                                color = Blue
                             )
                         }
                     }
@@ -154,7 +149,7 @@ fun PedidoCard(
                             ) {
                                 Image(
                                     painter = painterResource(id = R.drawable.menu_f),
-                                    contentDescription = "Editar",
+                                    contentDescription = "Informação",
 
 
                                 )
@@ -173,11 +168,11 @@ fun PedidoCard(
 
     if(showEditDialog){
         EditarPedidoDialog(
-            nomeSolicitante = nomeSolicitante,
-            contato = contato,
-            statusPedido = statusPedido,
-            dataEntrega = dataEntrega,
-            itens = itens,
+            nomeSolicitante = pedido.nomeSolicitante,
+            contato = pedido.contato,
+            statusPedido = pedido.statusPedido,
+            dataEntrega = pedido.dataEntrega,
+            itens = pedido.itens,
             onDismiss = { showEditDialog = false },
             onConfirm = { newNome, newContato, newStatus, newData, newItens ->
                 showEditDialog = false

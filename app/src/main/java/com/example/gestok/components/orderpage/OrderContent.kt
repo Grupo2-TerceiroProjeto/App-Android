@@ -1,4 +1,4 @@
-package com.example.gestok.components.orderscreen
+package com.example.gestok.components.orderpage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.gestok.components.teste
+import androidx.compose.ui.unit.sp
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.White
@@ -25,7 +25,7 @@ import com.example.gestok.ui.theme.White
 
 
 @Composable
-fun OrderContent(modifier: Modifier = Modifier, lista: List<String>) {
+fun OrderContent(modifier: Modifier = Modifier, pedido: OrderData) {
 
 
     LazyColumn(
@@ -42,7 +42,10 @@ fun OrderContent(modifier: Modifier = Modifier, lista: List<String>) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Pedidos", fontWeight = FontWeight.W600, color = Black)
+                    Text("Pedidos",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.W600,
+                        color = Black)
                     Button(onClick = {},
                         colors = ButtonDefaults.buttonColors(containerColor = Blue)
                         ) {
@@ -55,13 +58,7 @@ fun OrderContent(modifier: Modifier = Modifier, lista: List<String>) {
         }
 
         items(3) {
-            PedidoCard(
-                nomeSolicitante = "Luca Sena",
-                contato = "11984199966",
-                statusPedido = "Entregue",
-                dataEntrega = "19/03/2025",
-                itens = lista
-            )
+            OrderCard(pedido = pedido)
         }
     }
 }

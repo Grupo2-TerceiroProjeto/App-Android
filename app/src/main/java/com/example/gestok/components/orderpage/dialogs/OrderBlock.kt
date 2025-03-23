@@ -50,10 +50,11 @@ fun PedidoBlock(
                     focusedTextColor = Black,          // Cor do texto quando focado
                     unfocusedTextColor = Black,         // Cor do texto quando não focado
                     focusedIndicatorColor = Color.LightGray, // Cor do indicador (borda) quando focado
-                    unfocusedIndicatorColor = Color.LightGray
-                ),
+                    unfocusedIndicatorColor = Color.LightGray,
+
+                ),  maxLines = 1,
                 modifier = Modifier
-                    .width(70.dp)
+                    .width(74.dp)
                     .clip(shape = RoundedCornerShape(15))
 
             )

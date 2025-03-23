@@ -1,36 +1,17 @@
-package com.example.gestok.components.productpage.dialogs
+package com.example.gestok.components.orderpage.dialogs
 
-
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
+
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,25 +22,29 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.example.gestok.components.productpage.IngredientData
-import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.White
 
+
 @Composable
-fun ProductEdit(
-    product: ProductData,
+fun EditarPedidoDialog(
+    nomeSolicitante: String,
+    contato: String,
+    statusPedido: String,
+    dataEntrega: String,
+    itens: List<String>,
     onDismiss: () -> Unit,
-    onConfirm: (String, Int, String, Double, List<IngredientData>) -> Unit
+    onConfirm: (String, String, String, String, List<String>) -> Unit
 ) {
-    var editedProduto by remember { mutableStateOf(product.produto) }
-    var editedEstoque by remember { mutableStateOf(product.estoque.toString()) }
-    var editedCategoria by remember { mutableStateOf(product.categoria) }
-    var editedValor by remember { mutableStateOf(product.valor.toString()) }
-    var editedIngredientes by remember { mutableStateOf(product.ingredientes) }
+    var editedNomeSolicitante by remember { mutableStateOf(nomeSolicitante) }
+    var editedContato by remember { mutableStateOf(contato) }
+    var editedStatusPedido by remember { mutableStateOf(statusPedido) }
+    var editedDataEntrega by remember { mutableStateOf(dataEntrega) }
+    var editedValorPedido by remember { mutableStateOf("R$25,00") }
+    var editedItens by remember { mutableStateOf(itens) }
 
     var expanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf("Selecione uma opção") }
@@ -83,23 +68,21 @@ fun ProductEdit(
 
             ) {
 
-                // -- HEADER -------------------------
+                //----- HEADER ------------------------------------------------------------------------
                 item {
-                    Row (
+                    Row(
                         Modifier
                             .fillMaxWidth()
                             .padding(20.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
-                    ){
-
+                    ) {
                         Text(
-                            "Editar Produto",
+                            "Editar pedidos",
                             fontWeight = W600,
                             color = Blue,
                             fontSize = 20.sp
                         )
-
                         Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(Blue)) {
                             Icon(
                                 imageVector = Icons.Default.Close,
@@ -108,58 +91,21 @@ fun ProductEdit(
 
                                 )
                         }
-
                     }
                 }
-
-                //--- FOTO DO PRODUTO
-                item {
-
-                    Text(
-                        "Foto do produto",
-                        Modifier.padding(start = 20.dp, bottom = 15.dp),
-                        fontWeight = W600,
-                        color = Blue
-                    )
-
-                    Column(
-                        Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally // Centraliza todos os itens dentro da Column
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(15))
-                                .width(240.dp)
-                                .height(240.dp)
-                                .background(LightGray)
-                                .align(Alignment.CenterHorizontally), // Garante que o Box fique centralizado dentro da Column
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.AccountBox,
-                                contentDescription = null,
-                                modifier = Modifier.size(50.dp) // Ajusta o tamanho do ícone
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(10.dp))
-                }
-
-                //--- NOME PRODUTO -------------------------------------------
-
+                //-----SOLICITANTE-------------------------------------------------------------------------
                 item {
                     Column(Modifier.fillMaxWidth()) {
 
                         Text(
-                            "Nome do produto",
+                            "Solicitante",
                             Modifier.padding(start = 20.dp),
                             fontWeight = W600,
                             color = Blue
                         )
                         TextField(
-                            value = editedProduto,
-                            onValueChange = { editedProduto = it },
+                            value = editedNomeSolicitante,
+                            onValueChange = { editedNomeSolicitante = it },
                             colors = TextFieldDefaults.colors(
                                 focusedContainerColor = LightGray, // Cor de fundo quando focado
                                 unfocusedContainerColor = LightGray,   // Cor de fundo quando não focado
@@ -176,70 +122,11 @@ fun ProductEdit(
                     }
                 }
 
-                //--- VALOR -------------------------------------------
-
+                //-----STATUS-------------------------------------------------------------------------
                 item {
                     Column {
                         Text(
-                            "Valor",
-                            Modifier.padding(start = 20.dp),
-                            fontWeight = W600,
-                            color = Blue
-                        )
-                        TextField(
-                            value = editedValor,
-                            onValueChange = { editedValor = it },
-                            colors = TextFieldDefaults.colors(
-                                focusedContainerColor = LightGray, // Cor de fundo quando focado
-                                unfocusedContainerColor = LightGray,   // Cor de fundo quando não focado
-                                focusedTextColor = Black,          // Cor do texto quando focado
-                                unfocusedTextColor = Black,         // Cor do texto quando não focado
-                                focusedIndicatorColor = LightGray, // Cor do indicador (borda) quando focado
-                                unfocusedIndicatorColor = LightGray
-                            ),
-                            modifier = Modifier
-                                .padding(start = 20.dp, bottom = 15.dp)
-                                .clip(shape = RoundedCornerShape(20)),
-                            singleLine = true
-                        )
-                    }
-                }
-
-                //-- ESTOQUE -------------------------------------------
-
-                item {
-                    Column {
-                        Text(
-                            "Estoque",
-                            Modifier.padding(start = 20.dp),
-                            fontWeight = W600,
-                            color = Blue
-                        )
-                        TextField(
-                            value = editedEstoque,
-                            onValueChange = { editedEstoque = it },
-                            colors = TextFieldDefaults.colors(
-                                focusedContainerColor = LightGray, // Cor de fundo quando focado
-                                unfocusedContainerColor = LightGray,   // Cor de fundo quando não focado
-                                focusedTextColor = Black,          // Cor do texto quando focado
-                                unfocusedTextColor = Black,         // Cor do texto quando não focado
-                                focusedIndicatorColor = LightGray, // Cor do indicador (borda) quando focado
-                                unfocusedIndicatorColor = LightGray
-                            ),
-                            modifier = Modifier
-                                .padding(start = 20.dp, bottom = 15.dp)
-                                .clip(shape = RoundedCornerShape(20)),
-                            singleLine = true
-                        )
-                    }
-                }
-
-
-                //-- CATEGORIA -------------------------------------------
-                item {
-                    Column {
-                        Text(
-                            "Categoria",
+                            "Status do Pedido",
                             Modifier.padding(start = 20.dp),
                             fontWeight = W600,
                             color = Blue
@@ -287,7 +174,7 @@ fun ProductEdit(
                         Box(
                             Modifier
                                 .padding(start = 20.dp, bottom = 15.dp)
-//                            .background(Color.Red)
+
                                 .height(0.dp)
                                 .width(20.dp)
                         ) {
@@ -298,26 +185,26 @@ fun ProductEdit(
                                 modifier = Modifier
                                     .width(240.dp)
 
-//                            .padding(start = 200.dp)
+
                             ) {
                                 DropdownMenuItem(
-                                    text = { Text("Salgados") },
+                                    text = { Text("Em produção") },
                                     onClick = {
-                                        selectedOption = "Salgados"
+                                        selectedOption = "Em producão"
                                         expanded = false
                                     })
 
                                 DropdownMenuItem(
-                                    text = { Text("Doces") },
+                                    text = { Text("Entregue") },
                                     onClick = {
-                                        selectedOption = "Doces"
+                                        selectedOption = "Entregue"
                                         expanded = false
                                     })
 
                                 DropdownMenuItem(
-                                    text = { Text("Bolos") },
+                                    text = { Text("Cancelado") },
                                     onClick = {
-                                        selectedOption = "Bolos"
+                                        selectedOption = "Cancelado"
                                         expanded = false
                                     })
                             }
@@ -325,8 +212,62 @@ fun ProductEdit(
                         }
                     }
                 }
+                //-----DATA-------------------------------------------------------------------------
+                item {
+                    Column {
+                        Text(
+                            "Data de Entrega",
+                            Modifier.padding(start = 20.dp),
+                            fontWeight = W600,
+                            color = Blue
+                        )
+                        TextField(
+                            value = editedDataEntrega,
+                            onValueChange = { editedDataEntrega = it },
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = LightGray, // Cor de fundo quando focado
+                                unfocusedContainerColor = LightGray,   // Cor de fundo quando não focado
+                                focusedTextColor = Black,          // Cor do texto quando focado
+                                unfocusedTextColor = Black,         // Cor do texto quando não focado
+                                focusedIndicatorColor = LightGray, // Cor do indicador (borda) quando focado
+                                unfocusedIndicatorColor = LightGray
+                            ),
+                            modifier = Modifier
+                                .padding(start = 20.dp, bottom = 15.dp)
+                                .clip(shape = RoundedCornerShape(20)),
+                            singleLine = true
+                        )
+                    }
+                }
 
-                //-- INGREDIENTES HEADER -------------------------------------------
+                //-----VALOR-------------------------------------------------------------------------
+                item {
+                    Column {
+                        Text(
+                            "Valor",
+                            Modifier.padding(start = 20.dp),
+                            fontWeight = W600,
+                            color = Blue
+                        )
+                        TextField(
+                            value = editedValorPedido,
+                            onValueChange = { editedValorPedido = it },
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = LightGray, // Cor de fundo quando focado
+                                unfocusedContainerColor = LightGray,   // Cor de fundo quando não focado
+                                focusedTextColor = Black,          // Cor do texto quando focado
+                                unfocusedTextColor = Black,         // Cor do texto quando não focado
+                                focusedIndicatorColor = LightGray, // Cor do indicador (borda) quando focado
+                                unfocusedIndicatorColor = LightGray
+                            ),
+                            modifier = Modifier
+                                .padding(start = 20.dp, bottom = 15.dp)
+                                .clip(shape = RoundedCornerShape(20)),
+                            singleLine = true
+                        )
+                    }
+                }
+                //--- HEADER "ITENS" + BOTAO ADICIONAR -------------------------------------------------
 
                 item {
                     Row(
@@ -337,27 +278,37 @@ fun ProductEdit(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            "Ingredientes",
+                            "Itens",
                             fontWeight = W600,
                             color = Blue,
                             fontSize = 20.sp
                         )
-                                            }
+                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(LightBlue)) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = null,
+                                tint = White,
+
+                                )
+                            Text("  Adicionar", color = White)
+                        }
+                    }
                     Spacer(modifier = Modifier.height(10.dp))
 
                 }
 
-
-                //-- INGREDIENTES -------------------------------------------
+                //-- ITENS + QUANTIDADE -----------------------------
 
                 item {
                     Column(Modifier.padding(start = 20.dp, end = 20.dp)) {
-                        IngredientBlock(product)
+                        PedidoBlock()
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                 }
 
+
                 //-- BOTÕES CANCELAR E CONCLUIR ----------------------------------------
+
                 item {
                     Row(Modifier.fillMaxWidth().padding(20.dp), horizontalArrangement = Arrangement.SpaceBetween){
                         Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(Blue)) {
@@ -381,12 +332,9 @@ fun ProductEdit(
                     }
                 }
 
-
-
             }
+
         }
-
-
     }
-
 }
+
