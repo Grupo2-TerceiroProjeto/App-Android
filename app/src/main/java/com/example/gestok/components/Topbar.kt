@@ -17,12 +17,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.gestok.R
 
 @Composable
 fun Topbar(
-    modifier: Modifier = Modifier,
-    onItemClick: (NavItem) -> Unit
+    mainNavController: NavController
 ){
     Row(
         modifier = Modifier
@@ -46,7 +46,7 @@ fun Topbar(
             modifier = Modifier.padding(end = 210.dp)
         )
 
-        IconButton(onClick = {},
+        IconButton(onClick = {mainNavController.navigate("login")},
             modifier = Modifier
                 .height(50.dp)
                 .weight(1f)

@@ -148,26 +148,28 @@ fun CodeStep(navController: NavController) {
             )
         }
 
-        var expirationTime by remember { mutableIntStateOf(60) }
-
-        LaunchedEffect(Unit) {
-            while (expirationTime > 0) {
-                delay(1000L)
-                expirationTime--
-            }
-        }
-
-        Text(
-            text = String.format(Locale.getDefault(), "Expira em %02d:%02d", expirationTime / 60, expirationTime % 60),
-            color = Black,
-            fontSize = 14.sp,
-            modifier = Modifier
-                .padding(top = 16.dp, bottom = 38.dp)
-                .fillMaxWidth()
-        )
+//        var expirationTime by remember { mutableIntStateOf(60) }
+//
+//        LaunchedEffect(Unit) {
+//            while (expirationTime > 0) {
+//                delay(1000L)
+//                expirationTime--
+//            }
+//        }
+//
+//        Text(
+//            text = String.format(Locale.getDefault(), "Expira em %02d:%02d", expirationTime / 60, expirationTime % 60),
+//            color = Black,
+//            fontSize = 14.sp,
+//            modifier = Modifier
+//                .padding(top = 16.dp, bottom = 38.dp)
+//                .fillMaxWidth()
+//        )
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 78.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             SecundaryButton("Reenviar código") { }

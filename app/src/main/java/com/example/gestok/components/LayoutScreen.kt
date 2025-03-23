@@ -36,6 +36,7 @@ val queijo: IngredientData = IngredientData("Queijo", 300, "g")
 val presunto: IngredientData = IngredientData("Presunto", 200, "g")
 val oleo: IngredientData = IngredientData("Óleo", 1, "L")
 val acucar: IngredientData = IngredientData("Açúcar", 300, "g")
+import androidx.navigation.NavController
 
 
 val teste: List<String> =
@@ -66,8 +67,14 @@ fun LayoutScreen(modifier: Modifier = Modifier) {
     val currentPage = remember { mutableStateOf("produtos") }
 
     Scaffold(Modifier.background(Color(0xFFF3F3F3)), //COR DO FUNDO DA TELA
+fun LayoutScreen(
+    mainNavController: NavController,
+    modifier: Modifier = Modifier
+)
+{
+    Scaffold(Modifier.background(Color(0xFFF3F3F3)),
         topBar = {
-            Topbar() {}
+            Topbar(mainNavController)
         },
         bottomBar = {
             BottomNavBar() { navItem ->
