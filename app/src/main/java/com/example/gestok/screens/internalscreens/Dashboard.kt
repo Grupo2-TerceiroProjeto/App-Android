@@ -34,6 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.components.LineChartScreen
+import com.example.gestok.components.PieChartScreen
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.White
@@ -43,10 +44,10 @@ fun Dashboard() {
 
     var kpiMediaAvaliacao by remember { mutableDoubleStateOf(8.0) }
     var kpiPedidosAbertos by remember { mutableIntStateOf(2) }
-    var kpiValorMedioPedidos by remember { mutableIntStateOf(3) }
+    var kpiValorMedioPedidos by remember { mutableDoubleStateOf(50.0) }
 
-    var kpiFaturamentoMesAtual by remember { mutableDoubleStateOf(100.0) }
-    var kpiFaturamentoMesAnterior by remember { mutableDoubleStateOf(5.0) }
+    var kpiFaturamentoMesAtual by remember { mutableDoubleStateOf(300.0) }
+    var kpiFaturamentoMesAnterior by remember { mutableDoubleStateOf(250.0) }
 
     Column(modifier = Modifier
         .fillMaxSize(),
@@ -58,12 +59,12 @@ fun Dashboard() {
             fontSize = 20.sp,
             modifier = Modifier
                 .align(Alignment.Start)
-                .padding(start = 45.dp, top = 28.dp))
+                .padding(start = 30.dp, top = 28.dp))
 
         Spacer(modifier = Modifier.height(16.dp))
 
         LazyColumn(modifier = Modifier
-            .width(320.dp)
+            .width(350.dp)
             .height(520.dp)
         ) {
 
@@ -157,7 +158,7 @@ fun Dashboard() {
 
                    }
 
-                   Spacer(modifier = Modifier.height(20.dp))
+                   Spacer(modifier = Modifier.height(15.dp))
 
                    Row(
                        modifier = Modifier
@@ -239,9 +240,25 @@ fun Dashboard() {
 
                    }
 
-                   Spacer(modifier = Modifier.height(20.dp))
+                   Spacer(modifier = Modifier.height(15.dp))
 
-                   LineChartScreen()
+                   PieChartScreen()
+
+                   Spacer(modifier = Modifier.height(15.dp))
+
+                   LineChartScreen(
+                       title = "Valor Arrecadado por Mês (R$)",
+                       dataBaseValues = listOf(20f, 250f, 300f),
+                       xLabels = listOf("Jan 2025", "Fev 2025", "Mar 2025")
+                   )
+
+                   Spacer(modifier = Modifier.height(15.dp))
+
+                   LineChartScreen(
+                       title = "Quantidade de pedidos por mês",
+                       dataBaseValues = listOf(5, 25, 50),
+                       xLabels = listOf("Jan 2025", "Fev 2025", "Mar 2025")
+                   )
 
                }
 

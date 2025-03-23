@@ -46,14 +46,14 @@ fun Profile() {
            fontSize = 20.sp,
            modifier = Modifier
                .align(Alignment.Start)
-               .padding(start = 45.dp, top = 28.dp))
+               .padding(start = 30.dp, top = 28.dp))
 
        Spacer(modifier = Modifier.height(16.dp))
 
       Box(modifier = Modifier
           .background(Color.White)
           .height(436.dp)
-          .width(320.dp)
+          .width(350.dp)
           .clip(RoundedCornerShape(7.dp))) {
 
           Column(
