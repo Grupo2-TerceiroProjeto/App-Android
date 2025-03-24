@@ -110,7 +110,7 @@ fun RegisterCard(registerData: RegisterData, funcionariosLista: List<RegisterDat
 
 
                 }
-                
+
                 Column {  Text("Email",
                     fontWeight = FontWeight.Bold,
                     color = Blue
@@ -129,4 +129,5 @@ fun RegisterCard(registerData: RegisterData, funcionariosLista: List<RegisterDat
             onDismiss = { showEditRegisterDialog = false },
             onConfirm = { nome, cargo, email -> showEditRegisterDialog = false })
     }
+
 }

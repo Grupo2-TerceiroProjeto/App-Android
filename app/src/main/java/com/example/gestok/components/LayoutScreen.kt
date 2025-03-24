@@ -6,7 +6,6 @@ package com.example.gestok.components
 import BottomNavBar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -14,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavController
 import com.example.gestok.components.adminpage.AdminContent
 import com.example.gestok.components.adminpage.RegisterData
 import com.example.gestok.components.orderpage.OrderContent
@@ -21,7 +21,8 @@ import com.example.gestok.components.orderpage.OrderData
 import com.example.gestok.components.productpage.IngredientData
 import com.example.gestok.components.productpage.ProductContent
 import com.example.gestok.components.productpage.ProductData
-
+import com.example.gestok.screens.internalscreens.Dashboard
+import com.example.gestok.screens.internalscreens.Profile
 
 
 //Ingredientes testes:
@@ -36,7 +37,6 @@ val queijo: IngredientData = IngredientData("Queijo", 300, "g")
 val presunto: IngredientData = IngredientData("Presunto", 200, "g")
 val oleo: IngredientData = IngredientData("Óleo", 1, "L")
 val acucar: IngredientData = IngredientData("Açúcar", 300, "g")
-import androidx.navigation.NavController
 
 
 val teste: List<String> =
@@ -62,17 +62,13 @@ val listaProdutos: List<ProductData> = listOf(coxinha, esfirra, pastel, brigadei
 val listaFuncionarios: List<RegisterData> = listOf(luca, emilly, vitor, thiago, vagner, kauan)
 
 @Composable
-fun LayoutScreen(modifier: Modifier = Modifier) {
+fun LayoutScreen(
+    mainNavController: NavController
+) {
 
-    val currentPage = remember { mutableStateOf("produtos") }
+    val currentPage = remember { mutableStateOf("dashboard") }
 
     Scaffold(Modifier.background(Color(0xFFF3F3F3)), //COR DO FUNDO DA TELA
-fun LayoutScreen(
-    mainNavController: NavController,
-    modifier: Modifier = Modifier
-)
-{
-    Scaffold(Modifier.background(Color(0xFFF3F3F3)),
         topBar = {
             Topbar(mainNavController)
         },
@@ -85,6 +81,17 @@ fun LayoutScreen(
         }
     ) { innerPadding ->
         when (currentPage.value) {
+
+            "dashboard" -> {
+                Dashboard()
+
+            }
+
+            "perfil" -> {
+                Profile()
+
+            }
+
             "pedidos" -> {
                 OrderContent(
                     modifier = Modifier
@@ -112,5 +119,3 @@ fun LayoutScreen(
 
     }
 }
-
-
