@@ -8,3 +8,4 @@ data class ProductData(
     val ingredientes: List<IngredientData>,
     var disponbilidade: Boolean
 )
+

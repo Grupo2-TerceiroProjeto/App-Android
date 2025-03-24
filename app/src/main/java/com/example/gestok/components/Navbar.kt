@@ -2,7 +2,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.IconButton
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -10,6 +10,10 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.annotation.DrawableRes
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.example.gestok.R
 import com.example.gestok.ui.theme.LightBlue
 
@@ -20,9 +24,9 @@ data class NavItem(
 )
 
 val navItemList = listOf(
+    NavItem("Dashboard", R.drawable.dashboard, "dashboard"),
     NavItem("Produtos", R.drawable.produtos, "produtos"),
     NavItem("Config", R.drawable.administracao, "config"),
-    NavItem("Dashboard", R.drawable.dashboard, "dashboard"),
     NavItem("Pedidos", R.drawable.pedidos, "pedidos"),
     NavItem("Perfil", R.drawable.perfil, "perfil"),
 )
@@ -33,6 +37,7 @@ fun BottomNavBar(
     onItemClick: (NavItem) -> Unit
 ) {
     var selectedNavItem by remember { mutableStateOf(navItemList.first()) }
+
     BottomAppBar(
         modifier = modifier
             .padding(WindowInsets.navigationBars.asPaddingValues())
@@ -65,8 +70,14 @@ fun BottomNavBar(
                             null
                         }
                     )
+
                 }
             }
         }
+
     }
 }
+
+
+
+
