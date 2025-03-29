@@ -41,35 +41,21 @@ import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.White
 
 @Composable
-fun RegisterEdit(
-    funcionario: RegisterData,
+fun RegisterCreate(
     onDismiss: () -> Unit,
     onConfirm: (String, String, String) -> Unit
 ) {
-
-    var editedNome by remember { mutableStateOf(funcionario.nome) }
-    var editedCargo by remember { mutableStateOf(funcionario.cargo) }
-    var editedEmail by remember { mutableStateOf(funcionario.email) }
-
-    var expanded by remember { mutableStateOf(false) }
-    var selectedOption by remember { mutableStateOf("Selecione uma opção") }
+    var editedNome by remember { mutableStateOf("") }
+    var editedCargo by remember { mutableStateOf("") }
+    var editedEmail by remember { mutableStateOf("") }
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
             modifier = Modifier.fillMaxWidth(),
-
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            ), elevation = CardDefaults.cardElevation(
-                defaultElevation = 8.dp
-            )
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-
-
-            ) {
+            LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 // -- HEADER -------------------------
                 item {
                     Row(
@@ -78,7 +64,7 @@ fun RegisterEdit(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            "Editar Colaborador", fontWeight = W600, color = Blue, fontSize = 20.sp
+                            "Cadastrar Colaborador", fontWeight = W600, color = Blue, fontSize = 20.sp
                         )
                         Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(Blue)) {
                             Icon(imageVector = Icons.Default.Close, contentDescription = null, tint = White)
@@ -87,87 +73,63 @@ fun RegisterEdit(
                 }
 
                 //--- NOME COLABORADOR -------------------------------------------
-
                 item {
                     Column(Modifier.fillMaxWidth()) {
-
-                        Text(
-                            "Nome", Modifier.padding(start = 20.dp), fontWeight = W600, color = Blue
-                        )
+                        Text("Nome", Modifier.padding(start = 20.dp), fontWeight = W600, color = Blue)
                         TextField(
                             value = editedNome,
                             onValueChange = { editedNome = it },
                             colors = TextFieldDefaults.colors(
-                                focusedContainerColor = LightGray, // Cor de fundo quando focado
-                                unfocusedContainerColor = LightGray,   // Cor de fundo quando não focado
-                                focusedTextColor = Black,          // Cor do texto quando focado
-                                unfocusedTextColor = Black,         // Cor do texto quando não focado
-                                focusedIndicatorColor = LightGray, // Cor do indicador (borda) quando focado
+                                focusedContainerColor = LightGray,
+                                unfocusedContainerColor = LightGray,
+                                focusedTextColor = Black,
+                                unfocusedTextColor = Black,
+                                focusedIndicatorColor = LightGray,
                                 unfocusedIndicatorColor = LightGray
                             ),
-                            modifier = Modifier
-                                .padding(start = 20.dp, bottom = 15.dp)
-                                .clip(shape = RoundedCornerShape(20)),
+                            modifier = Modifier.padding(start = 20.dp, bottom = 15.dp).clip(shape = RoundedCornerShape(20)),
                             singleLine = true
                         )
                     }
                 }
 
                 //--- EMAIL COLABORADOR -------------------------------------------
-
                 item {
                     Column(Modifier.fillMaxWidth()) {
-
-                        Text(
-                            "Email",
-                            Modifier.padding(start = 20.dp),
-                            fontWeight = W600,
-                            color = Blue
-                        )
+                        Text("Email", Modifier.padding(start = 20.dp), fontWeight = W600, color = Blue)
                         TextField(
                             value = editedEmail,
                             onValueChange = { editedEmail = it },
                             colors = TextFieldDefaults.colors(
-                                focusedContainerColor = LightGray, // Cor de fundo quando focado
-                                unfocusedContainerColor = LightGray,   // Cor de fundo quando não focado
-                                focusedTextColor = Black,          // Cor do texto quando focado
-                                unfocusedTextColor = Black,         // Cor do texto quando não focado
-                                focusedIndicatorColor = LightGray, // Cor do indicador (borda) quando focado
+                                focusedContainerColor = LightGray,
+                                unfocusedContainerColor = LightGray,
+                                focusedTextColor = Black,
+                                unfocusedTextColor = Black,
+                                focusedIndicatorColor = LightGray,
                                 unfocusedIndicatorColor = LightGray
                             ),
-                            modifier = Modifier
-                                .padding(start = 20.dp, bottom = 15.dp)
-                                .clip(shape = RoundedCornerShape(20)),
+                            modifier = Modifier.padding(start = 20.dp, bottom = 15.dp).clip(shape = RoundedCornerShape(20)),
                             singleLine = true
                         )
                     }
                 }
 
                 //--- CARGO COLABORADOR -------------------------------------------
-
                 item {
                     Column(Modifier.fillMaxWidth()) {
-
-                        Text(
-                            "Cargo",
-                            Modifier.padding(start = 20.dp),
-                            fontWeight = W600,
-                            color = Blue
-                        )
+                        Text("Cargo", Modifier.padding(start = 20.dp), fontWeight = W600, color = Blue)
                         TextField(
                             value = editedCargo,
                             onValueChange = { editedCargo = it },
                             colors = TextFieldDefaults.colors(
-                                focusedContainerColor = LightGray, // Cor de fundo quando focado
-                                unfocusedContainerColor = LightGray,   // Cor de fundo quando não focado
-                                focusedTextColor = Black,          // Cor do texto quando focado
-                                unfocusedTextColor = Black,         // Cor do texto quando não focado
-                                focusedIndicatorColor = LightGray, // Cor do indicador (borda) quando focado
+                                focusedContainerColor = LightGray,
+                                unfocusedContainerColor = LightGray,
+                                focusedTextColor = Black,
+                                unfocusedTextColor = Black,
+                                focusedIndicatorColor = LightGray,
                                 unfocusedIndicatorColor = LightGray
                             ),
-                            modifier = Modifier
-                                .padding(start = 20.dp, bottom = 15.dp)
-                                .clip(shape = RoundedCornerShape(20)),
+                            modifier = Modifier.padding(start = 20.dp, bottom = 15.dp).clip(shape = RoundedCornerShape(20)),
                             singleLine = true
                         )
                     }
@@ -176,40 +138,23 @@ fun RegisterEdit(
                 //--- BOTÃO CONFIRMAR -------------------------------------------
                 item {
                     Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(20.dp),
+                        Modifier.fillMaxWidth().padding(20.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(Blue)) {
-                            Icon(
-                                imageVector = Icons.Default.Clear,
-                                contentDescription = null,
-                                tint = White,
-
-                                )
+                            Icon(imageVector = Icons.Default.Clear, contentDescription = null, tint = White)
                             Text("Cancelar", color = White)
                         }
                         Button(
-                            onClick = onDismiss, colors = ButtonDefaults.buttonColors(LightBlue)
+                            onClick = { onConfirm(editedNome, editedCargo, editedEmail); onDismiss() },
+                            colors = ButtonDefaults.buttonColors(LightBlue)
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Check,
-                                contentDescription = null,
-                                tint = White,
-
-                                )
+                            Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = White)
                             Text("Concluir", color = White)
                         }
                     }
                 }
-
-
             }
-
-
         }
-
-
     }
 }

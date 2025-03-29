@@ -1,4 +1,4 @@
-package com.example.gestok.components
+package com.example.gestok.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

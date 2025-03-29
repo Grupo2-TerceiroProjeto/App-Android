@@ -26,6 +26,9 @@ import co.yml.charts.ui.linechart.model.LineType
 import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
 import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
+import com.example.gestok.ui.theme.Black
+import com.example.gestok.ui.theme.Blue
+import com.example.gestok.ui.theme.LightBlue
 
 @Composable
 fun LineChartScreen(
@@ -64,8 +67,8 @@ fun LineChartScreen(
         .steps(pointsData.size - 1)
         .labelData { i -> xLabels.getOrElse(i) { "" } }
         .labelAndAxisLinePadding(15.dp)
-        .axisLineColor(MaterialTheme.colorScheme.tertiary)
-        .axisLabelColor(MaterialTheme.colorScheme.tertiary)
+        .axisLineColor(Black)
+        .axisLabelColor(Black)
         .build()
 
     val yAxisData = AxisData.Builder()
@@ -81,18 +84,18 @@ fun LineChartScreen(
                 Line(
                     dataPoints = pointsData,
                     LineStyle(
-                        color = MaterialTheme.colorScheme.tertiary,
+                        color = LightBlue,
                         lineType = LineType.SmoothCurve(isDotted = false)
                     ),
                     IntersectionPoint(
-                        color = MaterialTheme.colorScheme.tertiary
+                        color = LightBlue
                     ),
-                    SelectionHighlightPoint(color = MaterialTheme.colorScheme.primary),
+                    SelectionHighlightPoint(color = Blue),
                     ShadowUnderLine(
                         alpha = 0.5f,
                         brush = Brush.verticalGradient(
                             colors = listOf(
-                                MaterialTheme.colorScheme.inversePrimary,
+                                Blue,
                                 Color.Transparent
                             )
                         )
@@ -113,8 +116,7 @@ fun LineChartScreen(
 
         Text(
             title,
-            color = Color.Black,
-            fontSize = 12.sp,
+            color = Black,
             fontWeight = FontWeight.Bold
         )
 

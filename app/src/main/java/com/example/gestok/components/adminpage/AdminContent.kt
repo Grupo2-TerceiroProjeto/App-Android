@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gestok.components.adminpage.dialogs.RegisterCreate
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightGray
@@ -32,6 +33,7 @@ import com.example.gestok.components.adminpage.dialogs.RegisterEdit
 fun AdminContent(modifier: Modifier = Modifier, funcionariosLista: List<RegisterData>){
 
     var showEditRegisterDialog by remember { mutableStateOf(false) }
+    var showCreateRegisterDialog by remember { mutableStateOf(false) }
 
 
     LazyColumn (
@@ -51,7 +53,7 @@ fun AdminContent(modifier: Modifier = Modifier, funcionariosLista: List<Register
                         fontWeight = FontWeight.W600,
                         color = Black)
                     Button(onClick = {
-                        showEditRegisterDialog = true
+                        showCreateRegisterDialog = true
                     },
                         colors = ButtonDefaults.buttonColors(containerColor = Blue)
                     ) {
@@ -75,6 +77,12 @@ fun AdminContent(modifier: Modifier = Modifier, funcionariosLista: List<Register
     if(showEditRegisterDialog){
         RegisterEdit(funcionario = funcionariosLista.first(),
             onDismiss = { showEditRegisterDialog = false },
+            onConfirm = { nome, cargo, email -> showEditRegisterDialog = false })
+    }
+
+    if(showCreateRegisterDialog){
+        RegisterCreate(
+            onDismiss = { showCreateRegisterDialog = false },
             onConfirm = { nome, cargo, email -> showEditRegisterDialog = false })
     }
 }

@@ -29,12 +29,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.R
 import com.example.gestok.components.orderpage.dialogs.EditarPedidoDialog
+import com.example.gestok.components.orderpage.dialogs.OrderCreate
 import com.example.gestok.ui.theme.Blue
 
 @Composable
 fun OrderCard(pedido: OrderData) {
 
     var showEditDialog by remember { mutableStateOf(false) }
+
 
     Card(
         modifier = Modifier
@@ -165,6 +167,8 @@ fun OrderCard(pedido: OrderData) {
         }
 
     }
+
+
 
     if(showEditDialog){
         EditarPedidoDialog(

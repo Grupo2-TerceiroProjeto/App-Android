@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.components.productpage.dialogs.AdicionarAoEstoque
+import com.example.gestok.components.productpage.dialogs.CriarPedidoDialog
 import com.example.gestok.components.productpage.dialogs.ProductEdit
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
@@ -32,9 +33,10 @@ import com.example.gestok.ui.theme.White
 @Composable
 fun ProductContent(modifier: Modifier = Modifier, produtosLista: List<ProductData>) {
 
-    var showCreateDialog by remember { mutableStateOf(false) }
+    var showEditDialog by remember { mutableStateOf(false) }
     var showStockAddDialog by remember { mutableStateOf(false) }
     var selectedProductForStock by remember { mutableStateOf<ProductData?>(null) }
+    var showCreateDialog by remember { mutableStateOf(false) }
 
     LazyColumn(
         modifier = modifier
@@ -89,7 +91,16 @@ fun ProductContent(modifier: Modifier = Modifier, produtosLista: List<ProductDat
         }
     }
 
-    if (showCreateDialog) {
+
+    if(showCreateDialog){
+        CriarPedidoDialog(
+            onDismiss = { showCreateDialog = false },
+            onConfirm = { newProduto, newEstoque, newCategoria, newValor, newIngredientes ->
+                showCreateDialog = false
+            })
+    }
+
+    if (showEditDialog) {
          ProductEdit(
             product = produtosLista.first(),
             onDismiss = { showCreateDialog = false },

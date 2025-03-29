@@ -83,12 +83,16 @@ fun LayoutScreen(
         when (currentPage.value) {
 
             "dashboard" -> {
-                Dashboard()
+                Dashboard(modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding))
 
             }
 
             "perfil" -> {
-                Profile()
+                Profile(modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding))
 
             }
 

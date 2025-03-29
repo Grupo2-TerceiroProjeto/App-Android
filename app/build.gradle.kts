@@ -40,7 +40,7 @@ android {
 }
 
 dependencies {
-
+//    implementation("com.github.mahendramhole.compose-charts:compose-charts:1.0.0")
     implementation(libs.ycharts)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

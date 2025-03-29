@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import com.example.gestok.R
+import com.example.gestok.components.NutritionalDataDialog
 import com.example.gestok.components.productpage.dialogs.ProductEdit
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
@@ -40,6 +41,7 @@ fun ProductData(productData: ProductData){
 
     var checked by remember { mutableStateOf(true) }
     var showEditDialog by remember { mutableStateOf(false) }
+    var showNutritionalDialog by remember { mutableStateOf(false) }
 
 
     Card (
@@ -65,7 +67,7 @@ fun ProductData(productData: ProductData){
                 }
                 Row () {
                     IconButton(
-                        onClick = {},
+                        onClick = {showNutritionalDialog = true},
                         modifier = Modifier
                             .size(50.dp)
 
@@ -167,6 +169,16 @@ fun ProductData(productData: ProductData){
         }
 
     }
+
+    if (showNutritionalDialog) {
+        NutritionalDataDialog(
+            product = productData.produto,
+            ingredients = listOf("Chcolate", "Farinha", "Leite"),
+            nutrients = listOf(Triple("Gordura", "10.0", "4.0"), Triple("Proteína", "13.4", "4.3"), Triple("Caloria","90","2.1")),
+            onDismissRequest = { showNutritionalDialog = false }
+        )
+    }
+
 
     if(showEditDialog){
         ProductEdit(

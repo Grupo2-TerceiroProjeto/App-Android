@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.gestok.components.BodyLayoutLogin
+import com.example.gestok.screens.BodyLayoutLogin
 import com.example.gestok.components.LayoutScreen
 import com.example.gestok.screens.Login
 import com.example.gestok.screens.passwordrecovery.PasswordRecoveryNavigation
