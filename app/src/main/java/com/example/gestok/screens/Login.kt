@@ -1,5 +1,6 @@
 package com.example.gestok.screens
 
+import android.content.Intent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,11 +15,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.gestok.MainActivity
 import com.example.gestok.components.Input
 import com.example.gestok.components.PrimaryButton
 import com.example.gestok.ui.theme.LightBlue
@@ -30,8 +33,10 @@ fun Login(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
 
+    val contexto = LocalContext.current
 
-            Column(
+
+    Column(
                 modifier = Modifier
                     .height(300.dp)
                     .width(300.dp),
@@ -71,7 +76,15 @@ fun Login(navController: NavController) {
                         .padding(top = 12.dp, bottom = 48.dp)
                 )
 
-                PrimaryButton("Entrar") { navController.navigate("internalScreens") }
+                PrimaryButton("Entrar") {
+                    val mainActivity = Intent(contexto, MainActivity::class.java)
+
+                    mainActivity.putExtra("userName", "Jessica")
+                    mainActivity.putExtra("position", "Administrador")
+
+                    contexto.startActivity(mainActivity)
+
+                }
 
             }
 

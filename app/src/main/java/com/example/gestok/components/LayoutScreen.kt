@@ -4,6 +4,7 @@ package com.example.gestok.components
 
 //import androidx.compose.foundation.layout.FlowRowScopeInstance.align
 import BottomNavBar
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -63,14 +64,17 @@ val listaFuncionarios: List<RegisterData> = listOf(luca, emilly, vitor, thiago, 
 
 @Composable
 fun LayoutScreen(
-    mainNavController: NavController
+    activity: Activity,
+    userName: String,
+    position: String
+
 ) {
 
     val currentPage = remember { mutableStateOf("dashboard") }
 
     Scaffold(Modifier.background(Color(0xFFF3F3F3)), //COR DO FUNDO DA TELA
         topBar = {
-            Topbar(mainNavController)
+            Topbar(activity, userName)
         },
         bottomBar = {
             BottomNavBar() { navItem ->
@@ -92,7 +96,10 @@ fun LayoutScreen(
             "perfil" -> {
                 Profile(modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding))
+                    .padding(innerPadding),
+                    userName,
+                    position
+                )
 
             }
 
