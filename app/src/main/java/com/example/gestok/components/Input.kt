@@ -20,7 +20,9 @@ fun Input(
     textStyle: TextStyle? = null,
     singleLine : Boolean = true,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    keyboardType: KeyboardType = KeyboardType.Text
+    keyboardType: KeyboardType = KeyboardType.Text,
+    isError: Boolean = false,
+    supportingText: @Composable (() -> Unit)? = null
 
 ) {
     OutlinedTextField(
@@ -31,6 +33,8 @@ fun Input(
         textStyle = textStyle?.copy(color = Black) ?: TextStyle(color = Black),
         singleLine = singleLine,
         visualTransformation = visualTransformation,
-        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType)
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType),
+        isError = isError,
+        supportingText = supportingText
     )
 }
