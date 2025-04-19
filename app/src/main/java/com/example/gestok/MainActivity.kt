@@ -15,12 +15,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val userName = intent.getStringExtra("userName")
+        val email = intent.getStringExtra("email")
         val position = intent.getStringExtra("position")
 
         enableEdgeToEdge()
         setContent {
             GestokTheme {
-                LayoutScreen(this, userName!!, position!!)
+                LayoutScreen(this, userName!!, email!!, position!!)
             }
         }
     }

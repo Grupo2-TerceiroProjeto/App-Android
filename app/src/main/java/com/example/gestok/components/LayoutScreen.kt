@@ -66,6 +66,7 @@ val listaFuncionarios: List<RegisterData> = listOf(luca, emilly, vitor, thiago, 
 fun LayoutScreen(
     activity: Activity,
     userName: String,
+    email: String,
     position: String
 
 ) {
@@ -98,6 +99,7 @@ fun LayoutScreen(
                     .fillMaxSize()
                     .padding(innerPadding),
                     userName,
+                    email,
                     position
                 )
 

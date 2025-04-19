@@ -40,6 +40,7 @@ import com.example.gestok.ui.theme.White
 fun Profile(
     modifier: Modifier = Modifier,
     userName: String,
+    email: String,
     position: String
 ) {
 
@@ -120,25 +121,25 @@ fun Profile(
                     color = Blue
                 )
 
-//                TextField(
-//                    value = email,
-//                    onValueChange = {},
-//                    enabled = false,
-//                    trailingIcon = {
-//                        Icon(Icons.Filled.Lock, contentDescription = "Campo bloqueado")
-//                    },
-//                    colors = TextFieldDefaults.colors(
-//                        disabledTextColor = MediumGray,
-//                        disabledContainerColor = LightGray,
-//
-//
-//                        ),
-//                    modifier = Modifier
-//                        .padding(15.dp)
-//                        .fillMaxWidth()
-//                        .clip(shape = RoundedCornerShape(20)),
-//                    singleLine = true
-//                )
+                TextField(
+                    value = email,
+                    onValueChange = {},
+                    enabled = false,
+                    trailingIcon = {
+                        Icon(Icons.Filled.Lock, contentDescription = "Campo bloqueado")
+                    },
+                    colors = TextFieldDefaults.colors(
+                        disabledTextColor = MediumGray,
+                        disabledContainerColor = LightGray,
+
+
+                        ),
+                    modifier = Modifier
+                        .padding(15.dp)
+                        .fillMaxWidth()
+                        .clip(shape = RoundedCornerShape(20)),
+                    singleLine = true
+                )
 
 
                 //--CARGO -----------------------------------------

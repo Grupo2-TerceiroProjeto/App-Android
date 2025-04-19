@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,19 +28,31 @@ import com.example.gestok.MainActivity
 import com.example.gestok.components.Input
 import com.example.gestok.components.PrimaryButton
 import com.example.gestok.ui.theme.LightBlue
+import com.example.gestok.viewmodel.LoginViewModel
 
 @Composable
 
-fun Login(navController: NavController) {
+fun Login(navController: NavController, viewModel: LoginViewModel) {
 
     var email by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
 
-    var erroEmail by remember { mutableStateOf(false) }
-    var erroSenha by remember { mutableStateOf(false) }
-
     val contexto = LocalContext.current
 
+    val erroEmail = viewModel.emailErro
+    val erroSenha = viewModel.senhaErro
+    val usuarioLogado = viewModel.usuarioLogado
+
+    LaunchedEffect(usuarioLogado) {
+        usuarioLogado?.let { user ->
+            val mainActivity = Intent(contexto, MainActivity::class.java).apply {
+                putExtra("userName", user.nome)
+                putExtra("email", user.email)
+                putExtra("position", user.cargo)
+            }
+            contexto.startActivity(mainActivity)
+        }
+    }
 
     Column(
                 modifier = Modifier
@@ -58,13 +71,9 @@ fun Login(navController: NavController) {
                     email,
                     { email = it },
                     keyboardType = KeyboardType.Email,
-                    isError = erroEmail,
+                    isError = erroEmail != null,
                     supportingText = {
-                        if (erroEmail) {
-                            Text(
-                                text = "E-mail inválido"
-                            )
-                        }
+                        erroEmail?.let { Text(text = it) }
                     }
 
                 )
@@ -78,13 +87,9 @@ fun Login(navController: NavController) {
                     senha,
                     {senha = it},
                     visualTransformation = PasswordVisualTransformation(),
-                    isError = erroSenha,
+                    isError = erroSenha != null,
                     supportingText = {
-                        if (erroSenha) {
-                            Text(
-                                text = "Senha inválida"
-                            )
-                        }
+                        erroSenha?.let { Text(text = it) }
                     }
                 )
 
@@ -98,22 +103,10 @@ fun Login(navController: NavController) {
                         .padding(top = 12.dp, bottom = 30.dp)
                 )
 
-                PrimaryButton("Entrar") {
-                    val emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
-                    erroEmail = !email.matches(emailRegex.toRegex())
-                    erroSenha = senha == ""
+        PrimaryButton("Entrar") {
+            viewModel.login(email, senha)
+        }
 
-                    if (!erroEmail && !erroSenha) {
-                        val mainActivity = Intent(contexto, MainActivity::class.java)
-
-                        mainActivity.putExtra("userName", "Jessica")
-                        mainActivity.putExtra("position", "Administrador")
-
-                        contexto.startActivity(mainActivity)
-                    }
-
-                }
-
-            }
+    }
 
 }
