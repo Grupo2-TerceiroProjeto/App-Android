@@ -5,10 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gestok.data.LoggedInUser
-import com.example.gestok.data.LoginUser
-import com.example.gestok.network.AuthService
+import com.example.gestok.network.ApiClient
+import com.example.gestok.screens.login.LoggedInUser
+import com.example.gestok.screens.login.LoginUser
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class LoginViewModel : ViewModel() {
 
@@ -27,7 +28,7 @@ class LoginViewModel : ViewModel() {
     val usuarioLogado: LoggedInUser?
         get() = _usuarioLogado
 
-    fun limparErros() {
+    private fun limparErros() {
         _emailErro = null
         _senhaErro = null
     }
@@ -54,18 +55,18 @@ class LoginViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val resposta = AuthService.UsuarioApi.api.login(LoginUser(email, senha))
+                val resposta = ApiClient.authService.login(LoginUser(email, senha))
 
-                if (resposta != null) {
-                    _usuarioLogado = LoggedInUser(
-                        nome = resposta.nome,
-                        login = resposta.login,
-                        cargo = resposta.cargo,
-                        idEmpresa = resposta.idEmpresa
-                    )
-                } else {
-                    _senhaErro = "Credenciais inválidas"
-                }
+                _usuarioLogado = LoggedInUser(
+                    nome = resposta.nome,
+                    login = resposta.login,
+                    cargo = resposta.cargo,
+                    idEmpresa = resposta.idEmpresa
+                )
+            } catch (e: HttpException) {
+
+                if (e.code() == 403) _senhaErro = "Credenciais inválidas"
+
             } catch (e: Exception) {
                 _senhaErro = "Erro ao conectar ao servidor"
             }
