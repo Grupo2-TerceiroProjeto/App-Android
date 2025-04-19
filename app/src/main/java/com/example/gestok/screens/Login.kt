@@ -47,7 +47,7 @@ fun Login(navController: NavController, viewModel: LoginViewModel) {
         usuarioLogado?.let { user ->
             val mainActivity = Intent(contexto, MainActivity::class.java).apply {
                 putExtra("userName", user.nome)
-                putExtra("email", user.email)
+                putExtra("email", user.login)
                 putExtra("position", user.cargo)
             }
             contexto.startActivity(mainActivity)

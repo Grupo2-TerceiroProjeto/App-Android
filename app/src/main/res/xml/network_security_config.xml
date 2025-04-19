@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">192.168.15.157</domain> //Mudar para o IP atual da sua Máquina
+    </domain-config>
+</network-security-config>

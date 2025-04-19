@@ -59,7 +59,7 @@ class LoginViewModel : ViewModel() {
                 if (resposta != null) {
                     _usuarioLogado = LoggedInUser(
                         nome = resposta.nome,
-                        email = resposta.email,
+                        login = resposta.login,
                         cargo = resposta.cargo,
                         idEmpresa = resposta.idEmpresa
                     )

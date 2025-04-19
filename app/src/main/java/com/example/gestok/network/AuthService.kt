@@ -11,12 +11,12 @@ import okhttp3.logging.HttpLoggingInterceptor
 
 interface AuthService {
 
-    @POST("login")
+    @POST("funcionarios/login")
     suspend fun login(@Body usuarioLogin: LoginUser): LoggedInUser
 
     object UsuarioApi {
 
-        private const val BASE_URL = "http://192.168.15.139:8080/"
+        private const val BASE_URL = "http://192.168.15.157:8080/"//Mudar para o IP atual da sua Máquina
 
         val api: AuthService by lazy {
             val interceptor = HttpLoggingInterceptor().apply {
