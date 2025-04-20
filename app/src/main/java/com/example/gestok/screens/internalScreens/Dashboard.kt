@@ -40,13 +40,11 @@ import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.White
 import com.example.gestok.viewModel.DashboardViewModel
-import com.example.gestok.viewModel.LoginViewModel
 
 @Composable
 fun Dashboard(
     modifier: Modifier = Modifier,
-    viewModelDashboard: DashboardViewModel,
-    viewModelLogin: LoginViewModel) {
+    viewModelDashboard: DashboardViewModel) {
 
     var kpiMediaAvaliacao by remember { mutableDoubleStateOf(0.0) }
     var kpiPedidosAbertos by remember { mutableIntStateOf(0) }
@@ -56,15 +54,14 @@ fun Dashboard(
     var kpiFaturamentoMesAnterior by remember { mutableDoubleStateOf(0.0) }
 
     val erroDashboard = viewModelDashboard.dashboardErro
-    val usuarioLogado = viewModelLogin.usuarioLogado
 
 
-    LaunchedEffect(usuarioLogado) {
-        usuarioLogado?.let {
+    LaunchedEffect(Unit) {
+        viewModelDashboard.buscarTodos()
+    }
 
-            viewModelDashboard.buscarTodos()
-
-            //KPI Pedidos em Abertos nos Próximos 7 dias
+    LaunchedEffect(viewModelDashboard.carregouPedidos) {
+        if (viewModelDashboard.carregouPedidos) {
             val pedidosParaProximos7Dias = viewModelDashboard.buscarPedidosProximos7Dias()
             kpiPedidosAbertos = pedidosParaProximos7Dias.size
         }
@@ -100,14 +97,16 @@ fun Dashboard(
                     )
                 }
 
-                Text(
-                    erroDashboard ?: "",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.W600,
-                    color = Color.Red,
-                    modifier = Modifier
-                        .padding(bottom = 18.dp)
-                )
+                if(erroDashboard != null) {
+                    Text(
+                        erroDashboard ?: "",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.W600,
+                        color = Color.Red,
+                        modifier = Modifier
+                            .padding(bottom = 18.dp)
+                    )
+                }
 
                 Row(
                     Modifier.fillMaxWidth(),

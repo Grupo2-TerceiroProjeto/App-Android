@@ -10,7 +10,7 @@ data class Produto(
 data class OrderData(
     val id: Int,
     val nomeSolicitante: String,
-    val dataEntrega: String,
+    val dataEntrega: String?,
     val telefone: String,
     val status: String,
     val produtos: List<Produto>,

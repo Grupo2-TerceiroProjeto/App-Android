@@ -11,6 +11,7 @@ import com.example.gestok.screens.internalScreens.OrderData
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import android.util.Log
 
 class DashboardViewModel : ViewModel() {
 
@@ -18,15 +19,21 @@ class DashboardViewModel : ViewModel() {
 
     private var _pedidos = mutableStateListOf<OrderData>()
 
+    private var _carregouPedidos by mutableStateOf(false)
+
     val dashboardErro: String?
         get() = _dashboardErro
 
     val pedidos: List<OrderData>
         get() = _pedidos.toList()
 
+    val carregouPedidos: Boolean
+        get() = _carregouPedidos
+
     private fun limparErros() {
         _dashboardErro = null
     }
+
 
     fun buscarTodos() {
         limparErros()
@@ -35,9 +42,8 @@ class DashboardViewModel : ViewModel() {
             try {
                 val resposta = ApiClient.dashboardService.getPedidos()
 
-                if (resposta.isEmpty()) {
-                    _pedidos
-                } else {
+                _pedidos.clear()
+                if (resposta.isNotEmpty()) {
                     _pedidos.addAll(resposta.map {
                         OrderData(
                             id = it.id,
@@ -50,9 +56,12 @@ class DashboardViewModel : ViewModel() {
                         )
                     })
                 }
+                _carregouPedidos = true
+                Log.d("API", "Quantidade de pedidos encontrados: ${pedidos.size}")
 
             } catch (e: Exception) {
                 _dashboardErro = "Erro ao obter dados"
+                Log.e("API", "Erro ao obter dados: ${e.message}")
             }
         }
     }
@@ -62,7 +71,7 @@ class DashboardViewModel : ViewModel() {
         val seteDiasDepois = hoje.plusDays(7)
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
-        return pedidos.filter { pedido ->
+        val pedidosFiltrados = pedidos.filter { pedido ->
             val dataEntrega = pedido.dataEntrega?.let {
                 try {
                     LocalDate.parse(it, formatter)
@@ -71,8 +80,15 @@ class DashboardViewModel : ViewModel() {
                 }
             }
 
-            pedido.status == "Em Produção" && dataEntrega != null && dataEntrega >= hoje && dataEntrega <= seteDiasDepois
+            pedido.status == "Em Produção" &&
+                    dataEntrega != null &&
+                    dataEntrega >= hoje &&
+                    dataEntrega <= seteDiasDepois
         }
+
+        Log.d("API", "Quantidade de pedidos encontrados para os próximos 7 dias: ${pedidosFiltrados.size}")
+
+        return pedidosFiltrados
     }
 
 }
