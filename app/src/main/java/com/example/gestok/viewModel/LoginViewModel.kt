@@ -1,4 +1,4 @@
-package com.example.gestok.viewmodel
+package com.example.gestok.viewModel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

@@ -1,8 +1,5 @@
 package com.example.gestok.components
 
-//import android.graphics.drawable.Icon
-
-//import androidx.compose.foundation.layout.FlowRowScopeInstance.align
 import BottomNavBar
 import android.app.Activity
 import androidx.compose.foundation.background
@@ -14,7 +11,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavController
 import com.example.gestok.components.adminpage.AdminContent
 import com.example.gestok.components.adminpage.RegisterData
 import com.example.gestok.components.orderpage.OrderContent
@@ -22,10 +18,10 @@ import com.example.gestok.components.orderpage.OrderData
 import com.example.gestok.components.productpage.IngredientData
 import com.example.gestok.components.productpage.ProductContent
 import com.example.gestok.components.productpage.ProductData
-import com.example.gestok.screens.internalscreens.Dashboard
-import com.example.gestok.screens.internalscreens.Profile
+import com.example.gestok.screens.internalScreens.Dashboard
+import com.example.gestok.screens.internalScreens.Profile
 import com.example.gestok.viewModel.DashboardViewModel
-import com.example.gestok.viewmodel.LoginViewModel
+import com.example.gestok.viewModel.LoginViewModel
 
 
 //Ingredientes testes:

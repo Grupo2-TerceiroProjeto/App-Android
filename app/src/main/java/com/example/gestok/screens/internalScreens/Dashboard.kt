@@ -1,4 +1,4 @@
-package com.example.gestok.screens.internalscreens
+package com.example.gestok.screens.internalScreens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -40,7 +40,7 @@ import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.White
 import com.example.gestok.viewModel.DashboardViewModel
-import com.example.gestok.viewmodel.LoginViewModel
+import com.example.gestok.viewModel.LoginViewModel
 
 @Composable
 fun Dashboard(
@@ -101,7 +101,7 @@ fun Dashboard(
                 }
 
                 Text(
-                    "${erroDashboard != null}",
+                    erroDashboard ?: "",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.W600,
                     color = Color.Red,

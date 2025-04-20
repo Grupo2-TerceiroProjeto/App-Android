@@ -1,4 +1,4 @@
-package com.example.gestok.screens.passwordrecovery
+package com.example.gestok.screens.passwordRecovery
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController

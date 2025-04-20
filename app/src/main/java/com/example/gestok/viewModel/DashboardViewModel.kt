@@ -31,8 +31,6 @@ class DashboardViewModel : ViewModel() {
     fun buscarTodos() {
         limparErros()
 
-        var houveErro = false
-
         viewModelScope.launch {
             try {
                 val resposta = ApiClient.dashboardService.getPedidos()

@@ -15,9 +15,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.gestok.components.BodyLayoutLogin
 import com.example.gestok.screens.login.Login
-import com.example.gestok.screens.passwordrecovery.PasswordRecoveryNavigation
+import com.example.gestok.screens.passwordRecovery.PasswordRecoveryNavigation
 import com.example.gestok.ui.theme.GestokTheme
-import com.example.gestok.viewmodel.LoginViewModel
+import com.example.gestok.viewModel.LoginViewModel
 
 class AuthActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

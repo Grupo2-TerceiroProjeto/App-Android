@@ -26,7 +26,7 @@ import com.example.gestok.MainActivity
 import com.example.gestok.components.Input
 import com.example.gestok.components.PrimaryButton
 import com.example.gestok.ui.theme.LightBlue
-import com.example.gestok.viewmodel.LoginViewModel
+import com.example.gestok.viewModel.LoginViewModel
 
 @Composable
 
