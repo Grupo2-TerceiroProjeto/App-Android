@@ -2,17 +2,14 @@ package com.example.gestok.screens.internalscreens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -22,16 +19,15 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -43,19 +39,36 @@ import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.White
+import com.example.gestok.viewModel.DashboardViewModel
+import com.example.gestok.viewmodel.LoginViewModel
 
 @Composable
-fun Dashboard(modifier: Modifier = Modifier) {
+fun Dashboard(
+    modifier: Modifier = Modifier,
+    viewModelDashboard: DashboardViewModel,
+    viewModelLogin: LoginViewModel) {
 
-    var kpiMediaAvaliacao by remember { mutableDoubleStateOf(8.0) }
-    var kpiPedidosAbertos by remember { mutableIntStateOf(2) }
-    var kpiValorMedioPedidos by remember { mutableDoubleStateOf(50.0) }
+    var kpiMediaAvaliacao by remember { mutableDoubleStateOf(0.0) }
+    var kpiPedidosAbertos by remember { mutableIntStateOf(0) }
+    var kpiValorMedioPedidos by remember { mutableDoubleStateOf(0.0) }
 
-    var kpiFaturamentoMesAtual by remember { mutableDoubleStateOf(300.0) }
-    var kpiFaturamentoMesAnterior by remember { mutableDoubleStateOf(250.0) }
+    var kpiFaturamentoMesAtual by remember { mutableDoubleStateOf(0.0) }
+    var kpiFaturamentoMesAnterior by remember { mutableDoubleStateOf(0.0) }
+
+    val erroDashboard = viewModelDashboard.dashboardErro
+    val usuarioLogado = viewModelLogin.usuarioLogado
 
 
+    LaunchedEffect(usuarioLogado) {
+        usuarioLogado?.let {
 
+            viewModelDashboard.buscarTodos()
+
+            //KPI Pedidos em Abertos nos Próximos 7 dias
+            val pedidosParaProximos7Dias = viewModelDashboard.buscarPedidosProximos7Dias()
+            kpiPedidosAbertos = pedidosParaProximos7Dias.size
+        }
+    }
 
     LazyColumn(
         modifier = modifier
@@ -86,6 +99,15 @@ fun Dashboard(modifier: Modifier = Modifier) {
                             .padding(bottom = 18.dp)
                     )
                 }
+
+                Text(
+                    "${erroDashboard != null}",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.W600,
+                    color = Color.Red,
+                    modifier = Modifier
+                        .padding(bottom = 18.dp)
+                )
 
                 Row(
                     Modifier.fillMaxWidth(),

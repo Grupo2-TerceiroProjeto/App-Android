@@ -24,6 +24,8 @@ import com.example.gestok.components.productpage.ProductContent
 import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.screens.internalscreens.Dashboard
 import com.example.gestok.screens.internalscreens.Profile
+import com.example.gestok.viewModel.DashboardViewModel
+import com.example.gestok.viewmodel.LoginViewModel
 
 
 //Ingredientes testes:
@@ -90,7 +92,8 @@ fun LayoutScreen(
             "dashboard" -> {
                 Dashboard(modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding))
+                    .padding(innerPadding), DashboardViewModel(), LoginViewModel()
+                )
 
             }
 

@@ -1,6 +1,7 @@
 package com.example.gestok.network
 
 import com.example.gestok.network.service.AuthService
+import com.example.gestok.network.service.DashboardService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -28,5 +29,9 @@ object ApiClient {
 
     val authService: AuthService by lazy {
         api.create(AuthService::class.java)
+    }
+
+    val dashboardService: DashboardService by lazy {
+        api.create(DashboardService::class.java)
     }
 }
