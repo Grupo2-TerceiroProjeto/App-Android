@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import android.util.Log
+import retrofit2.HttpException
 
 class DashboardViewModel : ViewModel() {
 
@@ -58,6 +59,12 @@ class DashboardViewModel : ViewModel() {
                 }
                 _carregouPedidos = true
                 Log.d("API", "Quantidade de pedidos encontrados: ${pedidos.size}")
+
+            } catch (e: HttpException) {
+
+                if (e.code() == 500) _carregouPedidos = true
+
+                Log.e("API", "Nem um pedido encontrado: ${e.message}")
 
             } catch (e: Exception) {
                 _dashboardErro = "Erro ao obter dados"
