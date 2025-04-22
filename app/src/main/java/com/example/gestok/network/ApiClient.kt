@@ -9,29 +9,34 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
 
-    private const val BASE_URL = "http://192.168.15.157:8080/" //Mude para o IP da sua Máquina
+    private const val BASE_URL = "http://localhost:8080/" //Mude para o IP da sua Máquina
 
-    private val api by lazy {
-        val interceptor = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
+    fun getApi(token: String? = null): Retrofit {
+        val logInterceptor = HttpLoggingInterceptor()
+        logInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS)
+
+
+        val clientBuilder = OkHttpClient.Builder()
+            .addInterceptor(logInterceptor)
+
+        if (!token.isNullOrEmpty()) {
+            clientBuilder.addInterceptor(TokenInterceptor(token))
         }
 
-        val client = OkHttpClient.Builder()
-            .addInterceptor(interceptor)
-            .build()
+        val clienteHttp = clientBuilder.build()
 
-        Retrofit.Builder()
+        return Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(client)
+            .client(clienteHttp)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
-    val authService: AuthService by lazy {
-        api.create(AuthService::class.java)
+    fun authService(): AuthService {
+        return getApi().create(AuthService::class.java)
     }
 
-    val dashboardService: DashboardService by lazy {
-        api.create(DashboardService::class.java)
+    fun dashboardService(token: String): DashboardService {
+        return getApi(token).create(DashboardService::class.java)
     }
 }

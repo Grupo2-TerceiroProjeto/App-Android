@@ -1,6 +1,6 @@
-package com.example.gestok.screens.internalScreens
+package com.example.gestok.screens.internalScreens.dashboard
 
-data class Produto(
+data class Product(
     val id: Int,
     val nome: String,
     val preco: Double,
@@ -13,7 +13,7 @@ data class OrderData(
     val dataEntrega: String?,
     val telefone: String,
     val status: String,
-    val produtos: List<Produto>,
+    val produtos: List<Product>,
     val totalCompra: Double
 )
 

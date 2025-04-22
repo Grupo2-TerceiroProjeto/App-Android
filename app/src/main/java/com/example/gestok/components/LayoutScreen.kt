@@ -18,9 +18,15 @@ import com.example.gestok.components.orderpage.OrderData
 import com.example.gestok.components.productpage.IngredientData
 import com.example.gestok.components.productpage.ProductContent
 import com.example.gestok.components.productpage.ProductData
-import com.example.gestok.screens.internalScreens.Dashboard
+import com.example.gestok.network.service.DashboardService
+import com.example.gestok.screens.internalScreens.dashboard.Dashboard
 import com.example.gestok.screens.internalScreens.Profile
-import com.example.gestok.viewModel.DashboardViewModel
+import com.example.gestok.screens.login.LoggedInUser
+import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
+import com.example.gestok.viewModel.login.LoginApiViewModel
+import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
+import org.koin.core.parameter.parametersOf
 
 
 //Ingredientes testes:
@@ -85,9 +91,11 @@ fun LayoutScreen(
         when (currentPage.value) {
 
             "dashboard" -> {
+                val viewModel: DashboardApiViewModel = koinViewModel()
+
                 Dashboard(modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding), DashboardViewModel()
+                    .padding(innerPadding), viewModel
                 )
 
             }

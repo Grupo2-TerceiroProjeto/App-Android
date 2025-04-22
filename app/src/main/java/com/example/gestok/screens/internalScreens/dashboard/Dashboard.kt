@@ -1,4 +1,4 @@
-package com.example.gestok.screens.internalScreens
+package com.example.gestok.screens.internalScreens.dashboard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -39,12 +39,13 @@ import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.White
-import com.example.gestok.viewModel.DashboardViewModel
+import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
 
 @Composable
 fun Dashboard(
     modifier: Modifier = Modifier,
-    viewModelDashboard: DashboardViewModel) {
+    viewModel: DashboardApiViewModel
+) {
 
     var kpiMediaAvaliacao by remember { mutableDoubleStateOf(0.0) }
     var kpiPedidosAbertos by remember { mutableIntStateOf(0) }
@@ -53,17 +54,17 @@ fun Dashboard(
     var kpiFaturamentoMesAtual by remember { mutableDoubleStateOf(0.0) }
     var kpiFaturamentoMesAnterior by remember { mutableDoubleStateOf(0.0) }
 
-    val erroDashboard = viewModelDashboard.dashboardErro
+    val erroDashboard = viewModel.dashboardErro
 
 
     LaunchedEffect(Unit) {
-        viewModelDashboard.buscarTodos()
+        viewModel.buscarTodos()
     }
 
-    LaunchedEffect(viewModelDashboard.carregouPedidos) {
-        if (viewModelDashboard.carregouPedidos) {
-            val pedidosParaProximos7Dias = viewModelDashboard.buscarPedidosProximos7Dias()
-            kpiPedidosAbertos = pedidosParaProximos7Dias.size
+    LaunchedEffect(viewModel.carregouPedidos) {
+        if (viewModel.carregouPedidos) {
+
+            kpiPedidosAbertos =  viewModel.buscarPedidosProximos7Dias().size
         }
     }
 

@@ -17,7 +17,8 @@ import com.example.gestok.components.BodyLayoutLogin
 import com.example.gestok.screens.login.Login
 import com.example.gestok.screens.passwordRecovery.PasswordRecoveryNavigation
 import com.example.gestok.ui.theme.GestokTheme
-import com.example.gestok.viewModel.LoginViewModel
+import com.example.gestok.viewModel.login.LoginApiViewModel
+import org.koin.androidx.compose.koinViewModel
 
 class AuthActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +35,8 @@ class AuthActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         composable("login") {
-                            BodyLayoutLogin ("Faça seu login") { Login(navController, LoginViewModel()) }
+                            val viewModel: LoginApiViewModel = koinViewModel()
+                            BodyLayoutLogin ("Faça seu login") { Login(navController, viewModel) }
                         }
                         composable("passwordRecovery") {
                             PasswordRecoveryNavigation(navController)
@@ -60,7 +62,8 @@ fun GreetingPreview2() {
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable("login") {
-                    BodyLayoutLogin ("Faça seu login") { Login(navController, LoginViewModel()) }
+                    val viewModel: LoginApiViewModel = koinViewModel()
+                    BodyLayoutLogin ("Faça seu login") { Login(navController, viewModel) }
                 }
                 composable("passwordRecovery") {
                     PasswordRecoveryNavigation(navController)

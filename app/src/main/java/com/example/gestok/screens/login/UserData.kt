@@ -6,8 +6,9 @@ data class LoginUser(
 )
 
 data class LoggedInUser(
-    val nome: String,
-    val login: String,
-    val cargo: String,
-    val idEmpresa: Int
+    var nome: String = "",
+    var login: String = "",
+    var cargo: String = "",
+    var token: String = "",
+    var idEmpresa: Int = 0
 )
