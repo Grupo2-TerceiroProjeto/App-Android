@@ -5,7 +5,7 @@ data class ProductData(
     val estoque: Int,
     val categoria: String,
     val valor: Double,
-    val ingredientes: List<IngredientData>,
+    val ingredientes: MutableList<IngredientData>,
     var disponbilidade: Boolean
 )
 

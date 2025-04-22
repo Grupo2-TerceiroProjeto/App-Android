@@ -1,5 +1,6 @@
 package com.example.gestok.components.productpage.dialogs
 
+import androidx.compose.foundation.background
 import com.example.gestok.components.orderpage.dialogs.PedidoBlock
 
 import androidx.compose.foundation.clickable
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Check
@@ -24,6 +26,8 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.gestok.components.productpage.IngredientData
+import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
@@ -32,16 +36,15 @@ import com.example.gestok.ui.theme.White
 
 
 @Composable
-fun CriarPedidoDialog(
+fun ProductCreateDialog(
     onDismiss: () -> Unit,
-    onConfirm: (String, String, String, String, List<String>) -> Unit
+    onConfirm: (String, Int, String, Double, List<IngredientData>) -> Unit
 ) {
-    var editedNomeSolicitante by remember { mutableStateOf("") }
-    var editedContato by remember { mutableStateOf("") }
-    var editedStatusPedido by remember { mutableStateOf("") }
-    var editedDataEntrega by remember { mutableStateOf("") }
-    var editedValorPedido by remember { mutableStateOf("") }
-
+    var editedProduto by remember { mutableStateOf("") }
+    var editedEstoque by remember { mutableStateOf("") }
+    var editedCategoria by remember { mutableStateOf("Selecione uma opção") }
+    var editedValor by remember { mutableStateOf("") }
+    var editedIngredientes by remember { mutableStateOf(emptyList<IngredientData>()) }
 
     var expanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf("Selecione uma opção") }
@@ -61,25 +64,27 @@ fun CriarPedidoDialog(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-
+                    .height(700.dp)
 
             ) {
 
-                //----- HEADER ------------------------------------------------------------------------
+                // -- HEADER -------------------------
                 item {
-                    Row(
+                    Row (
                         Modifier
                             .fillMaxWidth()
                             .padding(20.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
+                    ){
+
                         Text(
-                            "Criar Produto",
+                            "Novo Produto",
                             fontWeight = W600,
                             color = Blue,
                             fontSize = 20.sp
                         )
+
                         Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(Blue)) {
                             Icon(
                                 imageVector = Icons.Default.Close,
@@ -88,21 +93,58 @@ fun CriarPedidoDialog(
 
                                 )
                         }
+
                     }
                 }
-                //-----SOLICITANTE-------------------------------------------------------------------------
+
+                //--- FOTO DO PRODUTO
+                item {
+
+                    Text(
+                        "Foto do produto",
+                        Modifier.padding(start = 20.dp, bottom = 15.dp),
+                        fontWeight = W600,
+                        color = Blue
+                    )
+
+                    Column(
+                        Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally // Centraliza todos os itens dentro da Column
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(15))
+                                .width(240.dp)
+                                .height(240.dp)
+                                .background(LightGray)
+                                .align(Alignment.CenterHorizontally), // Garante que o Box fique centralizado dentro da Column
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.AccountBox,
+                                contentDescription = null,
+                                modifier = Modifier.size(50.dp) // Ajusta o tamanho do ícone
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+                }
+
+                //--- NOME PRODUTO -------------------------------------------
+
                 item {
                     Column(Modifier.fillMaxWidth()) {
 
                         Text(
-                            "Solicitante",
+                                "Nome do produto",
                             Modifier.padding(start = 20.dp),
                             fontWeight = W600,
                             color = Blue
                         )
                         TextField(
-                            value = editedNomeSolicitante,
-                            onValueChange = { editedNomeSolicitante = it },
+                            value = editedProduto,
+                            onValueChange = { editedProduto = it },
                             colors = TextFieldDefaults.colors(
                                 focusedContainerColor = LightGray, // Cor de fundo quando focado
                                 unfocusedContainerColor = LightGray,   // Cor de fundo quando não focado
@@ -119,11 +161,70 @@ fun CriarPedidoDialog(
                     }
                 }
 
-                //-----STATUS-------------------------------------------------------------------------
+                //--- VALOR -------------------------------------------
+
                 item {
                     Column {
                         Text(
-                            "Status do Pedido",
+                            "Valor",
+                            Modifier.padding(start = 20.dp),
+                            fontWeight = W600,
+                            color = Blue
+                        )
+                        TextField(
+                            value = editedValor,
+                            onValueChange = { editedValor = it },
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = LightGray, // Cor de fundo quando focado
+                                unfocusedContainerColor = LightGray,   // Cor de fundo quando não focado
+                                focusedTextColor = Black,          // Cor do texto quando focado
+                                unfocusedTextColor = Black,         // Cor do texto quando não focado
+                                focusedIndicatorColor = LightGray, // Cor do indicador (borda) quando focado
+                                unfocusedIndicatorColor = LightGray
+                            ),
+                            modifier = Modifier
+                                .padding(start = 20.dp, bottom = 15.dp)
+                                .clip(shape = RoundedCornerShape(20)),
+                            singleLine = true
+                        )
+                    }
+                }
+
+                //-- ESTOQUE -------------------------------------------
+
+                item {
+                    Column {
+                        Text(
+                            "Estoque",
+                            Modifier.padding(start = 20.dp),
+                            fontWeight = W600,
+                            color = Blue
+                        )
+                        TextField(
+                            value = editedEstoque,
+                            onValueChange = { editedEstoque = it },
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = LightGray, // Cor de fundo quando focado
+                                unfocusedContainerColor = LightGray,   // Cor de fundo quando não focado
+                                focusedTextColor = Black,          // Cor do texto quando focado
+                                unfocusedTextColor = Black,         // Cor do texto quando não focado
+                                focusedIndicatorColor = LightGray, // Cor do indicador (borda) quando focado
+                                unfocusedIndicatorColor = LightGray
+                            ),
+                            modifier = Modifier
+                                .padding(start = 20.dp, bottom = 15.dp)
+                                .clip(shape = RoundedCornerShape(20)),
+                            singleLine = true
+                        )
+                    }
+                }
+
+
+                //-- CATEGORIA -------------------------------------------
+                item {
+                    Column {
+                        Text(
+                            "Categoria",
                             Modifier.padding(start = 20.dp),
                             fontWeight = W600,
                             color = Blue
@@ -171,7 +272,7 @@ fun CriarPedidoDialog(
                         Box(
                             Modifier
                                 .padding(start = 20.dp, bottom = 15.dp)
-
+//                            .background(Color.Red)
                                 .height(0.dp)
                                 .width(20.dp)
                         ) {
@@ -182,26 +283,26 @@ fun CriarPedidoDialog(
                                 modifier = Modifier
                                     .width(240.dp)
 
-
+//                            .padding(start = 200.dp)
                             ) {
                                 DropdownMenuItem(
-                                    text = { Text("Em produção") },
+                                    text = { Text("Salgados") },
                                     onClick = {
-                                        selectedOption = "Em producão"
+                                        selectedOption = "Salgados"
                                         expanded = false
                                     })
 
                                 DropdownMenuItem(
-                                    text = { Text("Entregue") },
+                                    text = { Text("Doces") },
                                     onClick = {
-                                        selectedOption = "Entregue"
+                                        selectedOption = "Doces"
                                         expanded = false
                                     })
 
                                 DropdownMenuItem(
-                                    text = { Text("Cancelado") },
+                                    text = { Text("Bolos") },
                                     onClick = {
-                                        selectedOption = "Cancelado"
+                                        selectedOption = "Bolos"
                                         expanded = false
                                     })
                             }
@@ -209,62 +310,8 @@ fun CriarPedidoDialog(
                         }
                     }
                 }
-                //-----DATA-------------------------------------------------------------------------
-                item {
-                    Column {
-                        Text(
-                            "Data de Entrega",
-                            Modifier.padding(start = 20.dp),
-                            fontWeight = W600,
-                            color = Blue
-                        )
-                        TextField(
-                            value = editedDataEntrega,
-                            onValueChange = { editedDataEntrega = it },
-                            colors = TextFieldDefaults.colors(
-                                focusedContainerColor = LightGray, // Cor de fundo quando focado
-                                unfocusedContainerColor = LightGray,   // Cor de fundo quando não focado
-                                focusedTextColor = Black,          // Cor do texto quando focado
-                                unfocusedTextColor = Black,         // Cor do texto quando não focado
-                                focusedIndicatorColor = LightGray, // Cor do indicador (borda) quando focado
-                                unfocusedIndicatorColor = LightGray
-                            ),
-                            modifier = Modifier
-                                .padding(start = 20.dp, bottom = 15.dp)
-                                .clip(shape = RoundedCornerShape(20)),
-                            singleLine = true
-                        )
-                    }
-                }
 
-                //-----VALOR-------------------------------------------------------------------------
-                item {
-                    Column {
-                        Text(
-                            "Valor",
-                            Modifier.padding(start = 20.dp),
-                            fontWeight = W600,
-                            color = Blue
-                        )
-                        TextField(
-                            value = editedValorPedido,
-                            onValueChange = { editedValorPedido = it },
-                            colors = TextFieldDefaults.colors(
-                                focusedContainerColor = LightGray, // Cor de fundo quando focado
-                                unfocusedContainerColor = LightGray,   // Cor de fundo quando não focado
-                                focusedTextColor = Black,          // Cor do texto quando focado
-                                unfocusedTextColor = Black,         // Cor do texto quando não focado
-                                focusedIndicatorColor = LightGray, // Cor do indicador (borda) quando focado
-                                unfocusedIndicatorColor = LightGray
-                            ),
-                            modifier = Modifier
-                                .padding(start = 20.dp, bottom = 15.dp)
-                                .clip(shape = RoundedCornerShape(20)),
-                            singleLine = true
-                        )
-                    }
-                }
-                //--- HEADER "ITENS" + BOTAO ADICIONAR -------------------------------------------------
+                //-- INGREDIENTES HEADER -------------------------------------------
 
                 item {
                     Row(
@@ -275,37 +322,33 @@ fun CriarPedidoDialog(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            "Itens",
+                            "Ingredientes",
                             fontWeight = W600,
                             color = Blue,
                             fontSize = 20.sp
                         )
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(LightBlue)) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = null,
-                                tint = White,
-
-                                )
-                            Text("  Adicionar", color = White)
+                        Button(onClick = {}, colors = ButtonDefaults.buttonColors(Blue)) {
+                            Text(
+                                "+ Ingrediente"
+                            )
                         }
+
                     }
                     Spacer(modifier = Modifier.height(10.dp))
 
                 }
 
-                //-- ITENS + QUANTIDADE -----------------------------
+
+                //-- INGREDIENTES -------------------------------------------
 
                 item {
                     Column(Modifier.padding(start = 20.dp, end = 20.dp)) {
-
+//                        IngredientBlock()
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                 }
 
-
                 //-- BOTÕES CANCELAR E CONCLUIR ----------------------------------------
-
                 item {
                     Row(Modifier.fillMaxWidth().padding(20.dp), horizontalArrangement = Arrangement.SpaceBetween){
                         Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(Blue)) {
@@ -329,9 +372,12 @@ fun CriarPedidoDialog(
                     }
                 }
 
+
+
             }
-
         }
-    }
-}
 
+
+    }
+
+}

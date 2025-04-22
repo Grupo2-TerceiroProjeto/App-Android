@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import com.example.gestok.R
 import com.example.gestok.components.NutritionalDataDialog
+import com.example.gestok.components.productpage.dialogs.ExcludeConfirmationDialog
 import com.example.gestok.components.productpage.dialogs.ProductEdit
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
@@ -42,6 +43,7 @@ fun ProductData(productData: ProductData){
     var checked by remember { mutableStateOf(true) }
     var showEditDialog by remember { mutableStateOf(false) }
     var showNutritionalDialog by remember { mutableStateOf(false) }
+    var showExcludeConfirmDialog by remember { mutableStateOf(false) }
 
 
     Card (
@@ -93,7 +95,7 @@ fun ProductData(productData: ProductData){
                     }
 
                     IconButton(
-                        onClick = {},
+                        onClick = {showExcludeConfirmDialog = true},
                         modifier = Modifier
                             .height(50.dp)
 
@@ -186,6 +188,15 @@ fun ProductData(productData: ProductData){
             onDismiss = { showEditDialog = false },
             onConfirm = { newProduto, newEstoque, newCategoria, newValor, newIngredientes ->
                 showEditDialog = false
+            }
+        )
+    }
+
+    if(showExcludeConfirmDialog){
+        ExcludeConfirmationDialog(
+            onDismiss = { showExcludeConfirmDialog = false },
+            onConfirm = {
+                showExcludeConfirmDialog = false
             }
         )
     }

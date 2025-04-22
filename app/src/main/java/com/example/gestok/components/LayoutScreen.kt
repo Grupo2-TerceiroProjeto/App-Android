@@ -52,11 +52,11 @@ val vagner = RegisterData("Vagner Benedito", "Chef de Cozinha", "vagner.benedito
 val kauan = RegisterData("Kauan Parente", "Estoquista", "kauan.parente@sptech.com")
 
 //Produtos testes:
-val coxinha = ProductData("Coxinha", 10, "Salgados", 100.10, listOf(margarina, farinha, frango, ovo), true)
-val esfirra = ProductData("Esfirra", 15, "Salgados", 80.50, listOf(farinha, margarina, queijo, presunto), true)
-val pastel = ProductData("Pastel", 20, "Salgados", 90.00, listOf(farinha, ovo, queijo, presunto, oleo), true)
-val brigadeiro = ProductData("Brigadeiro", 30, "Doces", 60.75, listOf(chocolate, leite, acucar, margarina), true)
-val boloDeChocolate = ProductData("Bolo de Chocolate", 5, "Doces", 120.00, listOf(farinha, leite, chocolate, ovo, fermento, acucar), true)
+val coxinha = ProductData("Coxinha", 10, "Salgados", 100.10, mutableListOf(margarina, farinha, frango, ovo), true)
+val esfirra = ProductData("Esfirra", 15, "Salgados", 80.50, mutableListOf(farinha, margarina, queijo, presunto), true)
+val pastel = ProductData("Pastel", 20, "Salgados", 90.00, mutableListOf(farinha, ovo, queijo, presunto, oleo), true)
+val brigadeiro = ProductData("Brigadeiro", 30, "Doces", 60.75, mutableListOf(chocolate, leite, acucar, margarina), true)
+val boloDeChocolate = ProductData("Bolo de Chocolate", 5, "Doces", 120.00, mutableListOf(farinha, leite, chocolate, ovo, fermento, acucar), true)
 
 val listaProdutos: List<ProductData> = listOf(coxinha, esfirra, pastel, brigadeiro, boloDeChocolate)
 val listaFuncionarios: List<RegisterData> = listOf(luca, emilly, vitor, thiago, vagner, kauan)

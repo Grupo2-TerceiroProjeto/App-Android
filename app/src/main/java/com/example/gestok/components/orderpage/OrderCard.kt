@@ -36,6 +36,7 @@ import com.example.gestok.ui.theme.Blue
 fun OrderCard(pedido: OrderData) {
 
     var showEditDialog by remember { mutableStateOf(false) }
+    var showConfirmDialog by remember { mutableStateOf(false) }
 
 
     Card(
@@ -183,6 +184,8 @@ fun OrderCard(pedido: OrderData) {
             }
         )
     }
+
+
 
 }
 
