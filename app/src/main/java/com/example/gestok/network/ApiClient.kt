@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
 
-    private const val BASE_URL = "http://localhost:8080/" //Mude para o IP da sua Máquina
+    private const val BASE_URL = "http://192.168.15.139:8080/" //Mude para o IP da sua Máquina
 
     fun getApi(token: String? = null): Retrofit {
         val logInterceptor = HttpLoggingInterceptor()
