@@ -5,12 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.gestok.screens.login.LoggedInUser
+import org.koin.compose.koinInject
 
-abstract class LoginViewModel : ViewModel() {
+open class LoginViewModel(open val _usuarioLogado : LoggedInUser) : ViewModel() {
 
     protected var _emailErro by mutableStateOf<String?>(null)
     protected var _senhaErro by mutableStateOf<String?>(null)
-    protected var _usuarioLogado by mutableStateOf<LoggedInUser?>(null)
 
     val emailErro: String?
         get() = _emailErro
@@ -18,7 +18,7 @@ abstract class LoginViewModel : ViewModel() {
     val senhaErro: String?
         get() = _senhaErro
 
-    val usuarioLogado: LoggedInUser?
+    val usuarioLogado: LoggedInUser
         get() = _usuarioLogado
 
     fun limparErros() {

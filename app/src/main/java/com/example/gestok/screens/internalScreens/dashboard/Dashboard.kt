@@ -1,5 +1,6 @@
 package com.example.gestok.screens.internalScreens.dashboard
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,12 +35,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.components.LineChartScreen
 import com.example.gestok.components.PieChartScreen
+import com.example.gestok.screens.login.LoggedInUser
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.White
 import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun Dashboard(
@@ -55,6 +58,10 @@ fun Dashboard(
     var kpiFaturamentoMesAnterior by remember { mutableDoubleStateOf(0.0) }
 
     val erroDashboard = viewModel.dashboardErro
+
+    val x = koinInject<LoggedInUser>()
+
+    Log.d("vhtest", "USUARIO ID EMPRESA:" + x)
 
 
     LaunchedEffect(Unit) {
