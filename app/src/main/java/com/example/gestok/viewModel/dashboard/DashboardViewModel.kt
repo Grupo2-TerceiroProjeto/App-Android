@@ -14,9 +14,9 @@ abstract class DashboardViewModel : ViewModel() {
 
     protected var _pedidos = mutableStateListOf<OrderData>()
 
-    protected var _mediaAvaliacao by mutableDoubleStateOf(0.0)
-
     protected var _carregouPedidos by mutableStateOf(false)
+
+    protected var _mediaAvaliacao by mutableDoubleStateOf(0.0)
 
     val dashboardErro: String?
         get() = _dashboardErro
@@ -24,18 +24,21 @@ abstract class DashboardViewModel : ViewModel() {
     val pedidos: List<OrderData>
         get() = _pedidos.toList()
 
-    val mediaAvaliacao: Double
-        get() = _mediaAvaliacao
-
     val carregouPedidos: Boolean
         get() = _carregouPedidos
+
+    val mediaAvaliacao: Double
+        get() = _mediaAvaliacao
 
     fun limparErros() {
         _dashboardErro = null
     }
 
-    open fun buscarTodos() {}
+    open fun getBuscarTodos() {}
 
-    abstract fun buscarPedidosProximos7Dias(): List<OrderData>
+    abstract fun getBuscarPedidosProximos7Dias(): List<OrderData>
+
+    abstract fun getMediaAvaliacao()
+
 
 }

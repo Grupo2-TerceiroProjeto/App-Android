@@ -58,14 +58,17 @@ fun Dashboard(
 
 
     LaunchedEffect(Unit) {
-        viewModel.buscarTodos()
+        viewModel.getBuscarTodos()
+        viewModel.getMediaAvaliacao()
     }
 
     LaunchedEffect(viewModel.carregouPedidos) {
         if (viewModel.carregouPedidos) {
 
-            kpiPedidosAbertos =  viewModel.buscarPedidosProximos7Dias().size
+            kpiPedidosAbertos =  viewModel.getBuscarPedidosProximos7Dias().size
         }
+
+        kpiMediaAvaliacao = viewModel.mediaAvaliacao
     }
 
     LazyColumn(

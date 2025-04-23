@@ -1,8 +1,10 @@
 package com.example.gestok.network.service
 
-import com.example.gestok.screens.internalScreens.dashboard.AssessmentData
 import com.example.gestok.screens.internalScreens.dashboard.OrderData
+import retrofit2.Response
+import okhttp3.ResponseBody
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 interface DashboardService {
 
@@ -10,6 +12,6 @@ interface DashboardService {
     suspend fun getPedidos(): List<OrderData>
 
     @GET("/avaliacoes/listar-todos/{idEmpresa}")
-    suspend fun getAvaliacoes(): List<AssessmentData>
+    suspend fun getAvaliacoes(@Path("idEmpresa") idEmpresa:Int): Response<ResponseBody>
 
 }

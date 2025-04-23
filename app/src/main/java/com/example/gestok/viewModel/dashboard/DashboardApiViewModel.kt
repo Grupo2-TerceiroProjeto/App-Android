@@ -6,12 +6,16 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
 import com.example.gestok.network.service.DashboardService
+import com.example.gestok.screens.internalScreens.dashboard.AssessmentData
+import com.google.common.reflect.TypeToken
+import com.google.gson.Gson
 import retrofit2.HttpException
 
 class DashboardApiViewModel(private val api: DashboardService) : DashboardViewModel() {
 
-    override fun buscarTodos() {
+    override fun getBuscarTodos() {
         limparErros()
 
         viewModelScope.launch {
@@ -48,7 +52,7 @@ class DashboardApiViewModel(private val api: DashboardService) : DashboardViewMo
         }
     }
 
-    override fun buscarPedidosProximos7Dias(): List<OrderData> {
+    override fun getBuscarPedidosProximos7Dias(): List<OrderData> {
         val hoje = LocalDate.now()
         val seteDiasDepois = hoje.plusDays(7)
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -71,6 +75,45 @@ class DashboardApiViewModel(private val api: DashboardService) : DashboardViewMo
         Log.d("API", "Quantidade de pedidos encontrados para os próximos 7 dias: ${pedidosFiltrados.size}")
 
         return pedidosFiltrados
+    }
+
+    override fun getMediaAvaliacao() {
+        limparErros()
+
+        var avaliacoes = mutableStateListOf<AssessmentData>()
+
+        viewModelScope.launch {
+            try {
+                val resposta = api.getAvaliacoes(1)
+
+                avaliacoes.clear()
+
+                val corpo = resposta.body()?.string()
+
+                if (!corpo.isNullOrBlank() && corpo != "[]") {
+                    val gson = Gson()
+                    val lista: List<AssessmentData> = gson.fromJson(
+                        corpo,
+                        object : TypeToken<List<AssessmentData>>() {}.type
+                    )
+
+                    avaliacoes.addAll(lista)
+
+                    _mediaAvaliacao = lista.map { it.nota }.average()
+                    Log.d("API", "Média: ${_mediaAvaliacao}")
+
+                } else {
+
+                    _mediaAvaliacao = 0.0
+                }
+
+                Log.d("API", "Quantidade de avaliações encontradas: ${avaliacoes.size}")
+
+            } catch (e: Exception) {
+                _dashboardErro = "Erro ao obter dados"
+                Log.e("API", "Erro ao obter dados: ${e.message}")
+            }
+        }
     }
 
 }
