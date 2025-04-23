@@ -1,15 +1,12 @@
 package com.example.gestok.viewModel.login
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.viewModelScope
 import com.example.gestok.network.service.AuthService
 import com.example.gestok.screens.login.LoggedInUser
 import com.example.gestok.screens.login.LoginUser
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
 import retrofit2.HttpException
 
 class LoginApiViewModel(
@@ -38,11 +35,8 @@ class LoginApiViewModel(
         viewModelScope.launch {
             try {
                 autenticado.value = false
-                val resposta = withTimeout(5000) { // 5000 milissegundos = 5 segundos
-                    api.login(LoginUser(email, senha))
-                }
 
-                Log.d("vhtest", usuarioLogado.nome)
+                val resposta = api.login(LoginUser(email, senha))
 
                 _usuarioLogado.nome = resposta.nome
                 _usuarioLogado.login = resposta.login
@@ -50,10 +44,8 @@ class LoginApiViewModel(
                 _usuarioLogado.token = resposta.token
                 _usuarioLogado.idEmpresa = resposta.idEmpresa
 
-
-                Log.d("API", "ID da Empresa: ${_usuarioLogado!!.idEmpresa}")
-
                 autenticado.value = true
+
             } catch (e: HttpException) {
                 if (e.code() == 403) {
                     _senhaErro = "Credenciais inválidas"

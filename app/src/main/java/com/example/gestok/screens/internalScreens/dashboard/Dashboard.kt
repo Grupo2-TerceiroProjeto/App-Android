@@ -59,11 +59,6 @@ fun Dashboard(
 
     val erroDashboard = viewModel.dashboardErro
 
-    val x = koinInject<LoggedInUser>()
-
-    Log.d("vhtest", "USUARIO ID EMPRESA:" + x)
-
-
     LaunchedEffect(Unit) {
         viewModel.getBuscarTodos()
         viewModel.getMediaAvaliacao()

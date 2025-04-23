@@ -7,8 +7,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.gestok.screens.internalScreens.dashboard.OrderData
+import com.example.gestok.screens.login.LoggedInUser
 
-abstract class DashboardViewModel : ViewModel() {
+abstract class DashboardViewModel(open val usuarioLogado : LoggedInUser) : ViewModel() {
 
     protected var _dashboardErro by mutableStateOf<String?>(null)
 

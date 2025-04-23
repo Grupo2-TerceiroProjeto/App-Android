@@ -4,7 +4,6 @@ import com.example.gestok.network.ApiClient
 import com.example.gestok.screens.login.LoggedInUser
 import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
 import com.example.gestok.viewModel.login.LoginApiViewModel
-import com.example.gestok.viewModel.login.LoginViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -33,11 +32,7 @@ val moduloApi = module {
     }
 
     viewModel {
-        DashboardApiViewModel(get())
-    }
-
-    viewModel {
-        LoginViewModel(get())
+        DashboardApiViewModel(get(), get())
     }
 
 

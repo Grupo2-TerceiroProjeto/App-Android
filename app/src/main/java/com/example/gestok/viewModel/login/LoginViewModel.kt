@@ -5,9 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.gestok.screens.login.LoggedInUser
-import org.koin.compose.koinInject
 
-open class LoginViewModel(open val _usuarioLogado : LoggedInUser) : ViewModel() {
+abstract class LoginViewModel(open val _usuarioLogado : LoggedInUser) : ViewModel() {
 
     protected var _emailErro by mutableStateOf<String?>(null)
     protected var _senhaErro by mutableStateOf<String?>(null)

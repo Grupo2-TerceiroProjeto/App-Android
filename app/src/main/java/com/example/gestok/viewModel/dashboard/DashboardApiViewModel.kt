@@ -9,11 +9,12 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import com.example.gestok.network.service.DashboardService
 import com.example.gestok.screens.internalScreens.dashboard.AssessmentData
+import com.example.gestok.screens.login.LoggedInUser
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import retrofit2.HttpException
 
-class DashboardApiViewModel(private val api: DashboardService) : DashboardViewModel() {
+class DashboardApiViewModel(private val api: DashboardService, override val usuarioLogado : LoggedInUser) : DashboardViewModel(usuarioLogado) {
 
     override fun getBuscarTodos() {
         limparErros()
@@ -84,7 +85,7 @@ class DashboardApiViewModel(private val api: DashboardService) : DashboardViewMo
 
         viewModelScope.launch {
             try {
-                val resposta = api.getAvaliacoes(1)
+                val resposta = api.getAvaliacoes(usuarioLogado.idEmpresa)
 
                 avaliacoes.clear()
 

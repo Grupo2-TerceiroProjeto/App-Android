@@ -33,16 +33,14 @@ import com.example.gestok.viewModel.login.LoginApiViewModel
 
 fun Login(navController: NavController, viewModel: LoginApiViewModel) {
 
-    var email by remember { mutableStateOf("luca.sena@sptech.school") }
-    var senha by remember { mutableStateOf("123") }
+    var email by remember { mutableStateOf("emmily.jesus@sptech.school") }
+    var senha by remember { mutableStateOf("Admin123") }
 
     val contexto = LocalContext.current
 
     val erroEmail = viewModel.emailErro
     val erroSenha = viewModel.senhaErro
     val usuarioLogado = viewModel.usuarioLogado
-
-
 
     if (viewModel.autenticado.value) {
 
@@ -54,8 +52,6 @@ fun Login(navController: NavController, viewModel: LoginApiViewModel) {
             }
             contexto.startActivity(mainActivity)
         }
-
-        Log.d("vhtest", viewModel.usuarioLogado.nome)
     }
 
     Column(
