@@ -1,6 +1,7 @@
 package com.example.gestok.screens.login
 
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,8 +33,8 @@ import com.example.gestok.viewModel.login.LoginApiViewModel
 
 fun Login(navController: NavController, viewModel: LoginApiViewModel) {
 
-    var email by remember { mutableStateOf("") }
-    var senha by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("luca.sena@sptech.school") }
+    var senha by remember { mutableStateOf("123") }
 
     val contexto = LocalContext.current
 
@@ -41,7 +42,10 @@ fun Login(navController: NavController, viewModel: LoginApiViewModel) {
     val erroSenha = viewModel.senhaErro
     val usuarioLogado = viewModel.usuarioLogado
 
-    LaunchedEffect(usuarioLogado) {
+
+
+    if (viewModel.autenticado.value) {
+
         usuarioLogado?.let { user ->
             val mainActivity = Intent(contexto, MainActivity::class.java).apply {
                 putExtra("userName", user.nome)
@@ -50,6 +54,8 @@ fun Login(navController: NavController, viewModel: LoginApiViewModel) {
             }
             contexto.startActivity(mainActivity)
         }
+
+        Log.d("vhtest", viewModel.usuarioLogado.nome)
     }
 
     Column(
