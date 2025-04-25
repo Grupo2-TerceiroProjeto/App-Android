@@ -1,5 +1,7 @@
 package com.example.gestok.components
 
+import android.app.Activity
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
@@ -7,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,12 +18,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import com.example.gestok.AuthActivity
 import com.example.gestok.R
 
 @Composable
 fun Topbar(
-    mainNavController: NavController
+    activity: Activity,
+    userName: String
 ){
     Row(
         modifier = Modifier
@@ -40,25 +42,23 @@ fun Topbar(
 
 
     ){
-        Text (text = "Olá, Jéssica",
+        Text (text = "Olá, $userName",
             color = Color.White,
             fontSize = 20.sp,
             modifier = Modifier.padding(end = 210.dp)
         )
 
-        IconButton(onClick = {mainNavController.navigate("login")},
-            modifier = Modifier
-                .height(50.dp)
-                .weight(1f)
-
-
-        ) {
+        IconButton(onClick = {
+            val context = activity
+            val intent = Intent(context, AuthActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            context.startActivity(intent)
+        }) {
             Image(
                 painter = painterResource(id = R.drawable.logout),
                 contentDescription = "logout",
                 modifier = Modifier.size(25.dp)
             )
-
         }
 
     }

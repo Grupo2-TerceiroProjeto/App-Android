@@ -1,9 +1,7 @@
 package com.example.gestok.components
 
-//import android.graphics.drawable.Icon
-
-//import androidx.compose.foundation.layout.FlowRowScopeInstance.align
 import BottomNavBar
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -13,7 +11,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavController
 import com.example.gestok.components.adminpage.AdminContent
 import com.example.gestok.components.adminpage.RegisterData
 import com.example.gestok.components.orderpage.OrderContent
@@ -21,8 +18,15 @@ import com.example.gestok.components.orderpage.OrderData
 import com.example.gestok.components.productpage.IngredientData
 import com.example.gestok.components.productpage.ProductContent
 import com.example.gestok.components.productpage.ProductData
-import com.example.gestok.screens.internalscreens.Dashboard
-import com.example.gestok.screens.internalscreens.Profile
+import com.example.gestok.network.service.DashboardService
+import com.example.gestok.screens.internalScreens.dashboard.Dashboard
+import com.example.gestok.screens.internalScreens.Profile
+import com.example.gestok.screens.login.LoggedInUser
+import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
+import com.example.gestok.viewModel.login.LoginApiViewModel
+import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
+import org.koin.core.parameter.parametersOf
 
 
 //Ingredientes testes:
@@ -63,14 +67,18 @@ val listaFuncionarios: List<RegisterData> = listOf(luca, emilly, vitor, thiago, 
 
 @Composable
 fun LayoutScreen(
-    mainNavController: NavController
+    activity: Activity,
+    userName: String,
+    email: String,
+    position: String
+
 ) {
 
     val currentPage = remember { mutableStateOf("dashboard") }
 
     Scaffold(Modifier.background(Color(0xFFF3F3F3)), //COR DO FUNDO DA TELA
         topBar = {
-            Topbar(mainNavController)
+            Topbar(activity, userName)
         },
         bottomBar = {
             BottomNavBar() { navItem ->
@@ -83,16 +91,23 @@ fun LayoutScreen(
         when (currentPage.value) {
 
             "dashboard" -> {
+                val viewModel: DashboardApiViewModel = koinViewModel()
+
                 Dashboard(modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding))
+                    .padding(innerPadding), viewModel
+                )
 
             }
 
             "perfil" -> {
                 Profile(modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding))
+                    .padding(innerPadding),
+                    userName,
+                    email,
+                    position
+                )
 
             }
 
