@@ -13,15 +13,10 @@ import com.example.gestok.ui.theme.GestokTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val userName = intent.getStringExtra("userName")
-        val email = intent.getStringExtra("email")
-        val position = intent.getStringExtra("position")
-
         enableEdgeToEdge()
         setContent {
             GestokTheme {
-                LayoutScreen(this, userName!!, email!!, position!!)
+                LayoutScreen(this)
             }
         }
     }

@@ -4,9 +4,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.gestok.screens.login.LoggedInUser
+import com.example.gestok.screens.login.UserSession
 
-abstract class LoginViewModel(open val _usuarioLogado : LoggedInUser) : ViewModel() {
+abstract class LoginViewModel(open val _sessaoUsuario : UserSession) : ViewModel() {
 
     protected var _emailErro by mutableStateOf<String?>(null)
     protected var _senhaErro by mutableStateOf<String?>(null)
@@ -16,9 +16,6 @@ abstract class LoginViewModel(open val _usuarioLogado : LoggedInUser) : ViewMode
 
     val senhaErro: String?
         get() = _senhaErro
-
-    val usuarioLogado: LoggedInUser
-        get() = _usuarioLogado
 
     fun limparErros() {
         _emailErro = null

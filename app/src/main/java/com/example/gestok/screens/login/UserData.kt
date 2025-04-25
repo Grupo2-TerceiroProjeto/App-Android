@@ -5,7 +5,7 @@ data class LoginUser(
     val senha: String
 )
 
-data class LoggedInUser(
+data class UserSession(
     var nome: String = "",
     var login: String = "",
     var cargo: String = "",

@@ -18,15 +18,10 @@ import com.example.gestok.components.orderpage.OrderData
 import com.example.gestok.components.productpage.IngredientData
 import com.example.gestok.components.productpage.ProductContent
 import com.example.gestok.components.productpage.ProductData
-import com.example.gestok.network.service.DashboardService
 import com.example.gestok.screens.internalScreens.dashboard.Dashboard
 import com.example.gestok.screens.internalScreens.Profile
-import com.example.gestok.screens.login.LoggedInUser
 import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
-import com.example.gestok.viewModel.login.LoginApiViewModel
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.koinInject
-import org.koin.core.parameter.parametersOf
 
 
 //Ingredientes testes:
@@ -67,10 +62,7 @@ val listaFuncionarios: List<RegisterData> = listOf(luca, emilly, vitor, thiago, 
 
 @Composable
 fun LayoutScreen(
-    activity: Activity,
-    userName: String,
-    email: String,
-    position: String
+    activity: Activity
 
 ) {
 
@@ -78,7 +70,7 @@ fun LayoutScreen(
 
     Scaffold(Modifier.background(Color(0xFFF3F3F3)), //COR DO FUNDO DA TELA
         topBar = {
-            Topbar(activity, userName)
+            Topbar(activity)
         },
         bottomBar = {
             BottomNavBar() { navItem ->
@@ -103,10 +95,7 @@ fun LayoutScreen(
             "perfil" -> {
                 Profile(modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding),
-                    userName,
-                    email,
-                    position
+                    .padding(innerPadding)
                 )
 
             }

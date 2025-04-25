@@ -40,17 +40,11 @@ fun Login(navController: NavController, viewModel: LoginApiViewModel) {
 
     val erroEmail = viewModel.emailErro
     val erroSenha = viewModel.senhaErro
-    val usuarioLogado = viewModel.usuarioLogado
 
-    if (viewModel.autenticado.value) {
-
-        usuarioLogado?.let { user ->
-            val mainActivity = Intent(contexto, MainActivity::class.java).apply {
-                putExtra("userName", user.nome)
-                putExtra("email", user.login)
-                putExtra("position", user.cargo)
-            }
-            contexto.startActivity(mainActivity)
+    LaunchedEffect(viewModel.autenticado.value) {
+        if (viewModel.autenticado.value) {
+            val intent = Intent(contexto, MainActivity::class.java)
+            contexto.startActivity(intent)
         }
     }
 
@@ -97,9 +91,10 @@ fun Login(navController: NavController, viewModel: LoginApiViewModel) {
                     text = "Esqueci minha senha",
                     color = LightBlue,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.clickable {
-                        navController.navigate("passwordRecovery")
-                    }
+                    modifier = Modifier
+                        .clickable {
+                            navController.navigate("passwordRecovery")
+                        }
                         .padding(top = 12.dp, bottom = 30.dp)
                 )
 

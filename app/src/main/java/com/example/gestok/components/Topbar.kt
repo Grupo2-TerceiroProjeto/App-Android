@@ -20,12 +20,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.AuthActivity
 import com.example.gestok.R
+import com.example.gestok.screens.login.UserSession
+import org.koin.compose.koinInject
 
 @Composable
 fun Topbar(
-    activity: Activity,
-    userName: String
+    activity: Activity
 ){
+    val sessaoUsuario = koinInject<UserSession>()
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -42,7 +45,7 @@ fun Topbar(
 
 
     ){
-        Text (text = "Olá, $userName",
+        Text (text = "Olá, ${sessaoUsuario.nome}",
             color = Color.White,
             fontSize = 20.sp,
             modifier = Modifier.padding(end = 210.dp)

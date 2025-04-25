@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.components.LineChartScreen
 import com.example.gestok.components.PieChartScreen
-import com.example.gestok.screens.login.LoggedInUser
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue

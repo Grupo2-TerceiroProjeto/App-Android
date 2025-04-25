@@ -26,19 +26,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gestok.screens.login.UserSession
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.MediumGray
 import com.example.gestok.ui.theme.White
+import org.koin.compose.koinInject
 
 @Composable
 fun Profile(
-    modifier: Modifier = Modifier,
-    userName: String,
-    email: String,
-    position: String
+    modifier: Modifier = Modifier
 ) {
+
+    val sessaoUsuario = koinInject<UserSession>()
 
     LazyColumn(
         modifier = modifier
@@ -89,7 +90,7 @@ fun Profile(
                 )
 
                 TextField(
-                    value = userName,
+                    value = sessaoUsuario.nome,
                     onValueChange = {},
                     enabled = false,
                     trailingIcon = {
@@ -118,7 +119,7 @@ fun Profile(
                 )
 
                 TextField(
-                    value = email,
+                    value = sessaoUsuario.login,
                     onValueChange = {},
                     enabled = false,
                     trailingIcon = {
@@ -147,7 +148,7 @@ fun Profile(
                 )
 
                 TextField(
-                    value = position,
+                    value = sessaoUsuario.cargo,
                     onValueChange = {},
                     enabled = false,
                     trailingIcon = {

@@ -4,14 +4,14 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.example.gestok.network.service.AuthService
-import com.example.gestok.screens.login.LoggedInUser
 import com.example.gestok.screens.login.LoginUser
+import com.example.gestok.screens.login.UserSession
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class LoginApiViewModel(
-    private val api: AuthService, override val _usuarioLogado : LoggedInUser
-) : LoginViewModel(_usuarioLogado) {
+    private val api: AuthService, override val _sessaoUsuario : UserSession
+) : LoginViewModel(_sessaoUsuario) {
 
     val autenticado =  mutableStateOf(false)
 
@@ -38,11 +38,11 @@ class LoginApiViewModel(
 
                 val resposta = api.login(LoginUser(email, senha))
 
-                _usuarioLogado.nome = resposta.nome
-                _usuarioLogado.login = resposta.login
-                _usuarioLogado.cargo = resposta.cargo
-                _usuarioLogado.token = resposta.token
-                _usuarioLogado.idEmpresa = resposta.idEmpresa
+                _sessaoUsuario.nome = resposta.nome
+                _sessaoUsuario.login = resposta.login
+                _sessaoUsuario.cargo = resposta.cargo
+                _sessaoUsuario.token = resposta.token
+                _sessaoUsuario.idEmpresa = resposta.idEmpresa
 
                 autenticado.value = true
 
