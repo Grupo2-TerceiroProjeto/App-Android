@@ -1,6 +1,7 @@
 package com.example.gestok.components.productpage.dialogs
 
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +29,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -37,10 +39,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.gestok.R
 import com.example.gestok.components.productpage.IngredientData
 import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.ui.theme.Black
@@ -48,6 +52,7 @@ import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.White
+import kotlinx.coroutines.delay
 
 @Composable
 fun ProductEdit(
@@ -55,11 +60,21 @@ fun ProductEdit(
     onDismiss: () -> Unit,
     onConfirm: (String, Int, String, Double, List<IngredientData>) -> Unit
 ) {
+
+
+
+
+    var showCreateIngredientDialog by remember { mutableStateOf(false) }
+
+
     var editedProduto by remember { mutableStateOf(product.produto) }
     var editedEstoque by remember { mutableStateOf(product.estoque.toString()) }
     var editedCategoria by remember { mutableStateOf(product.categoria) }
     var editedValor by remember { mutableStateOf(product.valor.toString()) }
     var editedIngredientes by remember { mutableStateOf(product.ingredientes) }
+
+    var ingredientUpdateTrigger by remember { mutableIntStateOf(0) }
+
 
     var expanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf("Selecione uma opção") }
@@ -342,6 +357,18 @@ fun ProductEdit(
                             color = Blue,
                             fontSize = 20.sp
                         )
+
+                        Button(onClick = {
+
+                            showCreateIngredientDialog = true
+
+                        }, colors = ButtonDefaults.buttonColors(Blue)) {
+                            Text(
+                                "+ Ingrediente"
+                            )
+                        }
+
+
                                             }
                     Spacer(modifier = Modifier.height(10.dp))
 
@@ -352,7 +379,9 @@ fun ProductEdit(
 
                 item {
                     Column(Modifier.padding(start = 20.dp, end = 20.dp)) {
-                        IngredientBlock(product)
+                        key(ingredientUpdateTrigger) {
+                            IngredientBlock(editedIngredientes)
+                        }
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                 }
@@ -387,6 +416,18 @@ fun ProductEdit(
         }
 
 
+    }
+
+    if (showCreateIngredientDialog) {
+        IngredientCreate(
+            onDismiss = { showCreateIngredientDialog = false },
+            onConfirm = { name, quantity, unit ->
+                val newIngredient = IngredientData(nome = name, quantidade = quantity, unidade = unit)
+                editedIngredientes.add(newIngredient)
+                showCreateIngredientDialog = false
+                ingredientUpdateTrigger++
+            }
+        )
     }
 
 }

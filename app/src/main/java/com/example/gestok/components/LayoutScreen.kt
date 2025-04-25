@@ -1,9 +1,7 @@
 package com.example.gestok.components
 
-//import android.graphics.drawable.Icon
-
-//import androidx.compose.foundation.layout.FlowRowScopeInstance.align
 import BottomNavBar
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -13,7 +11,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavController
 import com.example.gestok.components.adminpage.AdminContent
 import com.example.gestok.components.adminpage.RegisterData
 import com.example.gestok.components.orderpage.OrderContent
@@ -21,8 +18,10 @@ import com.example.gestok.components.orderpage.OrderData
 import com.example.gestok.components.productpage.IngredientData
 import com.example.gestok.components.productpage.ProductContent
 import com.example.gestok.components.productpage.ProductData
-import com.example.gestok.screens.internalscreens.Dashboard
-import com.example.gestok.screens.internalscreens.Profile
+import com.example.gestok.screens.internalScreens.dashboard.Dashboard
+import com.example.gestok.screens.internalScreens.Profile
+import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
+import org.koin.androidx.compose.koinViewModel
 
 
 //Ingredientes testes:
@@ -52,25 +51,26 @@ val vagner = RegisterData("Vagner Benedito", "Chef de Cozinha", "vagner.benedito
 val kauan = RegisterData("Kauan Parente", "Estoquista", "kauan.parente@sptech.com")
 
 //Produtos testes:
-val coxinha = ProductData("Coxinha", 10, "Salgados", 100.10, listOf(margarina, farinha, frango, ovo), true)
-val esfirra = ProductData("Esfirra", 15, "Salgados", 80.50, listOf(farinha, margarina, queijo, presunto), true)
-val pastel = ProductData("Pastel", 20, "Salgados", 90.00, listOf(farinha, ovo, queijo, presunto, oleo), true)
-val brigadeiro = ProductData("Brigadeiro", 30, "Doces", 60.75, listOf(chocolate, leite, acucar, margarina), true)
-val boloDeChocolate = ProductData("Bolo de Chocolate", 5, "Doces", 120.00, listOf(farinha, leite, chocolate, ovo, fermento, acucar), true)
+val coxinha = ProductData("Coxinha", 10, "Salgados", 100.10, mutableListOf(margarina, farinha, frango, ovo), true)
+val esfirra = ProductData("Esfirra", 15, "Salgados", 80.50, mutableListOf(farinha, margarina, queijo, presunto), true)
+val pastel = ProductData("Pastel", 20, "Salgados", 90.00, mutableListOf(farinha, ovo, queijo, presunto, oleo), true)
+val brigadeiro = ProductData("Brigadeiro", 30, "Doces", 60.75, mutableListOf(chocolate, leite, acucar, margarina), true)
+val boloDeChocolate = ProductData("Bolo de Chocolate", 5, "Doces", 120.00, mutableListOf(farinha, leite, chocolate, ovo, fermento, acucar), true)
 
 val listaProdutos: List<ProductData> = listOf(coxinha, esfirra, pastel, brigadeiro, boloDeChocolate)
 val listaFuncionarios: List<RegisterData> = listOf(luca, emilly, vitor, thiago, vagner, kauan)
 
 @Composable
 fun LayoutScreen(
-    mainNavController: NavController
+    activity: Activity
+
 ) {
 
     val currentPage = remember { mutableStateOf("dashboard") }
 
     Scaffold(Modifier.background(Color(0xFFF3F3F3)), //COR DO FUNDO DA TELA
         topBar = {
-            Topbar(mainNavController)
+            Topbar(activity)
         },
         bottomBar = {
             BottomNavBar() { navItem ->
@@ -83,16 +83,20 @@ fun LayoutScreen(
         when (currentPage.value) {
 
             "dashboard" -> {
+                val viewModel: DashboardApiViewModel = koinViewModel()
+
                 Dashboard(modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding))
+                    .padding(innerPadding), viewModel
+                )
 
             }
 
             "perfil" -> {
                 Profile(modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding))
+                    .padding(innerPadding)
+                )
 
             }
 

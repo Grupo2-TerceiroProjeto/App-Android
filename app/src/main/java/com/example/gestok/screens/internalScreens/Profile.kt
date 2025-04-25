@@ -1,24 +1,17 @@
-package com.example.gestok.screens.internalscreens
+package com.example.gestok.screens.internalScreens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -26,34 +19,27 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.gestok.R
-import com.example.gestok.components.InputLabel
+import com.example.gestok.screens.login.UserSession
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.MediumGray
 import com.example.gestok.ui.theme.White
+import org.koin.compose.koinInject
 
 @Composable
-fun Profile(modifier: Modifier = Modifier) {
+fun Profile(
+    modifier: Modifier = Modifier
+) {
 
-    var nome by remember { mutableStateOf("Jessica") }
-    var email by remember { mutableStateOf("jessicaDoces&Salgados@gmail.com") }
-    var cargo by remember { mutableStateOf("Administrador") }
-
+    val sessaoUsuario = koinInject<UserSession>()
 
     LazyColumn(
         modifier = modifier
@@ -104,7 +90,7 @@ fun Profile(modifier: Modifier = Modifier) {
                 )
 
                 TextField(
-                    value = nome,
+                    value = sessaoUsuario.nome,
                     onValueChange = {},
                     enabled = false,
                     trailingIcon = {
@@ -123,7 +109,6 @@ fun Profile(modifier: Modifier = Modifier) {
                     singleLine = true
                 )
 
-//                Spacer(modifier = Modifier.height(5.dp))
 
                 //--EMAIL -----------------------------------------
                 Text(
@@ -134,7 +119,7 @@ fun Profile(modifier: Modifier = Modifier) {
                 )
 
                 TextField(
-                    value = email,
+                    value = sessaoUsuario.login,
                     onValueChange = {},
                     enabled = false,
                     trailingIcon = {
@@ -153,7 +138,6 @@ fun Profile(modifier: Modifier = Modifier) {
                     singleLine = true
                 )
 
-//                Spacer(modifier = Modifier.height(5.dp))
 
                 //--CARGO -----------------------------------------
                 Text(
@@ -164,7 +148,7 @@ fun Profile(modifier: Modifier = Modifier) {
                 )
 
                 TextField(
-                    value = cargo,
+                    value = sessaoUsuario.cargo,
                     onValueChange = {},
                     enabled = false,
                     trailingIcon = {
@@ -183,13 +167,8 @@ fun Profile(modifier: Modifier = Modifier) {
                     singleLine = true
                 )
 
-
-
-
             }
         }
     }
-
-//
 
 }

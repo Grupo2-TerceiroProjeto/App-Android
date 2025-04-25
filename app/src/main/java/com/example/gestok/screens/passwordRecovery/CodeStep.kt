@@ -1,4 +1,4 @@
-package com.example.gestok.screens.passwordrecovery
+package com.example.gestok.screens.passwordRecovery
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,9 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -29,8 +27,6 @@ import com.example.gestok.components.Input
 import com.example.gestok.components.PrimaryButton
 import com.example.gestok.components.SecundaryButton
 import com.example.gestok.ui.theme.Black
-import kotlinx.coroutines.delay
-import java.util.Locale
 
 @Composable
 fun CodeStep(navController: NavController) {

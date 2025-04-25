@@ -3,7 +3,6 @@ package com.example.gestok.components.productpage.dialogs
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,23 +22,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.gestok.R
-import com.example.gestok.components.productpage.ProductData
+import com.example.gestok.components.productpage.IngredientData
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.LightGray
 
 @Composable
 fun IngredientBlock(
-    produto: ProductData
+    produto: MutableList<IngredientData>
 ) {
 
-    produto.ingredientes.forEach { ingredient ->
+    produto.forEach { ingredient ->
 
-      Row (Modifier
-          .fillMaxWidth(),
-
-          verticalAlignment = Alignment.CenterVertically,
-          horizontalArrangement = Arrangement.SpaceBetween){
-
+        Row (Modifier
+            .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween){
 
             Row(
                 Modifier
@@ -85,13 +82,13 @@ fun IngredientBlock(
                 Image(
                     painter = painterResource(id = R.drawable.edicao_f),
                     contentDescription = "Editar",
-                    )
+                )
 
 
             }
 
         }
-            Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(15.dp))
 
 
 

@@ -84,7 +84,17 @@ fun PieChartScreen(
             }
         }
 
+        Spacer(modifier = Modifier.height(8.dp))
 
+        selectedSlice?.let { (label, value) ->
+            val color = slices.find { it.label == label }?.color ?: Color.Black
+            Text(
+                text = "$label: $value",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = color
+            )
+        }
 
         PieChart(
             modifier = Modifier
@@ -97,16 +107,6 @@ fun PieChartScreen(
                 selectedSlice = slice.label to slice.value.toInt()
             }
         )
-
-        selectedSlice?.let { (label, value) ->
-            val color = slices.find { it.label == label }?.color ?: Color.Black
-            Text(
-                text = "$label: $value",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = color
-            )
-        }
     }
 }
 
