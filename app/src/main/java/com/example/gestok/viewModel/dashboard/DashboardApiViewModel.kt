@@ -13,6 +13,8 @@ import com.example.gestok.screens.login.UserSession
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import retrofit2.HttpException
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 class DashboardApiViewModel(private val api: DashboardService, override val sessaoUsuario : UserSession) : DashboardViewModel(sessaoUsuario) {
 
@@ -44,7 +46,7 @@ class DashboardApiViewModel(private val api: DashboardService, override val sess
 
                 if (e.code() == 500) _carregouPedidos = true
 
-                Log.e("API", "Nem um pedido encontrado: ${e.message}")
+                Log.w("API", "Nem um pedido encontrado: ${e.message}  ${_carregouPedidos}")
 
             } catch (e: Exception) {
                 _dashboardErro = "Erro ao obter dados"
@@ -104,7 +106,7 @@ class DashboardApiViewModel(private val api: DashboardService, override val sess
                     Log.d("API", "Média: ${_mediaAvaliacao}")
 
                 } else {
-
+                    Log.w("API", "Nenhuma avaliação encontrada")
                     _mediaAvaliacao = 0.0
                 }
 
@@ -115,6 +117,79 @@ class DashboardApiViewModel(private val api: DashboardService, override val sess
                 Log.e("API", "Erro ao obter dados: ${e.message}")
             }
         }
+    }
+
+    override fun getValorMedioPedidos(): Double {
+        val totalPedidos = pedidos.size
+        val totalValor = pedidos.sumOf { it.totalCompra ?: 0.0 }
+
+        return if (totalPedidos > 0) {
+            val media = totalValor / totalPedidos
+            val resultado = BigDecimal(media).setScale(2, RoundingMode.HALF_UP).toDouble()
+            Log.d("API", "Valor médio calculado: $resultado")
+            resultado
+        } else {
+            Log.w("API", "Nenhum pedido encontrado para calcular média")
+            0.0
+        }
+    }
+
+    override fun getFaturamentoMesAtual(): Double {
+        val hoje = LocalDate.now()
+        val primeiroDiaMes = hoje.withDayOfMonth(1)
+        val ultimoDiaMes = hoje.withDayOfMonth(hoje.lengthOfMonth())
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+        val pedidosFiltrados = pedidos.filter { pedido ->
+            val dataEntrega = pedido.dataEntrega?.let {
+                try {
+                    LocalDate.parse(it, formatter)
+                } catch (e: Exception) {
+                    Log.e("API", "Erro ao converter data de entrega: ${pedido.dataEntrega}", e)
+                    null
+                }
+            }
+
+            pedido.status == "Concluído" &&
+                    dataEntrega != null &&
+                    dataEntrega >= primeiroDiaMes &&
+                    dataEntrega <= ultimoDiaMes
+        }
+
+        val total = pedidosFiltrados.sumOf { it.totalCompra ?: 0.0 }
+        Log.d("API", "Faturamento mês atual: $total")
+
+        return BigDecimal(total).setScale(2, RoundingMode.HALF_EVEN).toDouble()
+
+    }
+
+    override fun getFaturamentoMesAnterior(): Double {
+        val hoje = LocalDate.now()
+        val primeiroDiaMesAnterior = hoje.minusMonths(1).withDayOfMonth(1)
+        val ultimoDiaMesAnterior = hoje.minusMonths(1).withDayOfMonth(hoje.minusMonths(1).lengthOfMonth())
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+        val pedidosFiltrados = pedidos.filter { pedido ->
+            val dataEntrega = pedido.dataEntrega?.let {
+                try {
+                    LocalDate.parse(it, formatter)
+                } catch (e: Exception) {
+                    Log.e("API", "Erro ao converter data de entrega: ${pedido.dataEntrega}", e)
+                    null
+                }
+            }
+
+            pedido.status == "Concluído" &&
+                    dataEntrega != null &&
+                    dataEntrega >= primeiroDiaMesAnterior &&
+                    dataEntrega <= ultimoDiaMesAnterior
+        }
+
+        val total = pedidosFiltrados.sumOf { it.totalCompra ?: 0.0 }
+        Log.d("API", "Faturamento mês anterior: $total")
+
+        return BigDecimal(total).setScale(2, RoundingMode.HALF_EVEN).toDouble()
+
     }
 
 }

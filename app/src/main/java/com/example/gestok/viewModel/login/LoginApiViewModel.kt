@@ -45,12 +45,14 @@ class LoginApiViewModel(
                 _sessaoUsuario.idEmpresa = resposta.idEmpresa
 
                 autenticado.value = true
+                Log.d("API", "Usuário autenticado com sucesso")
 
             } catch (e: HttpException) {
                 if (e.code() == 403) {
                     _senhaErro = "Credenciais inválidas"
                 } else {
                     _senhaErro = "Erro ao processar solicitação"
+                    Log.d("API", "Erro ao processar solicitação: ${e.message}")
                 }
             } catch (e: Exception) {
                 _senhaErro = "Erro ao conectar ao servidor"

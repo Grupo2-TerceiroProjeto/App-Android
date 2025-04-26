@@ -41,5 +41,11 @@ abstract class DashboardViewModel(open val sessaoUsuario : UserSession) : ViewMo
 
     abstract fun getMediaAvaliacao()
 
+    abstract fun getValorMedioPedidos(): Double
+
+    abstract fun getFaturamentoMesAtual(): Double
+
+    abstract fun getFaturamentoMesAnterior(): Double
+
 
 }
