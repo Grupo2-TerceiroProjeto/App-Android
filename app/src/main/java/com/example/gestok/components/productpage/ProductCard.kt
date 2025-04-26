@@ -195,9 +195,7 @@ fun ProductData(productData: ProductData){
     if(showExcludeConfirmDialog){
         ExcludeConfirmationDialog(
             onDismiss = { showExcludeConfirmDialog = false },
-            onConfirm = {
-                showExcludeConfirmDialog = false
-            }
+            onConfirm = { showExcludeConfirmDialog = false }
         )
     }
 

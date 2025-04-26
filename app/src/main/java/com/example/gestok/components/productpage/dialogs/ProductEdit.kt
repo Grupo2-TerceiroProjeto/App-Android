@@ -72,8 +72,9 @@ fun ProductEdit(
     var editedCategoria by remember { mutableStateOf(product.categoria) }
     var editedValor by remember { mutableStateOf(product.valor.toString()) }
     var editedIngredientes by remember { mutableStateOf(product.ingredientes) }
-
     var ingredientUpdateTrigger by remember { mutableIntStateOf(0) }
+
+    var showCancelConfirmDialog by remember { mutableStateOf(false) }
 
 
     var expanded by remember { mutableStateOf(false) }
@@ -115,7 +116,7 @@ fun ProductEdit(
                             fontSize = 20.sp
                         )
 
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(Blue)) {
+                        Button(onClick = { showCancelConfirmDialog = true }, colors = ButtonDefaults.buttonColors(Blue)) {
                             Icon(
                                 imageVector = Icons.Default.Close,
                                 contentDescription = null,
@@ -126,6 +127,8 @@ fun ProductEdit(
 
                     }
                 }
+
+
 
                 //--- FOTO DO PRODUTO
                 item {
@@ -388,8 +391,10 @@ fun ProductEdit(
 
                 //-- BOTÕES CANCELAR E CONCLUIR ----------------------------------------
                 item {
-                    Row(Modifier.fillMaxWidth().padding(20.dp), horizontalArrangement = Arrangement.SpaceBetween){
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(Blue)) {
+                    Row(Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp), horizontalArrangement = Arrangement.SpaceBetween){
+                        Button(onClick = { showCancelConfirmDialog = true }, colors = ButtonDefaults.buttonColors(Blue)) {
                             Icon(
                                 imageVector = Icons.Default.Clear,
                                 contentDescription = null,
@@ -398,7 +403,8 @@ fun ProductEdit(
                                 )
                             Text("Cancelar", color = White)
                         }
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(LightBlue)) {
+                        Button(onClick = onDismiss,
+                            colors = ButtonDefaults.buttonColors(LightBlue)) {
                             Icon(
                                 imageVector = Icons.Default.Check,
                                 contentDescription = null,
@@ -422,11 +428,26 @@ fun ProductEdit(
         IngredientCreate(
             onDismiss = { showCreateIngredientDialog = false },
             onConfirm = { name, quantity, unit ->
-                val newIngredient = IngredientData(nome = name, quantidade = quantity, unidade = unit)
+                val newIngredient = IngredientData(
+                    nome = if(name == ""){"Indefinido"} else {name},
+                    quantidade = quantity,
+                    unidade = unit)
                 editedIngredientes.add(newIngredient)
                 showCreateIngredientDialog = false
                 ingredientUpdateTrigger++
             }
+        )
+    }
+
+    if(showCancelConfirmDialog){
+        CancelConfirmationDialog(
+            onDismiss = {
+                showCancelConfirmDialog = false
+            },
+            onConfirm = {
+                showCancelConfirmDialog = false
+            },
+            externalOnDismiss = {onDismiss()}
         )
     }
 

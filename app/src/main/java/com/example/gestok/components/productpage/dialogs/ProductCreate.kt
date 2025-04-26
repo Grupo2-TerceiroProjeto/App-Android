@@ -1,5 +1,6 @@
 package com.example.gestok.components.productpage.dialogs
 
+import android.util.Log
 import androidx.compose.foundation.background
 import com.example.gestok.components.orderpage.dialogs.PedidoBlock
 
@@ -33,6 +34,7 @@ import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.White
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -45,21 +47,17 @@ fun ProductCreateDialog(
     var editedCategoria by remember { mutableStateOf("Selecione uma opção") }
     var editedValor by remember { mutableStateOf("") }
     var editedIngredientes by remember { mutableStateOf(emptyList<IngredientData>()) }
+    var showCancelConfirmDialog by remember { mutableStateOf(false) }
+
 
     var expanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf("Selecione uma opção") }
 
-    Dialog(onDismissRequest = onDismiss) {
+    Dialog(onDismissRequest = { onDismiss() }) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth(),
-
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            ),
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 8.dp
-            )
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
             LazyColumn(
                 modifier = Modifier
@@ -70,6 +68,7 @@ fun ProductCreateDialog(
 
                 // -- HEADER -------------------------
                 item {
+                    Spacer(modifier = Modifier.height(20.dp))
                     Row (
                         Modifier
                             .fillMaxWidth()
@@ -85,7 +84,7 @@ fun ProductCreateDialog(
                             fontSize = 20.sp
                         )
 
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(Blue)) {
+                        Button(onClick = { showCancelConfirmDialog = true }, colors = ButtonDefaults.buttonColors(Blue)) {
                             Icon(
                                 imageVector = Icons.Default.Close,
                                 contentDescription = null,
@@ -96,7 +95,6 @@ fun ProductCreateDialog(
 
                     }
                 }
-
                 //--- FOTO DO PRODUTO
                 item {
 
@@ -350,8 +348,10 @@ fun ProductCreateDialog(
 
                 //-- BOTÕES CANCELAR E CONCLUIR ----------------------------------------
                 item {
-                    Row(Modifier.fillMaxWidth().padding(20.dp), horizontalArrangement = Arrangement.SpaceBetween){
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(Blue)) {
+                    Row(Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp), horizontalArrangement = Arrangement.SpaceBetween){
+                        Button(onClick = { showCancelConfirmDialog = true }, colors = ButtonDefaults.buttonColors(Blue)) {
                             Icon(
                                 imageVector = Icons.Default.Clear,
                                 contentDescription = null,
@@ -360,7 +360,8 @@ fun ProductCreateDialog(
                                 )
                             Text("Cancelar", color = White)
                         }
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(LightBlue)) {
+                        Button(onClick = onDismiss,
+                            colors = ButtonDefaults.buttonColors(LightBlue)) {
                             Icon(
                                 imageVector = Icons.Default.Check,
                                 contentDescription = null,
@@ -378,6 +379,24 @@ fun ProductCreateDialog(
         }
 
 
+
+
+
+
+
     }
+    if(showCancelConfirmDialog){
+        CancelConfirmationDialog(
+            onDismiss = {
+                showCancelConfirmDialog = false
+            },
+            onConfirm = {
+                showCancelConfirmDialog = false
+            },
+            externalOnDismiss = {onDismiss()}
+        )
+    }
+
+
 
 }

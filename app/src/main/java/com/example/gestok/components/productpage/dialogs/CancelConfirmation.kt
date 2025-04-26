@@ -26,13 +26,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.gestok.ui.theme.Blue
+import com.example.gestok.ui.theme.DarkBlue
 import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.White
 
 @Composable
-fun ExcludeConfirmationDialog(
+fun CancelConfirmationDialog(
     onDismiss: () -> Unit,
-    onConfirm: @Composable () -> Unit
+    onConfirm: () -> Unit,
+    externalOnDismiss: () -> Unit
 ){
 
     Dialog(onDismissRequest = onDismiss) {
@@ -52,13 +54,13 @@ fun ExcludeConfirmationDialog(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Text("Excluir produto", fontWeight = W600, color = Blue, fontSize = 25.sp)
+                        Text("Cancelar", fontWeight = W600, color = Blue, fontSize = 25.sp)
                     }
 
                     Row(   Modifier.fillMaxWidth().padding(20.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center){
-                        Text("Você tem certeza que deseja excluir o produto?", textAlign = TextAlign.Center)
+                        Text("Você tem certeza que deseja cancelar a operação sem salvar?", textAlign = TextAlign.Center)
                     }
                     Spacer(modifier = Modifier.height(5.dp))
 
@@ -70,6 +72,7 @@ fun ExcludeConfirmationDialog(
                             onClick = {onDismiss()},
                             colors = ButtonDefaults.buttonColors(LightBlue)
                         ) {
+
                             Icon(
                                 imageVector = Icons.Default.Close,
                                 contentDescription = null,
@@ -79,7 +82,9 @@ fun ExcludeConfirmationDialog(
                             Text("Não")
                         }
                         Button(
-                            onClick = {onDismiss()},
+                            onClick = {onConfirm()
+                                        externalOnDismiss()
+                                      },
                             colors = ButtonDefaults.buttonColors(Blue)
                         ) {
                             Icon(
