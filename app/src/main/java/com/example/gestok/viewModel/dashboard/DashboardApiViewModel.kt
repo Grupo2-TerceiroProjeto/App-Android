@@ -16,6 +16,8 @@ import com.google.gson.Gson
 import retrofit2.HttpException
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.time.format.TextStyle
+import java.util.Locale
 
 class DashboardApiViewModel(private val api: DashboardService, override val sessaoUsuario : UserSession) : DashboardViewModel(sessaoUsuario) {
 
@@ -215,6 +217,80 @@ class DashboardApiViewModel(private val api: DashboardService, override val sess
             cancelado = cancelado
         )
 
+    }
+
+    override fun getFaturamentoUltimos6Meses(): Pair<List<Float>, List<String>> {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val hoje = LocalDate.now()
+
+        val meses = (0..5).map { hoje.minusMonths(it.toLong()).withDayOfMonth(1) }.reversed()
+
+        val labels = meses.map {
+            val nomeMes = it.month.getDisplayName(TextStyle.SHORT, Locale("pt", "BR"))
+            "${nomeMes.replaceFirstChar { c -> c.uppercase() }} ${it.year}"
+        }
+
+        val faturamentos = meses.map { mes ->
+            val inicio = mes
+            val fim = mes.withDayOfMonth(mes.lengthOfMonth())
+
+            val total = pedidos.filter { pedido ->
+                val dataEntrega = pedido.dataEntrega?.let {
+                    try {
+                        LocalDate.parse(it, formatter)
+                    } catch (e: Exception) {
+                        Log.d("API", "Erro ao converter data de entrega: ${pedido.dataEntrega}", e)
+                        null
+                    }
+                }
+
+                pedido.status == "Concluído" &&
+                        dataEntrega != null &&
+                        dataEntrega >= inicio &&
+                        dataEntrega <= fim
+
+            }.sumOf { it.totalCompra ?: 0.0 }
+
+            BigDecimal(total).setScale(2, RoundingMode.HALF_EVEN).toFloat()
+        }
+
+        return Pair(faturamentos, labels)
+
+    }
+
+    override fun getPedidosPorMes(): Pair<List<Int>, List<String>> {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val hoje = LocalDate.now()
+
+        val meses = (0..5).map { hoje.minusMonths(it.toLong()).withDayOfMonth(1) }.reversed()
+
+        val labels = meses.map {
+            val nomeMes = it.month.getDisplayName(TextStyle.SHORT, Locale("pt", "BR"))
+            "${nomeMes.replaceFirstChar { c -> c.uppercase() }} ${it.year}"
+        }
+
+        val quantidades = meses.map { mes ->
+            val inicio = mes
+            val fim = mes.withDayOfMonth(mes.lengthOfMonth())
+
+            pedidos.count { pedido ->
+                val dataEntrega = pedido.dataEntrega?.let {
+                    try {
+                        LocalDate.parse(it, formatter)
+                    } catch (e: Exception) {
+                        Log.d("API", "Erro ao converter data de entrega: ${pedido.dataEntrega}", e)
+                        null
+                    }
+                }
+
+                pedido.status == "Concluído" &&
+                        dataEntrega != null &&
+                        dataEntrega >= inicio &&
+                        dataEntrega <= fim
+            }
+        }
+
+        return Pair(quantidades, labels)
     }
 
 }

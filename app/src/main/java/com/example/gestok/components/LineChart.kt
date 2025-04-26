@@ -29,6 +29,8 @@ import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 @Composable
 fun LineChartScreen(
@@ -47,11 +49,11 @@ fun LineChartScreen(
 
     val step = (maxY - minY) / 4
     val yLabels = List(5) { index ->
-
+        val value = minY + step * index
         if (isIntData) {
-            (minY + step * index).toInt().toString()
+            (value.toInt()).toString()
         } else {
-            (minY + step * index).toString()
+            BigDecimal(value.toDouble()).setScale(2, RoundingMode.HALF_EVEN).toString()
         }
     }
 
@@ -123,7 +125,7 @@ fun LineChartScreen(
         LineChart(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp),
+                .height(300.dp),
             lineChartData = lineChartData
         )
     }

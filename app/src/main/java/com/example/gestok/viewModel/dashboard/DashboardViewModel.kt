@@ -50,4 +50,8 @@ abstract class DashboardViewModel(open val sessaoUsuario : UserSession) : ViewMo
 
     abstract fun getPedidosPorCategoria(): OrderStatus
 
+    abstract fun getFaturamentoUltimos6Meses(): Pair<List<Float>, List<String>>
+
+    abstract fun getPedidosPorMes(): Pair<List<Int>, List<String>>
+
 }

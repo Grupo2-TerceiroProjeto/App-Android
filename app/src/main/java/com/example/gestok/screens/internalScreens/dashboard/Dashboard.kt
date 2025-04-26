@@ -64,6 +64,9 @@ fun Dashboard(
         mutableStateOf(OrderStatus(0f, 0f, 0f, 0f))
     }
 
+    val (faturamentos, meses) = viewModel.getFaturamentoUltimos6Meses()
+    val (quantidadesPedidos, mesesPedidos) = viewModel.getPedidosPorMes()
+
     val erroDashboard = viewModel.dashboardErro
 
     LaunchedEffect(Unit) {
@@ -382,8 +385,8 @@ fun Dashboard(
                     ) {
                         LineChartScreen(
                             title = "Valor Arrecadado por Mês (R$)",
-                            data = listOf(20f, 250f, 300f),
-                            xLabels = listOf("Jan 2025", "Fev 2025", "Mar 2025")
+                            data = faturamentos,
+                            xLabels = meses
                         )
                     }
                 }
@@ -412,8 +415,8 @@ fun Dashboard(
                     ) {
                         LineChartScreen(
                             title = "Quantidade de pedidos por mês",
-                            data = listOf(5, 25, 50),
-                            xLabels = listOf("Jan 2025", "Fev 2025", "Mar 2025")
+                            data = quantidadesPedidos,
+                            xLabels = mesesPedidos
                         )
                     }
 
