@@ -1,6 +1,7 @@
 package com.example.gestok.screens.internalScreens.dashboard
 
 import android.util.Log
+import androidx.collection.mutableFloatListOf
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,7 +24,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -35,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.components.LineChartScreen
 import com.example.gestok.components.PieChartScreen
+import com.example.gestok.screens.internalScreens.dashboard.data.OrderStatus
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
@@ -56,6 +60,10 @@ fun Dashboard(
     var kpiFaturamentoMesAtual by remember { mutableDoubleStateOf(0.0) }
     var kpiFaturamentoMesAnterior by remember { mutableDoubleStateOf(0.0) }
 
+    var pedidosPorStatus by remember {
+        mutableStateOf(OrderStatus(0f, 0f, 0f, 0f))
+    }
+
     val erroDashboard = viewModel.dashboardErro
 
     LaunchedEffect(Unit) {
@@ -69,6 +77,7 @@ fun Dashboard(
             kpiValorMedioPedidos = viewModel.getValorMedioPedidos()
             kpiFaturamentoMesAtual= viewModel.getFaturamentoMesAtual()
             kpiFaturamentoMesAnterior = viewModel.getFaturamentoMesAnterior()
+            pedidosPorStatus = viewModel.getPedidosPorCategoria()
 
             viewModel.getMediaAvaliacao()
 
@@ -301,7 +310,7 @@ fun Dashboard(
 
                             Text(
                                 text = "Ultimo mês: R$$kpiFaturamentoMesAnterior",
-                                fontSize = 10.sp,
+                                fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Black
 
@@ -339,7 +348,12 @@ fun Dashboard(
 
                         PieChartScreen(
                             title = "Quantidade de Pedidos por Status",
-                            data = listOf(30f, 25f, 20f, 15f),
+                            data = listOf(
+                                pedidosPorStatus.pendente,
+                                pedidosPorStatus.emProducao,
+                                pedidosPorStatus.concluido,
+                                pedidosPorStatus.cancelado
+                            )
                         )
                     }
                 }

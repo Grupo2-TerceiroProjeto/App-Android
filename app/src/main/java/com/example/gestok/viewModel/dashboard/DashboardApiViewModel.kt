@@ -1,15 +1,16 @@
 package com.example.gestok.viewModel.dashboard
 
 import androidx.lifecycle.viewModelScope
-import com.example.gestok.screens.internalScreens.dashboard.OrderData
+import com.example.gestok.screens.internalScreens.dashboard.data.OrderData
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import com.example.gestok.network.service.DashboardService
-import com.example.gestok.screens.internalScreens.dashboard.AssessmentData
-import com.example.gestok.screens.login.UserSession
+import com.example.gestok.screens.internalScreens.dashboard.data.AssessmentData
+import com.example.gestok.screens.internalScreens.dashboard.data.OrderStatus
+import com.example.gestok.screens.login.data.UserSession
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import retrofit2.HttpException
@@ -189,6 +190,30 @@ class DashboardApiViewModel(private val api: DashboardService, override val sess
         Log.d("API", "Faturamento mês anterior: $total")
 
         return BigDecimal(total).setScale(2, RoundingMode.HALF_EVEN).toDouble()
+
+    }
+
+    override fun getPedidosPorCategoria(): OrderStatus {
+        val pendente = pedidos.count { it.status == "Pendente" }.toFloat()
+        val emProducao = pedidos.count { it.status == "Em Produção" }.toFloat()
+        val concluido = pedidos.count { it.status == "Concluído" }.toFloat()
+        val cancelado = pedidos.count { it.status == "Cancelado" }.toFloat()
+
+        Log.d(
+            "API",
+            "Pedidos por categoria: " +
+                    "Pendente: ${pendente.toInt()}, " +
+                    "Em Produção: ${emProducao.toInt()}, " +
+                    "Concluído: ${concluido.toInt()}, " +
+                    "Cancelado: ${cancelado.toInt()}"
+        )
+
+        return OrderStatus(
+            pendente = pendente,
+            emProducao = emProducao,
+            concluido = concluido,
+            cancelado = cancelado
+        )
 
     }
 

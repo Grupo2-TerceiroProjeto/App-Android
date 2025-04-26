@@ -1,4 +1,4 @@
-package com.example.gestok.screens.internalScreens.dashboard
+package com.example.gestok.screens.internalScreens.dashboard.data
 
 data class OrderItens(
     val id: Int,

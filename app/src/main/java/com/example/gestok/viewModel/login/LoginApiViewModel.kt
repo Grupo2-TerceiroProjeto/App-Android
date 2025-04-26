@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.example.gestok.network.service.AuthService
-import com.example.gestok.screens.login.LoginUser
-import com.example.gestok.screens.login.UserSession
+import com.example.gestok.screens.login.data.LoginUser
+import com.example.gestok.screens.login.data.UserSession
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 

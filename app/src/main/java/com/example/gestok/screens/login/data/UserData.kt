@@ -1,4 +1,4 @@
-package com.example.gestok.screens.login
+package com.example.gestok.screens.login.data
 
 data class LoginUser(
     val login: String,

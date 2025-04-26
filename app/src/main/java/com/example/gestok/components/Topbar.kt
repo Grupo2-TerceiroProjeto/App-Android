@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.AuthActivity
 import com.example.gestok.R
-import com.example.gestok.screens.login.UserSession
+import com.example.gestok.screens.login.data.UserSession
 import org.koin.compose.koinInject
 
 @Composable

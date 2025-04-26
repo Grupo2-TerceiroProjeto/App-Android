@@ -1,7 +1,7 @@
 package com.example.gestok.di
 
 import com.example.gestok.network.ApiClient
-import com.example.gestok.screens.login.UserSession
+import com.example.gestok.screens.login.data.UserSession
 import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
 import com.example.gestok.viewModel.login.LoginApiViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
