@@ -21,6 +21,7 @@ import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.screens.internalScreens.dashboard.Dashboard
 import com.example.gestok.screens.internalScreens.Profile
 import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
+import com.example.gestok.viewModel.order.OrderApiViewModel
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -129,10 +130,12 @@ fun LayoutScreen(
             }
 
             "pedidos" -> {
+                val viewModel: OrderApiViewModel = koinViewModel()
+
                 OrderContent(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding), listaPedidos, listaProdutos
+                        .padding(innerPadding), viewModel
                 )
 
             }

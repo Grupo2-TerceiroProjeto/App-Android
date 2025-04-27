@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.gestok.components.orderpage.OrderItens
 import com.example.gestok.components.CancelConfirmationDialog
 import com.example.gestok.components.orderpage.OrderData
 import com.example.gestok.components.productpage.ProductData
@@ -34,21 +35,23 @@ import com.example.gestok.ui.theme.White
 
 @Composable
 fun EditarPedidoDialog(
-    listaProdutos: List<ProductData>,
-    order: OrderData,
+    nomeSolicitante: String,
+    telefone: String,
+    status: String,
+    dataEntrega: String,
+    produtos: List<OrderItens>,
+    totalCompra: Double,
     onDismiss: () -> Unit,
-    onConfirm: (String, String, String, String, List<ProductData>) -> Unit
+    onConfirm: (String, String, String, String, List<String>) -> Unit
 ) {
-    var editedNomeSolicitante by remember { mutableStateOf(order.nomeSolicitante) }
-    var editedContato by remember { mutableStateOf(order.contato) }
-    var editedStatusPedido by remember { mutableStateOf(order.statusPedido) }
-    var editedDataEntrega by remember { mutableStateOf(order.dataEntrega) }
-    var editedValorPedido by remember { mutableStateOf("R$25,00") }
-    var editedItens by remember { mutableStateOf(order.itens.toMutableMap()) }
-    var itemUpdateTrigger by remember { mutableIntStateOf(0) }
+    var editedNomeSolicitante by remember { mutableStateOf(nomeSolicitante) }
+    var editedContato by remember { mutableStateOf(telefone) }
+    var editedStatusPedido by remember { mutableStateOf(status) }
+    var editedDataEntrega by remember { mutableStateOf(dataEntrega) }
+    var editedValorPedido by remember { mutableStateOf(totalCompra.toString()) }
+    val editedItens by remember { mutableStateOf(produtos) }
 
     var expanded by remember { mutableStateOf(false) }
-    var selectedOption by remember { mutableStateOf("Selecione uma opção") }
 
     var showCancelConfirmDialog by remember { mutableStateOf(false) }
     var showAddItemDialog by remember { mutableStateOf(false) }
@@ -143,7 +146,7 @@ fun EditarPedidoDialog(
                         ) {
 
                             TextField(
-                                value = selectedOption,
+                                value = editedStatusPedido,
                                 onValueChange = {},
                                 readOnly = true,
                                 colors = TextFieldDefaults.colors(
@@ -186,36 +189,58 @@ fun EditarPedidoDialog(
                             DropdownMenu(
                                 expanded = expanded,
                                 onDismissRequest = { expanded = false },
-                                modifier = Modifier
-                                    .width(240.dp)
-
-
+                                modifier = Modifier.width(240.dp)
                             ) {
-                                DropdownMenuItem(
-                                    text = { Text("Em produção") },
-                                    onClick = {
-                                        selectedOption = "Em producão"
-                                        expanded = false
-                                    })
+                                listOf(
+                                    "Pendente",
+                                    "Em Produção",
+                                    "Concluído",
+                                    "Cancelado"
+                                ).forEach { statusOption ->
+                                    DropdownMenuItem(
+                                        text = { Text(statusOption) },
+                                        onClick = {
+                                            editedStatusPedido = statusOption
+                                            expanded = false
+                                        }
+                                    )
+                                }
 
-                                DropdownMenuItem(
-                                    text = { Text("Entregue") },
-                                    onClick = {
-                                        selectedOption = "Entregue"
-                                        expanded = false
-                                    })
-
-                                DropdownMenuItem(
-                                    text = { Text("Cancelado") },
-                                    onClick = {
-                                        selectedOption = "Cancelado"
-                                        expanded = false
-                                    })
                             }
 
                         }
                     }
                 }
+
+                //-----CONTATO-------------------------------------------------------------------------
+                item {
+                    Column(Modifier.fillMaxWidth()) {
+
+                        Text(
+                            "Contato",
+                            Modifier.padding(start = 20.dp),
+                            fontWeight = W600,
+                            color = Blue
+                        )
+                        TextField(
+                            value = editedContato,
+                            onValueChange = { editedContato = it },
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = LightGray, // Cor de fundo quando focado
+                                unfocusedContainerColor = LightGray,   // Cor de fundo quando não focado
+                                focusedTextColor = Black,          // Cor do texto quando focado
+                                unfocusedTextColor = Black,         // Cor do texto quando não focado
+                                focusedIndicatorColor = LightGray, // Cor do indicador (borda) quando focado
+                                unfocusedIndicatorColor = LightGray
+                            ),
+                            modifier = Modifier
+                                .padding(start = 20.dp, bottom = 15.dp)
+                                .clip(shape = RoundedCornerShape(20)),
+                            singleLine = true
+                        )
+                    }
+                }
+
                 //-----DATA-------------------------------------------------------------------------
                 item {
                     Column {
@@ -305,7 +330,7 @@ fun EditarPedidoDialog(
 
                 item {
                     Column(Modifier.padding(start = 20.dp, end = 20.dp)) {
-                        PedidoBlock(order.itens)
+                        PedidoBlock(editedItens)
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                 }
@@ -326,7 +351,10 @@ fun EditarPedidoDialog(
                                 )
                             Text("Cancelar", color = White)
                         }
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(LightBlue)) {
+                        Button(
+                            onClick = onDismiss,
+                            colors = ButtonDefaults.buttonColors(LightBlue)
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.Check,
                                 contentDescription = null,
@@ -341,25 +369,6 @@ fun EditarPedidoDialog(
             }
 
         }
-    }
-
-
-    if(showAddItemDialog){
-        ItensAdd(produtos = listaProdutos,
-            onDismiss = { showAddItemDialog = false },
-            onConfirm = {showAddItemDialog = false})
-    }
-
-    if(showCancelConfirmDialog){
-        CancelConfirmationDialog(
-            onDismiss = {
-                showCancelConfirmDialog = false
-            },
-            onConfirm = {
-                showCancelConfirmDialog = false
-            },
-            externalOnDismiss = {onDismiss()}
-        )
     }
 }
 

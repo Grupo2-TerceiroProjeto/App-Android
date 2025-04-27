@@ -1,7 +1,9 @@
 package com.example.gestok.network
 
+import android.util.Log
 import com.example.gestok.network.service.AuthService
 import com.example.gestok.network.service.DashboardService
+import com.example.gestok.network.service.OrderService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -38,5 +40,9 @@ object ApiClient {
 
     fun dashboardService(token: String): DashboardService {
         return getApi(token).create(DashboardService::class.java)
+    }
+
+    fun orderService(token: String): OrderService {
+        return getApi(token).create(OrderService::class.java)
     }
 }
