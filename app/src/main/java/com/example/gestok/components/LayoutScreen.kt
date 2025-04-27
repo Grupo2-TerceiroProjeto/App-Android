@@ -40,33 +40,33 @@ val acucar: IngredientData = IngredientData("Açúcar", 300, "g")
 
 
 
-// Pedidos mockados
-val pedido1: OrderData
-    get() = OrderData(
-        nomeSolicitante = "Vitor Nunes",
-        contato = "1140028922",
-        statusPedido = "Em produção",
-        dataEntrega = "20/11/2023",
-        itens = mutableMapOf(coxinha to 20, esfirra to 30, brigadeiro to 100) // Pedido com alguns salgados e um doce
-    )
-
-val pedido2: OrderData
-    get() = OrderData(
-        nomeSolicitante = "Emilly Ferreira",
-        contato = "1198765432",
-        statusPedido = "Aguardando entrega",
-        dataEntrega = "22/11/2023",
-        itens = mutableMapOf(pastel to 10, boloDeChocolate to 2) // Outro pedido com um salgado e um bolo
-    )
-
-val pedido3: OrderData
-    get() = OrderData(
-        nomeSolicitante = "Thiago Rodrigues",
-        contato = "1122334455",
-        statusPedido = "Entregue",
-        dataEntrega = "15/11/2023",
-        itens = mutableMapOf(coxinha to 60, esfirra to 50, brigadeiro to 10) // Pedido com mais itens e repetidos
-    )
+//// Pedidos mockados
+//val pedido1: OrderData
+//    get() = OrderData(
+//        nomeSolicitante = "Vitor Nunes",
+//        contato = "1140028922",
+//        statusPedido = "Em produção",
+//        dataEntrega = "20/11/2023",
+//        itens = mutableMapOf(coxinha to 20, esfirra to 30, brigadeiro to 100) // Pedido com alguns salgados e um doce
+//    )
+//
+//val pedido2: OrderData
+//    get() = OrderData(
+//        nomeSolicitante = "Emilly Ferreira",
+//        contato = "1198765432",
+//        statusPedido = "Aguardando entrega",
+//        dataEntrega = "22/11/2023",
+//        itens = mutableMapOf(pastel to 10, boloDeChocolate to 2) // Outro pedido com um salgado e um bolo
+//    )
+//
+//val pedido3: OrderData
+//    get() = OrderData(
+//        nomeSolicitante = "Thiago Rodrigues",
+//        contato = "1122334455",
+//        statusPedido = "Entregue",
+//        dataEntrega = "15/11/2023",
+//        itens = mutableMapOf(coxinha to 60, esfirra to 50, brigadeiro to 10) // Pedido com mais itens e repetidos
+//    )
 
 
 
@@ -87,7 +87,7 @@ val boloDeChocolate = ProductData("Bolo de Chocolate", 5, "Doces", 120.00, mutab
 
 val listaProdutos: List<ProductData> = listOf(coxinha, esfirra, pastel, brigadeiro, boloDeChocolate)
 val listaFuncionarios: List<RegisterData> = listOf(luca, emilly, vitor, thiago, vagner, kauan)
-val listaPedidos: List<OrderData> = listOf(pedido1, pedido2, pedido3)
+//val listaPedidos: List<OrderData> = listOf(pedido1, pedido2, pedido3)
 
 @Composable
 fun LayoutScreen(

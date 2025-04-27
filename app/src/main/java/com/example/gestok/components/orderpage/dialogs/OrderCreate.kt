@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.gestok.components.orderpage.OrderItens
 import com.example.gestok.components.CancelConfirmationDialog
+import com.example.gestok.components.listaProdutos
 import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue

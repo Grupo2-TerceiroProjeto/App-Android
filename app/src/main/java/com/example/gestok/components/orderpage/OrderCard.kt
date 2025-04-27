@@ -70,11 +70,6 @@ fun OrderCard(pedido: OrderData) {
 
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    Text(text = "Contato", fontWeight = FontWeight.Bold, color = Blue)
-                    Text(text = pedido.contato, fontWeight = FontWeight.W300, color = Blue)
-                }
-
-                Column {
                     Text(
                         text = "Status do pedido",
                         fontWeight = FontWeight.Bold,
@@ -85,6 +80,7 @@ fun OrderCard(pedido: OrderData) {
                         fontWeight = FontWeight.W300,
                         color = Blue
                     )
+
                 }
 
                 Column {
