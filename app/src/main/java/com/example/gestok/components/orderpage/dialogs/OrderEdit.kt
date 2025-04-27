@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.gestok.components.CancelConfirmationDialog
 import com.example.gestok.components.orderpage.OrderData
 import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.ui.theme.Black
@@ -33,6 +34,7 @@ import com.example.gestok.ui.theme.White
 
 @Composable
 fun EditarPedidoDialog(
+    listaProdutos: List<ProductData>,
     order: OrderData,
     onDismiss: () -> Unit,
     onConfirm: (String, String, String, String, List<ProductData>) -> Unit
@@ -43,9 +45,13 @@ fun EditarPedidoDialog(
     var editedDataEntrega by remember { mutableStateOf(order.dataEntrega) }
     var editedValorPedido by remember { mutableStateOf("R$25,00") }
     var editedItens by remember { mutableStateOf(order.itens.toMutableMap()) }
+    var itemUpdateTrigger by remember { mutableIntStateOf(0) }
 
     var expanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf("Selecione uma opção") }
+
+    var showCancelConfirmDialog by remember { mutableStateOf(false) }
+    var showAddItemDialog by remember { mutableStateOf(false) }
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -81,7 +87,7 @@ fun EditarPedidoDialog(
                             color = Blue,
                             fontSize = 20.sp
                         )
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(Blue)) {
+                        Button(onClick = { showCancelConfirmDialog = true }, colors = ButtonDefaults.buttonColors(Blue)) {
                             Icon(
                                 imageVector = Icons.Default.Close,
                                 contentDescription = null,
@@ -281,7 +287,7 @@ fun EditarPedidoDialog(
                             color = Blue,
                             fontSize = 20.sp
                         )
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(LightBlue)) {
+                        Button(onClick = {showAddItemDialog = true}, colors = ButtonDefaults.buttonColors(LightBlue)) {
                             Icon(
                                 imageVector = Icons.Default.Add,
                                 contentDescription = null,
@@ -308,8 +314,10 @@ fun EditarPedidoDialog(
                 //-- BOTÕES CANCELAR E CONCLUIR ----------------------------------------
 
                 item {
-                    Row(Modifier.fillMaxWidth().padding(20.dp), horizontalArrangement = Arrangement.SpaceBetween){
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(Blue)) {
+                    Row(Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp), horizontalArrangement = Arrangement.SpaceBetween){
+                        Button(onClick = { showCancelConfirmDialog = true }, colors = ButtonDefaults.buttonColors(Blue)) {
                             Icon(
                                 imageVector = Icons.Default.Clear,
                                 contentDescription = null,
@@ -333,6 +341,25 @@ fun EditarPedidoDialog(
             }
 
         }
+    }
+
+
+    if(showAddItemDialog){
+        ItensAdd(produtos = listaProdutos,
+            onDismiss = { showAddItemDialog = false },
+            onConfirm = {showAddItemDialog = false})
+    }
+
+    if(showCancelConfirmDialog){
+        CancelConfirmationDialog(
+            onDismiss = {
+                showCancelConfirmDialog = false
+            },
+            onConfirm = {
+                showCancelConfirmDialog = false
+            },
+            externalOnDismiss = {onDismiss()}
+        )
     }
 }
 

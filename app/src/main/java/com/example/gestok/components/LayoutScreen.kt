@@ -132,7 +132,7 @@ fun LayoutScreen(
                 OrderContent(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding), listaPedidos
+                        .padding(innerPadding), listaPedidos, listaProdutos
                 )
 
             }

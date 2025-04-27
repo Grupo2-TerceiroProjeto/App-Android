@@ -29,10 +29,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.R
 import com.example.gestok.components.orderpage.dialogs.EditarPedidoDialog
+import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.ui.theme.Blue
 
 @Composable
-fun OrderCard(pedido: OrderData) {
+fun OrderCard(pedido: OrderData, produtosLista: List<ProductData>) {
 
     var showEditDialog by remember { mutableStateOf(false) }
     var showConfirmDialog by remember { mutableStateOf(false) }
@@ -171,7 +172,7 @@ fun OrderCard(pedido: OrderData) {
 
 
     if(showEditDialog){
-        EditarPedidoDialog(
+        EditarPedidoDialog(listaProdutos = produtosLista,
             order = pedido,
             onDismiss = { showEditDialog = false },
             onConfirm = { newNome, newContato, newStatus, newData, newItens ->

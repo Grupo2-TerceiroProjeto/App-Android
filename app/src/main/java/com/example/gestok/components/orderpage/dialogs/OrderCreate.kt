@@ -21,6 +21,8 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.gestok.components.CancelConfirmationDialog
+import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
@@ -29,6 +31,7 @@ import com.example.gestok.ui.theme.White
 
 @Composable
 fun OrderCreate(
+    listaProdutos: List<ProductData>,
     onDismiss: () -> Unit,
     onConfirm: (String, String, String, String, List<String>) -> Unit
 ) {
@@ -38,6 +41,9 @@ fun OrderCreate(
     var dataEntrega by remember { mutableStateOf("") }
     var valorPedido by remember { mutableStateOf("") }
     var itens by remember { mutableStateOf(emptyList<String>()) }
+
+    var showCancelConfirmDialog by remember { mutableStateOf(false) }
+    var showAddItemDialog by remember { mutableStateOf(false) }
 
     var expanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf("Selecione uma opção") }
@@ -51,6 +57,8 @@ fun OrderCreate(
             LazyColumn(
                 modifier = Modifier.fillMaxWidth()
             ) {
+
+                // -- HEADER -------------------------
                 item {
                     Row(
                         Modifier.fillMaxWidth().padding(20.dp),
@@ -58,7 +66,7 @@ fun OrderCreate(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text("Criar Pedido", fontWeight = W600, color = Blue, fontSize = 20.sp)
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(Blue)) {
+                        Button(onClick = { showCancelConfirmDialog = true }, colors = ButtonDefaults.buttonColors(Blue)) {
                             Icon(imageVector = Icons.Default.Close, contentDescription = null, tint = White)
                         }
                     }
@@ -66,6 +74,7 @@ fun OrderCreate(
                     Spacer(modifier = Modifier.height(10.dp))
                 }
 
+                //-- SOLICITANTE ----------------------
                 item {
                     Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
                         Text("Solicitante", fontWeight = W600, color = Blue)
@@ -87,6 +96,7 @@ fun OrderCreate(
                     Spacer(modifier = Modifier.height(10.dp))
                 }
 
+                //-----STATUS--------------------
                 item {
                     Column {
                         Text(
@@ -177,6 +187,7 @@ fun OrderCreate(
                     }
                 }
 
+                //-----DATA----------------
                 item {
                     Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
                         Text("Data de Entrega", fontWeight = W600, color = Blue)
@@ -198,6 +209,7 @@ fun OrderCreate(
                     Spacer(modifier = Modifier.height(10.dp))
                 }
 
+                //-----VALOR----------------------
                 item {
                     Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
                         Text("Valor", fontWeight = W600, color = Blue)
@@ -219,6 +231,7 @@ fun OrderCreate(
                     Spacer(modifier = Modifier.height(10.dp))
                 }
 
+                //--- HEADER "ITENS" + BOTAO ADICIONAR -----------------
                 item {
                     Row(
                         Modifier
@@ -233,7 +246,7 @@ fun OrderCreate(
                             color = Blue,
                             fontSize = 20.sp
                         )
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(LightBlue)) {
+                        Button(onClick = {showAddItemDialog = true}, colors = ButtonDefaults.buttonColors(LightBlue)) {
                             Icon(
                                 imageVector = Icons.Default.Add,
                                 contentDescription = null,
@@ -247,6 +260,7 @@ fun OrderCreate(
 
                 }
 
+                //-- ITENS + QUANTIDADE -----------------------------
                 item {
                     Column(Modifier.padding(start = 20.dp, end = 20.dp)) {
 
@@ -255,9 +269,10 @@ fun OrderCreate(
                 }
 
 
+                //-- BOTÕES CANCELAR E CONCLUIR ----------------------------------------
                 item {
                     Row(Modifier.fillMaxWidth().padding(20.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(Blue)) {
+                        Button(onClick = { showCancelConfirmDialog = true }, colors = ButtonDefaults.buttonColors(Blue)) {
                             Icon(imageVector = Icons.Default.Clear, contentDescription = null, tint = White)
                             Text("Cancelar", color = White)
                         }
@@ -269,5 +284,23 @@ fun OrderCreate(
                 }
             }
         }
+    }
+
+    if(showAddItemDialog){
+        ItensAdd(produtos = listaProdutos,
+            onDismiss = { showAddItemDialog = false },
+            onConfirm = {showAddItemDialog = false})
+    }
+
+    if(showCancelConfirmDialog){
+        CancelConfirmationDialog(
+            onDismiss = {
+                showCancelConfirmDialog = false
+            },
+            onConfirm = {
+                showCancelConfirmDialog = false
+            },
+            externalOnDismiss = {onDismiss()}
+        )
     }
 }
