@@ -27,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.gestok.R
+import com.example.gestok.components.ExcludeConfirmationDialog
 import com.example.gestok.components.adminpage.dialogs.RegisterEdit
 import com.example.gestok.ui.theme.Blue
 
@@ -35,6 +36,7 @@ fun RegisterCard(registerData: RegisterData, funcionariosLista: List<RegisterDat
 
 
     var showEditRegisterDialog by remember { mutableStateOf(false) }
+    var showExcludeConfirmDialog by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
@@ -72,7 +74,7 @@ fun RegisterCard(registerData: RegisterData, funcionariosLista: List<RegisterDat
                     }
 
                     IconButton(
-                        onClick = {},
+                        onClick = {showExcludeConfirmDialog = true},
                         modifier = Modifier
                             .height(50.dp)
 
@@ -128,6 +130,13 @@ fun RegisterCard(registerData: RegisterData, funcionariosLista: List<RegisterDat
         RegisterEdit(funcionario = registerData,
             onDismiss = { showEditRegisterDialog = false },
             onConfirm = { nome, cargo, email -> showEditRegisterDialog = false })
+    }
+
+    if(showExcludeConfirmDialog){
+        ExcludeConfirmationDialog(
+            onDismiss = { showExcludeConfirmDialog = false },
+            onConfirm = { showExcludeConfirmDialog = false }
+        )
     }
 
 }

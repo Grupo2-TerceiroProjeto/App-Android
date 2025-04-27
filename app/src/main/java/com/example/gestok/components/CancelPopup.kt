@@ -1,4 +1,4 @@
-package com.example.gestok.components.productpage.dialogs
+package com.example.gestok.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.gestok.ui.theme.Blue
-import com.example.gestok.ui.theme.DarkBlue
 import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.White
 

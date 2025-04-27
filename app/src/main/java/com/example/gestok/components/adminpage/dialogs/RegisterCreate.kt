@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.gestok.components.CancelConfirmationDialog
 import com.example.gestok.components.adminpage.RegisterData
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
@@ -48,6 +49,8 @@ fun RegisterCreate(
     var editedNome by remember { mutableStateOf("") }
     var editedCargo by remember { mutableStateOf("") }
     var editedEmail by remember { mutableStateOf("") }
+
+    var showCancelConfirmDialog by remember { mutableStateOf(false) }
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -66,7 +69,7 @@ fun RegisterCreate(
                         Text(
                             "Cadastrar Colaborador", fontWeight = W600, color = Blue, fontSize = 20.sp
                         )
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(Blue)) {
+                        Button(onClick = { showCancelConfirmDialog = true }, colors = ButtonDefaults.buttonColors(Blue)) {
                             Icon(imageVector = Icons.Default.Close, contentDescription = null, tint = White)
                         }
                     }
@@ -141,15 +144,19 @@ fun RegisterCreate(
                         Modifier.fillMaxWidth().padding(20.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(Blue)) {
-                            Icon(imageVector = Icons.Default.Clear, contentDescription = null, tint = White)
+                        Button(onClick = { showCancelConfirmDialog = true }, colors = ButtonDefaults.buttonColors(Blue)) {
+                            Icon(imageVector = Icons.Default.Clear,
+                                contentDescription = null,
+                                tint = White)
                             Text("Cancelar", color = White)
                         }
                         Button(
                             onClick = { onConfirm(editedNome, editedCargo, editedEmail); onDismiss() },
                             colors = ButtonDefaults.buttonColors(LightBlue)
                         ) {
-                            Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = White)
+                            Icon(imageVector = Icons.Default.Check,
+                                contentDescription = null,
+                                tint = White)
                             Text("Concluir", color = White)
                         }
                     }
@@ -157,4 +164,17 @@ fun RegisterCreate(
             }
         }
     }
+
+    if(showCancelConfirmDialog){
+        CancelConfirmationDialog(
+            onDismiss = {
+                showCancelConfirmDialog = false
+            },
+            onConfirm = {
+                showCancelConfirmDialog = false
+            },
+            externalOnDismiss = {onDismiss()}
+        )
+    }
+
 }

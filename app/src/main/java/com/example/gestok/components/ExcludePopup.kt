@@ -1,4 +1,4 @@
-package com.example.gestok.components.productpage.dialogs
+package com.example.gestok.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
