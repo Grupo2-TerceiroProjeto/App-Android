@@ -22,6 +22,8 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.gestok.components.orderpage.OrderData
+import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
@@ -31,20 +33,16 @@ import com.example.gestok.ui.theme.White
 
 @Composable
 fun EditarPedidoDialog(
-    nomeSolicitante: String,
-    contato: String,
-    statusPedido: String,
-    dataEntrega: String,
-    itens: List<String>,
+    order: OrderData,
     onDismiss: () -> Unit,
-    onConfirm: (String, String, String, String, List<String>) -> Unit
+    onConfirm: (String, String, String, String, List<ProductData>) -> Unit
 ) {
-    var editedNomeSolicitante by remember { mutableStateOf(nomeSolicitante) }
-    var editedContato by remember { mutableStateOf(contato) }
-    var editedStatusPedido by remember { mutableStateOf(statusPedido) }
-    var editedDataEntrega by remember { mutableStateOf(dataEntrega) }
+    var editedNomeSolicitante by remember { mutableStateOf(order.nomeSolicitante) }
+    var editedContato by remember { mutableStateOf(order.contato) }
+    var editedStatusPedido by remember { mutableStateOf(order.statusPedido) }
+    var editedDataEntrega by remember { mutableStateOf(order.dataEntrega) }
     var editedValorPedido by remember { mutableStateOf("R$25,00") }
-    var editedItens by remember { mutableStateOf(itens) }
+    var editedItens by remember { mutableStateOf(order.itens.toMutableMap()) }
 
     var expanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf("Selecione uma opção") }
@@ -301,7 +299,7 @@ fun EditarPedidoDialog(
 
                 item {
                     Column(Modifier.padding(start = 20.dp, end = 20.dp)) {
-                        PedidoBlock()
+                        PedidoBlock(order.itens)
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                 }

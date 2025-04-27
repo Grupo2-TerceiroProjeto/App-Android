@@ -52,13 +52,13 @@ fun ExcludeConfirmationDialog(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Text("Excluir produto", fontWeight = W600, color = Blue, fontSize = 25.sp)
+                        Text("Excluir", fontWeight = W600, color = Blue, fontSize = 25.sp)
                     }
 
                     Row(   Modifier.fillMaxWidth().padding(20.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center){
-                        Text("Você tem certeza que deseja excluir o produto?", textAlign = TextAlign.Center)
+                        Text("Você tem certeza que deseja excluir?", textAlign = TextAlign.Center)
                     }
                     Spacer(modifier = Modifier.height(5.dp))
 

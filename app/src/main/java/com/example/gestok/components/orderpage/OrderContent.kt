@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -30,7 +31,7 @@ import com.example.gestok.ui.theme.White
 
 
 @Composable
-fun OrderContent(modifier: Modifier = Modifier, pedido: OrderData) {
+fun OrderContent(modifier: Modifier = Modifier, pedidosLista: List<OrderData>) {
 
     var showCreateDialog by remember { mutableStateOf(false) }
 
@@ -63,7 +64,7 @@ fun OrderContent(modifier: Modifier = Modifier, pedido: OrderData) {
 
         }
 
-        items(3) {
+        items(items = pedidosLista) { pedido ->
             OrderCard(pedido = pedido)
         }
     }

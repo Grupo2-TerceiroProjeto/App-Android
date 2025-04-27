@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.R
 import com.example.gestok.components.orderpage.dialogs.EditarPedidoDialog
-import com.example.gestok.components.orderpage.dialogs.OrderCreate
 import com.example.gestok.ui.theme.Blue
 
 @Composable
@@ -112,9 +111,9 @@ fun OrderCard(pedido: OrderData) {
             Column(Modifier.padding(top = 16.dp)) {
                 Row {
                     Column {
-                        pedido.itens.forEach { item ->
+                        pedido.itens.forEach { (item, quantidade) ->
                             Text(
-                                text = "• $item",
+                                text = "•${quantidade} | ${item.produto}",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.W500,
                                 color = Blue
@@ -173,11 +172,7 @@ fun OrderCard(pedido: OrderData) {
 
     if(showEditDialog){
         EditarPedidoDialog(
-            nomeSolicitante = pedido.nomeSolicitante,
-            contato = pedido.contato,
-            statusPedido = pedido.statusPedido,
-            dataEntrega = pedido.dataEntrega,
-            itens = pedido.itens,
+            order = pedido,
             onDismiss = { showEditDialog = false },
             onConfirm = { newNome, newContato, newStatus, newData, newItens ->
                 showEditDialog = false

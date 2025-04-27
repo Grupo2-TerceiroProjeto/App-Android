@@ -18,17 +18,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.gestok.components.teste
+import com.example.gestok.components.productpage.ProductData
+
 
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.LightGray
 
 @Composable
 fun PedidoBlock(
-    itens: List<String> = teste,
+    itens: MutableMap<ProductData, Int>,
 ) {
 
-    itens.forEach { item ->
+    itens.forEach { (item, quantidade) ->
 
         Row(
             Modifier
@@ -40,9 +41,9 @@ fun PedidoBlock(
             verticalAlignment = Alignment.CenterVertically
 
         ) {
-            Text("$item", color = Black)
+            Text(text = item.produto + " ", color = Black)
             TextField(
-                value = "2000",
+                value = "$quantidade",
                 onValueChange = {},
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.LightGray, // Cor de fundo quando focado
