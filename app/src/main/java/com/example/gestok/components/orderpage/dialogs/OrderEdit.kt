@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.gestok.components.orderpage.OrderItens
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
@@ -32,22 +33,22 @@ import com.example.gestok.ui.theme.White
 @Composable
 fun EditarPedidoDialog(
     nomeSolicitante: String,
-    contato: String,
-    statusPedido: String,
+    telefone: String,
+    status: String,
     dataEntrega: String,
-    itens: List<String>,
+    produtos: List<OrderItens>,
+    totalCompra: Double,
     onDismiss: () -> Unit,
     onConfirm: (String, String, String, String, List<String>) -> Unit
 ) {
     var editedNomeSolicitante by remember { mutableStateOf(nomeSolicitante) }
-    var editedContato by remember { mutableStateOf(contato) }
-    var editedStatusPedido by remember { mutableStateOf(statusPedido) }
+    var editedContato by remember { mutableStateOf(telefone) }
+    var editedStatusPedido by remember { mutableStateOf(status) }
     var editedDataEntrega by remember { mutableStateOf(dataEntrega) }
-    var editedValorPedido by remember { mutableStateOf("R$25,00") }
-    var editedItens by remember { mutableStateOf(itens) }
+    var editedValorPedido by remember { mutableStateOf(totalCompra.toString()) }
+    val editedItens by remember { mutableStateOf(produtos) }
 
     var expanded by remember { mutableStateOf(false) }
-    var selectedOption by remember { mutableStateOf("Selecione uma opção") }
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -139,7 +140,7 @@ fun EditarPedidoDialog(
                         ) {
 
                             TextField(
-                                value = selectedOption,
+                                value = editedStatusPedido,
                                 onValueChange = {},
                                 readOnly = true,
                                 colors = TextFieldDefaults.colors(
@@ -182,36 +183,58 @@ fun EditarPedidoDialog(
                             DropdownMenu(
                                 expanded = expanded,
                                 onDismissRequest = { expanded = false },
-                                modifier = Modifier
-                                    .width(240.dp)
-
-
+                                modifier = Modifier.width(240.dp)
                             ) {
-                                DropdownMenuItem(
-                                    text = { Text("Em produção") },
-                                    onClick = {
-                                        selectedOption = "Em producão"
-                                        expanded = false
-                                    })
+                                listOf(
+                                    "Pendente",
+                                    "Em Produção",
+                                    "Concluído",
+                                    "Cancelado"
+                                ).forEach { statusOption ->
+                                    DropdownMenuItem(
+                                        text = { Text(statusOption) },
+                                        onClick = {
+                                            editedStatusPedido = statusOption
+                                            expanded = false
+                                        }
+                                    )
+                                }
 
-                                DropdownMenuItem(
-                                    text = { Text("Entregue") },
-                                    onClick = {
-                                        selectedOption = "Entregue"
-                                        expanded = false
-                                    })
-
-                                DropdownMenuItem(
-                                    text = { Text("Cancelado") },
-                                    onClick = {
-                                        selectedOption = "Cancelado"
-                                        expanded = false
-                                    })
                             }
 
                         }
                     }
                 }
+
+                //-----CONTATO-------------------------------------------------------------------------
+                item {
+                    Column(Modifier.fillMaxWidth()) {
+
+                        Text(
+                            "Contato",
+                            Modifier.padding(start = 20.dp),
+                            fontWeight = W600,
+                            color = Blue
+                        )
+                        TextField(
+                            value = editedContato,
+                            onValueChange = { editedContato = it },
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = LightGray, // Cor de fundo quando focado
+                                unfocusedContainerColor = LightGray,   // Cor de fundo quando não focado
+                                focusedTextColor = Black,          // Cor do texto quando focado
+                                unfocusedTextColor = Black,         // Cor do texto quando não focado
+                                focusedIndicatorColor = LightGray, // Cor do indicador (borda) quando focado
+                                unfocusedIndicatorColor = LightGray
+                            ),
+                            modifier = Modifier
+                                .padding(start = 20.dp, bottom = 15.dp)
+                                .clip(shape = RoundedCornerShape(20)),
+                            singleLine = true
+                        )
+                    }
+                }
+
                 //-----DATA-------------------------------------------------------------------------
                 item {
                     Column {
@@ -283,7 +306,10 @@ fun EditarPedidoDialog(
                             color = Blue,
                             fontSize = 20.sp
                         )
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(LightBlue)) {
+                        Button(
+                            onClick = onDismiss,
+                            colors = ButtonDefaults.buttonColors(LightBlue)
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.Add,
                                 contentDescription = null,
@@ -301,7 +327,7 @@ fun EditarPedidoDialog(
 
                 item {
                     Column(Modifier.padding(start = 20.dp, end = 20.dp)) {
-                        PedidoBlock()
+                        PedidoBlock(editedItens)
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                 }
@@ -310,8 +336,16 @@ fun EditarPedidoDialog(
                 //-- BOTÕES CANCELAR E CONCLUIR ----------------------------------------
 
                 item {
-                    Row(Modifier.fillMaxWidth().padding(20.dp), horizontalArrangement = Arrangement.SpaceBetween){
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(Blue)) {
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Button(
+                            onClick = onDismiss,
+                            colors = ButtonDefaults.buttonColors(Blue)
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.Clear,
                                 contentDescription = null,
@@ -320,7 +354,10 @@ fun EditarPedidoDialog(
                                 )
                             Text("Cancelar", color = White)
                         }
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(LightBlue)) {
+                        Button(
+                            onClick = onDismiss,
+                            colors = ButtonDefaults.buttonColors(LightBlue)
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.Check,
                                 contentDescription = null,

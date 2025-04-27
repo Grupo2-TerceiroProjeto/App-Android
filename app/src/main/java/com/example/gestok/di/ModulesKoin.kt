@@ -4,6 +4,7 @@ import com.example.gestok.network.ApiClient
 import com.example.gestok.screens.login.data.UserSession
 import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
 import com.example.gestok.viewModel.login.LoginApiViewModel
+import com.example.gestok.viewModel.order.OrderApiViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -23,7 +24,13 @@ val moduloApi = module {
 
     factory {
         ApiClient.dashboardService(
-            get<UserSession>().token ?: ""
+            get<UserSession>().token
+        )
+    }
+
+    factory {
+        ApiClient.orderService(
+            get<UserSession>().token
         )
     }
 
@@ -33,6 +40,10 @@ val moduloApi = module {
 
     viewModel {
         DashboardApiViewModel(get(), get())
+    }
+
+    viewModel {
+        OrderApiViewModel(get())
     }
 
 

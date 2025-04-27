@@ -1,7 +1,7 @@
 package com.example.gestok.viewModel.dashboard
 
 import androidx.lifecycle.viewModelScope
-import com.example.gestok.screens.internalScreens.dashboard.data.OrderData
+import com.example.gestok.components.orderpage.OrderData
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -13,6 +13,7 @@ import com.example.gestok.screens.internalScreens.dashboard.data.OrderStatus
 import com.example.gestok.screens.login.data.UserSession
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
+import kotlinx.coroutines.delay
 import retrofit2.HttpException
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -21,11 +22,12 @@ import java.util.Locale
 
 class DashboardApiViewModel(private val api: DashboardService, override val sessaoUsuario : UserSession) : DashboardViewModel(sessaoUsuario) {
 
-    override fun getBuscarTodos() {
+    override fun getPedidos() {
         limparErros()
 
         viewModelScope.launch {
             try {
+                delay(2000)
                 val resposta = api.getPedidos()
 
                 _pedidos.clear()

@@ -29,14 +29,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.R
 import com.example.gestok.components.orderpage.dialogs.EditarPedidoDialog
-import com.example.gestok.components.orderpage.dialogs.OrderCreate
 import com.example.gestok.ui.theme.Blue
 
 @Composable
 fun OrderCard(pedido: OrderData) {
 
     var showEditDialog by remember { mutableStateOf(false) }
-    var showConfirmDialog by remember { mutableStateOf(false) }
 
 
     Card(
@@ -47,7 +45,7 @@ fun OrderCard(pedido: OrderData) {
             containerColor = Color.White, //COR DO CARD
         ),
 
-//        border = BorderStroke(1.dp, Color.Gray),
+
         elevation = CardDefaults.cardElevation(
             defaultElevation = 8.dp
         )
@@ -72,21 +70,28 @@ fun OrderCard(pedido: OrderData) {
 
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    Text(text = "Contato", fontWeight = FontWeight.Bold, color = Blue)
-                    Text(text = pedido.contato, fontWeight = FontWeight.W300, color = Blue)
-                }
-
-                Column {
                     Text(
                         text = "Status do pedido",
                         fontWeight = FontWeight.Bold,
                         color = Blue
                     )
                     Text(
-                        text = pedido.statusPedido,
+                        text = pedido.status,
                         fontWeight = FontWeight.W300,
                         color = Blue
                     )
+                }
+
+                Column {
+
+                    Text(
+                        text = "Contato",
+                        fontWeight = FontWeight.Bold,
+                        color = Blue)
+                    Text(
+                        text = pedido.telefone,
+                        fontWeight = FontWeight.W300,
+                        color = Blue)
 
                     Spacer(modifier = Modifier.height(4.dp))
 
@@ -96,7 +101,7 @@ fun OrderCard(pedido: OrderData) {
                         color = Blue
                     )
                     Text(
-                        text = pedido.dataEntrega,
+                        text = pedido.dataEntrega ?: "",
                         fontWeight = FontWeight.W300,
                         color = Blue
                     )
@@ -112,42 +117,42 @@ fun OrderCard(pedido: OrderData) {
             Column(Modifier.padding(top = 16.dp)) {
                 Row {
                     Column {
-                        pedido.itens.forEach { item ->
+                        pedido.produtos.forEach { item ->
                             Text(
-                                text = "• $item",
+                                text = "• ${item.nome} ${item.quantidade}un",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.W500,
                                 color = Blue
                             )
                         }
                     }
-                    Column (Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.Bottom),
-                        horizontalAlignment = Alignment.End){
-                        Row (){
-                            IconButton(onClick = {showEditDialog = true},
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.Bottom),
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        Row() {
+                            IconButton(
+                                onClick = { showEditDialog = true },
                                 modifier = Modifier
                                     .size(50.dp)
-//                                    .height(50.dp)
-//                                    .weight(1f)
 
                             ) {
-                               Image(
-                                   painter = painterResource(id = R.drawable.edicao_f),
-                                   contentDescription = "Editar",
+                                Image(
+                                    painter = painterResource(id = R.drawable.edicao_f),
+                                    contentDescription = "Editar",
 
 
-                               )
+                                    )
 
 
+                            }
 
-                           }
-
-                            IconButton(onClick = {},
+                            IconButton(
+                                onClick = {},
                                 modifier = Modifier
                                     .height(50.dp)
-//                                    .weight(1f)
 
                             ) {
                                 Image(
@@ -155,7 +160,7 @@ fun OrderCard(pedido: OrderData) {
                                     contentDescription = "Informação",
 
 
-                                )
+                                    )
                             }
                         }
                     }
@@ -171,20 +176,20 @@ fun OrderCard(pedido: OrderData) {
 
 
 
-    if(showEditDialog){
+    if (showEditDialog) {
         EditarPedidoDialog(
             nomeSolicitante = pedido.nomeSolicitante,
-            contato = pedido.contato,
-            statusPedido = pedido.statusPedido,
-            dataEntrega = pedido.dataEntrega,
-            itens = pedido.itens,
+            telefone = pedido.telefone,
+            status = pedido.status,
+            dataEntrega = pedido.dataEntrega ?: "",
+            produtos = pedido.produtos,
+            totalCompra = pedido.totalCompra,
             onDismiss = { showEditDialog = false },
             onConfirm = { newNome, newContato, newStatus, newData, newItens ->
                 showEditDialog = false
             }
         )
     }
-
 
 
 }

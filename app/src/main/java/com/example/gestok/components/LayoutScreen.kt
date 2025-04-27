@@ -14,13 +14,13 @@ import androidx.compose.ui.graphics.Color
 import com.example.gestok.components.adminpage.AdminContent
 import com.example.gestok.components.adminpage.RegisterData
 import com.example.gestok.components.orderpage.OrderContent
-import com.example.gestok.components.orderpage.OrderData
 import com.example.gestok.components.productpage.IngredientData
 import com.example.gestok.components.productpage.ProductContent
 import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.screens.internalScreens.dashboard.Dashboard
 import com.example.gestok.screens.internalScreens.Profile
 import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
+import com.example.gestok.viewModel.order.OrderApiViewModel
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -38,9 +38,9 @@ val oleo: IngredientData = IngredientData("Óleo", 1, "L")
 val acucar: IngredientData = IngredientData("Açúcar", 300, "g")
 
 
-val teste: List<String> =
-    listOf("Coxinha", "Bolinho de Queijo", "Brigadeiro", "Bolinho de Queijo", "Brigadeiro")
-val pedido = OrderData("Vitor Nunes", "1140028922", "Em produção", "20/11/2023", teste)
+//val teste: List<String> =
+//    listOf("Coxinha", "Bolinho de Queijo", "Brigadeiro", "Bolinho de Queijo", "Brigadeiro")
+//val pedido = OrderData("Vitor Nunes", "1140028922", "Em produção", "20/11/2023", teste)
 
 //Funcionário testes:
 val luca = RegisterData("Luca Sena", "Cozinheiro", "luca.souza@sptech.com")
@@ -101,10 +101,12 @@ fun LayoutScreen(
             }
 
             "pedidos" -> {
+                val viewModel: OrderApiViewModel = koinViewModel()
+
                 OrderContent(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding), pedido
+                        .padding(innerPadding), viewModel
                 )
 
             }

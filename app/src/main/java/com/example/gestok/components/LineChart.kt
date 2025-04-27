@@ -34,7 +34,6 @@ import java.math.RoundingMode
 
 @Composable
 fun LineChartScreen(
-    title: String,
     data: List<Number>,
     xLabels: List<String>
 ) {
@@ -115,13 +114,6 @@ fun LineChartScreen(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        Text(
-            title,
-            color = Black,
-            fontWeight = FontWeight.Bold
-        )
-
         LineChart(
             modifier = Modifier
                 .fillMaxWidth()

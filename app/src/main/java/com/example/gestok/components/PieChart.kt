@@ -30,7 +30,6 @@ import com.example.gestok.ui.theme.White
 
 @Composable
 fun PieChartScreen(
-    title : String,
     data: List<Float>
 ) {
     var selectedSlice by remember { mutableStateOf<Pair<String, Int>?>(null) }
@@ -58,14 +57,6 @@ fun PieChartScreen(
         modifier = Modifier
             .background(White)
     ) {
-        Text(
-            title,
-            color = Black,
-
-            fontWeight = FontWeight.Bold
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
 
         Row {
             slices.forEach { slice ->
