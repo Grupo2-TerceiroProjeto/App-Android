@@ -21,6 +21,10 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.gestok.components.orderpage.OrderItens
+import com.example.gestok.components.CancelConfirmationDialog
+import com.example.gestok.components.listaProdutos
+import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
@@ -30,17 +34,19 @@ import com.example.gestok.ui.theme.White
 @Composable
 fun OrderCreate(
     onDismiss: () -> Unit,
-    onConfirm: (String, String, String, String, List<String>) -> Unit
+    onConfirm: (String, String, String, String, List<OrderItens>) -> Unit
 ) {
     var nomeSolicitante by remember { mutableStateOf("") }
-    var contato by remember { mutableStateOf("") }
-    var statusPedido by remember { mutableStateOf("Selecione uma opção") }
+    var telefone by remember { mutableStateOf("") }
+    var status by remember { mutableStateOf("") }
     var dataEntrega by remember { mutableStateOf("") }
-    var valorPedido by remember { mutableStateOf("") }
-    var itens by remember { mutableStateOf(emptyList<String>()) }
+    var totalCompra by remember { mutableStateOf("") }
+    var produtos by remember { mutableStateOf(emptyList<OrderItens>()) }
+
+    var showCancelConfirmDialog by remember { mutableStateOf(false) }
+    var showAddItemDialog by remember { mutableStateOf(false) }
 
     var expanded by remember { mutableStateOf(false) }
-    var selectedOption by remember { mutableStateOf("Selecione uma opção") }
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -51,6 +57,8 @@ fun OrderCreate(
             LazyColumn(
                 modifier = Modifier.fillMaxWidth()
             ) {
+
+                // -- HEADER -------------------------
                 item {
                     Row(
                         Modifier.fillMaxWidth().padding(20.dp),
@@ -58,7 +66,7 @@ fun OrderCreate(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text("Criar Pedido", fontWeight = W600, color = Blue, fontSize = 20.sp)
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(Blue)) {
+                        Button(onClick = { showCancelConfirmDialog = true }, colors = ButtonDefaults.buttonColors(Blue)) {
                             Icon(imageVector = Icons.Default.Close, contentDescription = null, tint = White)
                         }
                     }
@@ -66,6 +74,7 @@ fun OrderCreate(
                     Spacer(modifier = Modifier.height(10.dp))
                 }
 
+                //-- SOLICITANTE ----------------------
                 item {
                     Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
                         Text("Solicitante", fontWeight = W600, color = Blue)
@@ -87,6 +96,7 @@ fun OrderCreate(
                     Spacer(modifier = Modifier.height(10.dp))
                 }
 
+                //-----STATUS--------------------
                 item {
                     Column {
                         Text(
@@ -103,7 +113,7 @@ fun OrderCreate(
                         ) {
 
                             TextField(
-                                value = selectedOption,
+                                value = status,
                                 onValueChange = {},
                                 readOnly = true,
                                 colors = TextFieldDefaults.colors(
@@ -151,32 +161,49 @@ fun OrderCreate(
 
 
                             ) {
-                                DropdownMenuItem(
-                                    text = { Text("Em produção") },
-                                    onClick = {
-                                        selectedOption = "Em producão"
-                                        expanded = false
-                                    })
-
-                                DropdownMenuItem(
-                                    text = { Text("Entregue") },
-                                    onClick = {
-                                        selectedOption = "Entregue"
-                                        expanded = false
-                                    })
-
-                                DropdownMenuItem(
-                                    text = { Text("Cancelado") },
-                                    onClick = {
-                                        selectedOption = "Cancelado"
-                                        expanded = false
-                                    })
+                                listOf(
+                                    "Selecione uma opção",
+                                    "Pendente",
+                                    "Em Produção",
+                                    "Concluído",
+                                    "Cancelado"
+                                ).forEach { statusOption ->
+                                    DropdownMenuItem(
+                                        text = { Text(statusOption) },
+                                        onClick = {
+                                            status = statusOption
+                                            expanded = false
+                                        }
+                                    )
+                                }
                             }
 
                         }
                     }
                 }
 
+                item {
+                    Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
+                        Text("Contato", fontWeight = W600, color = Blue)
+                        TextField(
+                            value = telefone,
+                            onValueChange = { telefone = it },
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = LightGray,
+                                unfocusedContainerColor = LightGray,
+                                focusedTextColor = Black,
+                                unfocusedTextColor = Black,
+                                focusedIndicatorColor = LightGray,
+                                unfocusedIndicatorColor = LightGray
+                            ),
+                            modifier = Modifier.clip(RoundedCornerShape(20)),
+                            singleLine = true
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
+                }
+
+                //-----DATA----------------
                 item {
                     Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
                         Text("Data de Entrega", fontWeight = W600, color = Blue)
@@ -198,12 +225,13 @@ fun OrderCreate(
                     Spacer(modifier = Modifier.height(10.dp))
                 }
 
+                //-----VALOR----------------------
                 item {
                     Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
                         Text("Valor", fontWeight = W600, color = Blue)
                         TextField(
-                            value = valorPedido,
-                            onValueChange = { valorPedido = it },
+                            value = totalCompra,
+                            onValueChange = { totalCompra = it },
                             colors = TextFieldDefaults.colors(
                                 focusedContainerColor = LightGray,
                                 unfocusedContainerColor = LightGray,
@@ -219,6 +247,7 @@ fun OrderCreate(
                     Spacer(modifier = Modifier.height(10.dp))
                 }
 
+                //--- HEADER "ITENS" + BOTAO ADICIONAR -----------------
                 item {
                     Row(
                         Modifier
@@ -233,7 +262,7 @@ fun OrderCreate(
                             color = Blue,
                             fontSize = 20.sp
                         )
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(LightBlue)) {
+                        Button(onClick = {showAddItemDialog = true}, colors = ButtonDefaults.buttonColors(LightBlue)) {
                             Icon(
                                 imageVector = Icons.Default.Add,
                                 contentDescription = null,
@@ -255,13 +284,14 @@ fun OrderCreate(
                 }
 
 
+                //-- BOTÕES CANCELAR E CONCLUIR ----------------------------------------
                 item {
                     Row(Modifier.fillMaxWidth().padding(20.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(Blue)) {
+                        Button(onClick = { showCancelConfirmDialog = true }, colors = ButtonDefaults.buttonColors(Blue)) {
                             Icon(imageVector = Icons.Default.Clear, contentDescription = null, tint = White)
                             Text("Cancelar", color = White)
                         }
-                        Button(onClick = { onConfirm(nomeSolicitante, contato, statusPedido, dataEntrega, itens) }, colors = ButtonDefaults.buttonColors(LightBlue)) {
+                        Button(onClick = { onConfirm(nomeSolicitante, telefone, status, dataEntrega, produtos) }, colors = ButtonDefaults.buttonColors(LightBlue)) {
                             Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = White)
                             Text("Criar", color = White)
                         }
@@ -269,5 +299,23 @@ fun OrderCreate(
                 }
             }
         }
+    }
+
+    if(showAddItemDialog){
+        ItensAdd(produtos = listaProdutos,
+            onDismiss = { showAddItemDialog = false },
+            onConfirm = {showAddItemDialog = false})
+    }
+
+    if(showCancelConfirmDialog){
+        CancelConfirmationDialog(
+            onDismiss = {
+                showCancelConfirmDialog = false
+            },
+            onConfirm = {
+                showCancelConfirmDialog = false
+            },
+            externalOnDismiss = {onDismiss()}
+        )
     }
 }

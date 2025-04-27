@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -41,7 +40,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
-import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.White
 
@@ -56,7 +54,7 @@ fun IngredientCreate(
      var editedIngredientName by remember { mutableStateOf("") }
 
     var expanded by remember { mutableStateOf(false) }
-    var selectedOption by remember { mutableStateOf("Novo Ingrediente") }
+    var selectedOption by remember { mutableStateOf("") }
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -65,18 +63,18 @@ fun IngredientCreate(
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
             LazyColumn(
-                Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
             ) {
                 item {
-                    Spacer(modifier = Modifier.height(20.dp))
                     Row(
                         Modifier
                             .fillMaxWidth()
-                            .padding(5.dp),
+                            .padding(20.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Criar Ingrediente", fontWeight = W600, color = Blue, fontSize = 25.sp)
+                        Text("Criar Ingrediente", fontWeight = W600, color = Blue, fontSize = 20.sp)
                         Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(Blue)) {
                             Icon(
                                 imageVector = Icons.Default.Close,
@@ -87,21 +85,19 @@ fun IngredientCreate(
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(20.dp))
+
                 }
 
 
                 item {
-                    Column() {
+                    Column(Modifier.fillMaxWidth()) {
                         Text(
                             "Nome do ingrediente",
+                            Modifier.padding(start = 20.dp),
                             fontWeight = W600,
-                            color = Blue,
-                            fontSize = 15.sp
+                            color = Blue
                         )
 
-
-                        Row() {
                             TextField(
                                 value = editedIngredientName,
                                 onValueChange = { editedIngredientName = it },
@@ -118,7 +114,7 @@ fun IngredientCreate(
                                     .clip(shape = RoundedCornerShape(20)),
                                 singleLine = true
                             )
-                        }
+
                     }
 
                 }
@@ -127,11 +123,10 @@ fun IngredientCreate(
                     Column() {
                         Text(
                             "Unidade de Medida",
+                            Modifier.padding(start = 20.dp),
                             fontWeight = W600,
-                            color = Blue,
-                            fontSize = 15.sp
+                            color = Blue
                         )
-
 
                         Row(
                             modifier = Modifier
@@ -216,8 +211,7 @@ fun IngredientCreate(
 
                 item {
                     Row(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceAround
+                        Modifier.fillMaxWidth().padding(20.dp), horizontalArrangement = Arrangement.Center
                     ) {
                         Button(
                             onClick = {

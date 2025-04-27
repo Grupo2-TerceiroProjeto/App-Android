@@ -1,4 +1,4 @@
-package com.example.gestok.components.productpage.dialogs
+package com.example.gestok.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -25,12 +26,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.gestok.ui.theme.Blue
+import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.White
 
 @Composable
 fun ExcludeConfirmationDialog(
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit
+    onConfirm: @Composable () -> Unit
 ){
 
     Dialog(onDismissRequest = onDismiss) {
@@ -50,13 +52,13 @@ fun ExcludeConfirmationDialog(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Text("Excluir produto", fontWeight = W600, color = Blue, fontSize = 25.sp)
+                        Text("Excluir", fontWeight = W600, color = Blue, fontSize = 25.sp)
                     }
 
                     Row(   Modifier.fillMaxWidth().padding(20.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center){
-                        Text("Você tem certeza que deseja excluir o produto?", textAlign = TextAlign.Center)
+                        Text("Você tem certeza que deseja excluir?", textAlign = TextAlign.Center)
                     }
                     Spacer(modifier = Modifier.height(5.dp))
 
@@ -66,15 +68,27 @@ fun ExcludeConfirmationDialog(
                     ){
                         Button(
                             onClick = {onDismiss()},
-                            colors = ButtonDefaults.buttonColors(Blue)
+                            colors = ButtonDefaults.buttonColors(LightBlue)
                         ) {
-                            Text("Cancelar")
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = null,
+                                tint = White,
+
+                                )
+                            Text("Não")
                         }
                         Button(
                             onClick = {onDismiss()},
                             colors = ButtonDefaults.buttonColors(Blue)
                         ) {
-                            Text("Confirmar")
+                            Icon(
+                                imageVector = Icons.Default.Check,
+                                contentDescription = null,
+                                tint = White,
+
+                                )
+                            Text("Sim")
                         }
                     }
                 }

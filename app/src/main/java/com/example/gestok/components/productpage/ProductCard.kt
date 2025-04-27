@@ -13,7 +13,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -31,10 +30,9 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import com.example.gestok.R
 import com.example.gestok.components.NutritionalDataDialog
-import com.example.gestok.components.productpage.dialogs.ExcludeConfirmationDialog
+import com.example.gestok.components.ExcludeConfirmationDialog
 import com.example.gestok.components.productpage.dialogs.ProductEdit
 import com.example.gestok.ui.theme.Blue
-import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.LightGray
 
 @Composable
@@ -195,9 +193,7 @@ fun ProductData(productData: ProductData){
     if(showExcludeConfirmDialog){
         ExcludeConfirmationDialog(
             onDismiss = { showExcludeConfirmDialog = false },
-            onConfirm = {
-                showExcludeConfirmDialog = false
-            }
+            onConfirm = { showExcludeConfirmDialog = false }
         )
     }
 

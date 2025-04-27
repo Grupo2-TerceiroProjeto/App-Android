@@ -1,7 +1,9 @@
 package com.example.gestok.network
 
+import android.util.Log
 import com.example.gestok.network.service.AuthService
 import com.example.gestok.network.service.DashboardService
+import com.example.gestok.network.service.OrderService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -9,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
 
-    private const val BASE_URL = "http://192.168.137.1:8080/" //Mude para o IP da sua Máquina
+    private const val BASE_URL = "http://192.168.1.3:8080/" //Mude para o IP da sua Máquina
 
     fun getApi(token: String? = null): Retrofit {
         val logInterceptor = HttpLoggingInterceptor()
@@ -38,5 +40,9 @@ object ApiClient {
 
     fun dashboardService(token: String): DashboardService {
         return getApi(token).create(DashboardService::class.java)
+    }
+
+    fun orderService(token: String): OrderService {
+        return getApi(token).create(OrderService::class.java)
     }
 }

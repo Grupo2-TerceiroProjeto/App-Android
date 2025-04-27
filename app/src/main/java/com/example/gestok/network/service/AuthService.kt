@@ -1,7 +1,7 @@
 package com.example.gestok.network.service
 
-import com.example.gestok.screens.login.LoginUser
-import com.example.gestok.screens.login.UserSession
+import com.example.gestok.screens.login.data.LoginUser
+import com.example.gestok.screens.login.data.UserSession
 import retrofit2.http.Body
 import retrofit2.http.POST
 
