@@ -67,6 +67,8 @@ fun AdicionarAoEstoque(
     val editedProdutos = remember { mutableStateMapOf<Int, String>() }
     var quantidadeProduto by remember { mutableIntStateOf(1) }
 
+    var showCancelConfirmDialog by remember { mutableStateOf(false) }
+
 
     Dialog(onDismissRequest = onDismiss) {
 
@@ -103,7 +105,7 @@ fun AdicionarAoEstoque(
                             color = Blue,
                             fontSize = 30.sp
                         )
-                        Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(Blue)) {
+                        Button(onClick = { showCancelConfirmDialog = true }, colors = ButtonDefaults.buttonColors(Blue)) {
                             Icon(
                                 imageVector = Icons.Default.Close,
                                 contentDescription = null,
@@ -273,6 +275,18 @@ fun AdicionarAoEstoque(
         }
 
 
+    }
+
+    if(showCancelConfirmDialog){
+        CancelConfirmationDialog(
+            onDismiss = {
+                showCancelConfirmDialog = false
+            },
+            onConfirm = {
+                showCancelConfirmDialog = false
+            },
+            externalOnDismiss = {onDismiss()}
+        )
     }
 
 }

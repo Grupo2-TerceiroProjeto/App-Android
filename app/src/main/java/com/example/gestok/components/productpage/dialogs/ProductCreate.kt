@@ -42,11 +42,16 @@ fun ProductCreateDialog(
     onDismiss: () -> Unit,
     onConfirm: (String, Int, String, Double, List<IngredientData>) -> Unit
 ) {
+
+    var showCreateIngredientDialog by remember { mutableStateOf(false) }
+    var ingredientUpdateTrigger by remember { mutableIntStateOf(0) }
+
     var editedProduto by remember { mutableStateOf("") }
     var editedEstoque by remember { mutableStateOf("") }
     var editedCategoria by remember { mutableStateOf("Selecione uma opção") }
     var editedValor by remember { mutableStateOf("") }
     var editedIngredientes by remember { mutableStateOf(emptyList<IngredientData>()) }
+
     var showCancelConfirmDialog by remember { mutableStateOf(false) }
 
 
@@ -325,7 +330,8 @@ fun ProductCreateDialog(
                             color = Blue,
                             fontSize = 20.sp
                         )
-                        Button(onClick = {}, colors = ButtonDefaults.buttonColors(Blue)) {
+                        Button(onClick = { showCreateIngredientDialog = true},
+                            colors = ButtonDefaults.buttonColors(Blue)) {
                             Text(
                                 "+ Ingrediente"
                             )
@@ -341,7 +347,9 @@ fun ProductCreateDialog(
 
                 item {
                     Column(Modifier.padding(start = 20.dp, end = 20.dp)) {
-//                        IngredientBlock()
+                        key(ingredientUpdateTrigger) {
+//                            IngredientBlock(editedIngredientes)
+                        }
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                 }
@@ -377,14 +385,23 @@ fun ProductCreateDialog(
 
             }
         }
-
-
-
-
-
-
-
     }
+
+
+
+    if (showCreateIngredientDialog) {
+        IngredientCreate(
+            onDismiss = {
+                showCreateIngredientDialog = false
+            },
+            onConfirm = { name, quantity, unity ->
+                // Handle the confirmed ingredient data here
+                println("Ingredient created: $name, $quantity, $unity")
+                showCreateIngredientDialog = false
+            }
+        )
+    }
+
     if(showCancelConfirmDialog){
         CancelConfirmationDialog(
             onDismiss = {

@@ -361,11 +361,8 @@ fun ProductEdit(
                             fontSize = 20.sp
                         )
 
-                        Button(onClick = {
-
-                            showCreateIngredientDialog = true
-
-                        }, colors = ButtonDefaults.buttonColors(Blue)) {
+                        Button(onClick = {showCreateIngredientDialog = true},
+                            colors = ButtonDefaults.buttonColors(Blue)) {
                             Text(
                                 "+ Ingrediente"
                             )
