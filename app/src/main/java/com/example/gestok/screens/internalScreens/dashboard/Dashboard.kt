@@ -1,8 +1,6 @@
 package com.example.gestok.screens.internalScreens.dashboard
 
 import SkeletonLoader
-import android.util.Log
-import androidx.collection.mutableFloatListOf
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

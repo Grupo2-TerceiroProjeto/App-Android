@@ -1,4 +1,4 @@
-package com.example.gestok.components.orderpage
+package com.example.gestok.screens.internalScreens.order
 
 import SkeletonLoader
 import androidx.compose.foundation.background
@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gestok.components.orderpage.OrderCard
 import com.example.gestok.components.orderpage.dialogs.OrderCreate
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
@@ -96,7 +97,6 @@ fun OrderContent(
             }
 
         }
-
 
 
         item {

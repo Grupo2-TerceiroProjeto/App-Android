@@ -43,7 +43,7 @@ val moduloApi = module {
     }
 
     viewModel {
-        OrderApiViewModel(get())
+        OrderApiViewModel(get(), get())
     }
 
 

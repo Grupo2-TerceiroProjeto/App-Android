@@ -1,13 +1,13 @@
-package com.example.gestok.components.orderpage
+package com.example.gestok.screens.internalScreens.order.data
 
 data class OrderItens(
-    val id: Int,
+    val id: Int? = 0,
     val nome: String,
-    val categoria: Int,
-    val preco: Double,
+    val categoria: Int? = 0,
+    val preco: Double? = 0.0,
     var quantidade: Int,
-    val imagem: String?,
-    val emProducao: Boolean
+    val imagem: String? = "",
+    val emProducao: Boolean? = false
 
 )
 

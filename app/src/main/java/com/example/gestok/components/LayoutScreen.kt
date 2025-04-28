@@ -13,8 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.gestok.components.adminpage.AdminContent
 import com.example.gestok.components.adminpage.RegisterData
-import com.example.gestok.components.orderpage.OrderContent
-import com.example.gestok.components.orderpage.OrderData
+import com.example.gestok.screens.internalScreens.order.OrderContent
 import com.example.gestok.components.productpage.IngredientData
 import com.example.gestok.components.productpage.ProductContent
 import com.example.gestok.components.productpage.ProductData
@@ -84,8 +83,15 @@ val esfirra = ProductData("Esfirra", 15, "Salgados", 80.50, mutableListOf(farinh
 val pastel = ProductData("Pastel", 20, "Salgados", 90.00, mutableListOf(farinha, ovo, queijo, presunto, oleo), true)
 val brigadeiro = ProductData("Brigadeiro", 30, "Doces", 60.75, mutableListOf(chocolate, leite, acucar, margarina), true)
 val boloDeChocolate = ProductData("Bolo de Chocolate", 5, "Doces", 120.00, mutableListOf(farinha, leite, chocolate, ovo, fermento, acucar), true)
+val pudim = ProductData("Pudim", 25, "Doces", 70.50, mutableListOf(chocolate, leite, acucar, margarina), true)
+val quibe = ProductData("Quibe", 18, "Salgados", 85.00, mutableListOf(chocolate, leite, acucar, margarina), true)
+val mousseDeMaracuja = ProductData("Mousse de Maracujá", 8, "Doces", 65.00, mutableListOf(chocolate, leite, acucar, margarina), true)
+val tortaDeFrango = ProductData("Torta de Frango", 12, "Salgados", 110.00, mutableListOf(chocolate, leite, acucar, margarina), true)
 
-val listaProdutos: List<ProductData> = listOf(coxinha, esfirra, pastel, brigadeiro, boloDeChocolate)
+val listaProdutos: List<ProductData> = listOf(
+    coxinha, esfirra, pastel, brigadeiro, boloDeChocolate,
+    pudim, quibe, mousseDeMaracuja, tortaDeFrango
+)
 val listaFuncionarios: List<RegisterData> = listOf(luca, emilly, vitor, thiago, vagner, kauan)
 //val listaPedidos: List<OrderData> = listOf(pedido1, pedido2, pedido3)
 
