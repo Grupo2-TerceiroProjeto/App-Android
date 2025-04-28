@@ -21,15 +21,15 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.example.gestok.components.orderpage.OrderItens
+import com.example.gestok.screens.internalScreens.order.data.OrderItens
 import com.example.gestok.components.CancelConfirmationDialog
-import com.example.gestok.components.listaProdutos
-import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.White
+import com.example.gestok.viewModel.order.OrderApiViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun OrderCreate(
@@ -47,6 +47,12 @@ fun OrderCreate(
     var showAddItemDialog by remember { mutableStateOf(false) }
 
     var expanded by remember { mutableStateOf(false) }
+
+    val updateQuantidade: (Int, Int) -> Unit = { index, newQuantidade ->
+        produtos = produtos.toMutableList().apply {
+            this[index] = this[index].copy(quantidade = newQuantidade)
+        }
+    }
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -278,7 +284,7 @@ fun OrderCreate(
 
                 item {
                     Column(Modifier.padding(start = 20.dp, end = 20.dp)) {
-
+                        PedidoBlock(produtos, updateQuantidade)
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                 }
@@ -301,10 +307,19 @@ fun OrderCreate(
         }
     }
 
-    if(showAddItemDialog){
-        ItensAdd(produtos = listaProdutos,
+    if (showAddItemDialog) {
+        val viewModel: OrderApiViewModel = koinViewModel()
+
+        ItensAdd(
             onDismiss = { showAddItemDialog = false },
-            onConfirm = {showAddItemDialog = false})
+            onConfirm = { selectedProducts ->
+                produtos = produtos + selectedProducts.map {
+                    OrderItens(nome = it.nome, quantidade = 0)
+                }
+                showAddItemDialog = false
+            },
+            viewModel
+        )
     }
 
     if(showCancelConfirmDialog){

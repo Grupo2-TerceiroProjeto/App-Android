@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.R
 import com.example.gestok.components.orderpage.dialogs.EditarPedidoDialog
+import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.ui.theme.Blue
 
 @Composable

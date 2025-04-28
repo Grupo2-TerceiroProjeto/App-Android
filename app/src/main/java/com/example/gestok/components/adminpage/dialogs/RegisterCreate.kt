@@ -67,7 +67,7 @@ fun RegisterCreate(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            "Cadastrar Colaborador", fontWeight = W600, color = Blue, fontSize = 20.sp
+                            "Cadastrar", fontWeight = W600, color = Blue, fontSize = 20.sp
                         )
                         Button(onClick = { showCancelConfirmDialog = true }, colors = ButtonDefaults.buttonColors(Blue)) {
                             Icon(imageVector = Icons.Default.Close, contentDescription = null, tint = White)

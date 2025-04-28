@@ -22,16 +22,16 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.example.gestok.components.orderpage.OrderItens
+import com.example.gestok.screens.internalScreens.order.data.OrderItens
 import com.example.gestok.components.CancelConfirmationDialog
 import com.example.gestok.components.listaProdutos
-import com.example.gestok.components.orderpage.OrderData
-import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.White
+import com.example.gestok.viewModel.order.OrderApiViewModel
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
@@ -50,12 +50,18 @@ fun EditarPedidoDialog(
     var editedStatusPedido by remember { mutableStateOf(status) }
     var editedDataEntrega by remember { mutableStateOf(dataEntrega) }
     var editedValorPedido by remember { mutableStateOf(totalCompra.toString()) }
-    val editedItens by remember { mutableStateOf(produtos) }
+    var editedItens by remember { mutableStateOf(produtos) }
 
     var expanded by remember { mutableStateOf(false) }
 
     var showCancelConfirmDialog by remember { mutableStateOf(false) }
     var showAddItemDialog by remember { mutableStateOf(false) }
+
+    val updateQuantidade: (Int, Int) -> Unit = { index, newQuantidade ->
+        editedItens = editedItens.toMutableList().apply {
+            this[index] = this[index].copy(quantidade = newQuantidade)
+        }
+    }
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -331,7 +337,7 @@ fun EditarPedidoDialog(
 
                 item {
                     Column(Modifier.padding(start = 20.dp, end = 20.dp)) {
-                        PedidoBlock(editedItens)
+                        PedidoBlock(editedItens, updateQuantidade)
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                 }
@@ -372,10 +378,18 @@ fun EditarPedidoDialog(
         }
     }
 
-    if(showAddItemDialog){
-        ItensAdd(produtos = listaProdutos,
+    if (showAddItemDialog) {
+        val viewModel: OrderApiViewModel = koinViewModel()
+        ItensAdd(
             onDismiss = { showAddItemDialog = false },
-            onConfirm = {showAddItemDialog = false})
+            onConfirm = { selectedProducts ->
+                editedItens = editedItens + selectedProducts.map {
+                    OrderItens(nome = it.nome, quantidade = 0)
+                }
+                showAddItemDialog = false
+            },
+            viewModel
+        )
     }
 
     if(showCancelConfirmDialog){

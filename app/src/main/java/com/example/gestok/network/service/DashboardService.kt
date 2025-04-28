@@ -1,6 +1,6 @@
 package com.example.gestok.network.service
 
-import com.example.gestok.components.orderpage.OrderData
+import com.example.gestok.screens.internalScreens.order.data.OrderData
 import retrofit2.Response
 import okhttp3.ResponseBody
 import retrofit2.http.GET

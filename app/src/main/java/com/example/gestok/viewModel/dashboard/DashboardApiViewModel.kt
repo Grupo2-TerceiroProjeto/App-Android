@@ -1,7 +1,7 @@
 package com.example.gestok.viewModel.dashboard
 
 import androidx.lifecycle.viewModelScope
-import com.example.gestok.components.orderpage.OrderData
+import com.example.gestok.screens.internalScreens.order.data.OrderData
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -27,7 +27,7 @@ class DashboardApiViewModel(private val api: DashboardService, override val sess
 
         viewModelScope.launch {
             try {
-                delay(2000)
+                delay(1500)
                 val resposta = api.getPedidos()
 
                 _pedidos.clear()
