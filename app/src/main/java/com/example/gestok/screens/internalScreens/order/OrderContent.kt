@@ -17,6 +17,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,10 +39,11 @@ import com.example.gestok.viewModel.order.OrderApiViewModel
 @Composable
 fun OrderContent(
     modifier: Modifier = Modifier,
-    viewModel: OrderApiViewModel
+    viewModel: OrderApiViewModel,
+    currentPage: MutableState<String>
 ) {
 
-    var showCreateDialog by remember { mutableStateOf(false) }
+//    var showCreateDialog by remember { mutableStateOf(false) }
 
     val erroPedidos = viewModel.pedidosErro
     val pedidos = viewModel.pedidos
@@ -76,7 +78,7 @@ fun OrderContent(
                         color = Black
                     )
                     Button(
-                        onClick = { showCreateDialog = true },
+                        onClick = { currentPage.value = "createOrder" },
                         colors = ButtonDefaults.buttonColors(containerColor = Blue)
                     ) {
                         Text("Cadastrar pedido", color = White)
@@ -149,13 +151,13 @@ fun OrderContent(
         }
 
     }
-
-    if (showCreateDialog) {
-        OrderCreate(
-            onDismiss = { showCreateDialog = false },
-            onConfirm = { newNome, newContato, newStatus, newData, newItens ->
-                showCreateDialog = false
-            }
-        )
-    }
+//
+//    if (showCreateDialog) {
+//        OrderCreate(
+//            onDismiss = { showCreateDialog = false },
+//            onConfirm = { newNome, newContato, newStatus, newData, newItens ->
+//                showCreateDialog = false
+//            }
+//        )
+//    }
 }

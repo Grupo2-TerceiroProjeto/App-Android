@@ -29,8 +29,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import com.example.gestok.R
-import com.example.gestok.components.NutritionalDataDialog
 import com.example.gestok.components.ExcludeConfirmationDialog
+import com.example.gestok.components.productpage.dialogs.NutritionalDataDialog
 import com.example.gestok.components.productpage.dialogs.ProductEdit
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightGray

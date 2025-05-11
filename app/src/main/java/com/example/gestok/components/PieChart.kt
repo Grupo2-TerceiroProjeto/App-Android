@@ -43,7 +43,7 @@ fun PieChartScreen(
 
     val pieChartData = PieChartData(
         slices = slices,
-        plotType = PlotType.Pie
+        plotType = PlotType.Donut
     )
 
     val pieChartConfig = PieChartConfig(

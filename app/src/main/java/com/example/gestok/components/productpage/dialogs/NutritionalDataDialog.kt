@@ -1,4 +1,4 @@
-package com.example.gestok.components
+package com.example.gestok.components.productpage.dialogs
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,13 +18,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.gestok.components.InputLabelDisable
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.LightGray
@@ -76,13 +76,11 @@ fun NutritionalDataDialog(
                 Spacer(modifier = Modifier
                     .height(20.dp))
 
-                InputLabel(
-                    description = "Ingredientes",
+                InputLabelDisable(
+                    text = "Ingredientes",
                     value = ingredients.joinToString(", "),
                     singleLine = false,
-                    enabled = false,
-                    modifier = Modifier
-                        .background(LightGray)
+                    icon = false
                 )
 
                 Spacer(modifier = Modifier

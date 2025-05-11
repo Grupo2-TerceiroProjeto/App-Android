@@ -284,7 +284,7 @@ fun OrderCreate(
 
                 item {
                     Column(Modifier.padding(start = 20.dp, end = 20.dp)) {
-                        PedidoBlock(produtos, updateQuantidade)
+                        ItensBlock(produtos, updateQuantidade)
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                 }

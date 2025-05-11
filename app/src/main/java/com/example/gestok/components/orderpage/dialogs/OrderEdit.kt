@@ -337,7 +337,7 @@ fun EditarPedidoDialog(
 
                 item {
                     Column(Modifier.padding(start = 20.dp, end = 20.dp)) {
-                        PedidoBlock(editedItens, updateQuantidade)
+                        ItensBlock(editedItens, updateQuantidade)
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                 }

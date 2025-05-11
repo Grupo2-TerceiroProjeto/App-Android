@@ -65,7 +65,7 @@ fun CodeStep(navController: NavController) {
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             Input(
-                description = "",
+                text = "",
                 modifier = Modifier
                     .width(48.dp)
                     .focusRequester(focusCodigo1),
@@ -81,7 +81,7 @@ fun CodeStep(navController: NavController) {
             )
 
             Input(
-                description = "",
+                text = "",
                 modifier = Modifier
                     .width(48.dp)
                     .focusRequester(focusCodigo2),
@@ -97,7 +97,7 @@ fun CodeStep(navController: NavController) {
             )
 
             Input(
-                description = "",
+                text = "",
                 modifier = Modifier
                     .width(48.dp)
                     .focusRequester(focusCodigo3),
@@ -113,7 +113,7 @@ fun CodeStep(navController: NavController) {
             )
 
             Input(
-                description = "",
+                text = "",
                 modifier = Modifier
                     .width(48.dp)
                     .focusRequester(focusCodigo4),
@@ -129,7 +129,7 @@ fun CodeStep(navController: NavController) {
             )
 
             Input(
-                description = "",
+                text = "",
                 modifier = Modifier
                     .width(48.dp)
                     .focusRequester(focusCodigo5),

@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.gestok.components.adminpage.AdminContent
 import com.example.gestok.components.adminpage.RegisterData
+import com.example.gestok.components.orderpage.dialogs.OrderCreateV2
 import com.example.gestok.screens.internalScreens.order.OrderContent
 import com.example.gestok.components.productpage.IngredientData
 import com.example.gestok.components.productpage.ProductContent
@@ -141,9 +142,22 @@ fun LayoutScreen(
                 OrderContent(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding), viewModel
+                        .padding(innerPadding),
+                    viewModel,
+                    currentPage = currentPage
                 )
 
+            }
+
+            "createOrder" -> {
+                OrderCreateV2(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    onBack = {
+                        currentPage.value = "pedidos"
+                    }
+                )
             }
 
             "config" -> {

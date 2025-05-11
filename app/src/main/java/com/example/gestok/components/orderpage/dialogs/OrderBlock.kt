@@ -27,7 +27,7 @@ import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.LightGray
 
 @Composable
-fun PedidoBlock(
+fun ItensBlock(
     itens: List<OrderItens>,
     updateQuantidade: (Int, Int) -> Unit
 ) {
