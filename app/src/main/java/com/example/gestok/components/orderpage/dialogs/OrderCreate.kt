@@ -1,52 +1,62 @@
 package com.example.gestok.components.orderpage.dialogs
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import SelectOption
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
+import com.example.gestok.components.InputLabel
 import com.example.gestok.screens.internalScreens.order.data.OrderItens
-import com.example.gestok.components.CancelConfirmationDialog
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
-import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.White
 import com.example.gestok.viewModel.order.OrderApiViewModel
 import org.koin.androidx.compose.koinViewModel
 
+
 @Composable
 fun OrderCreate(
-    onDismiss: () -> Unit,
-    onConfirm: (String, String, String, String, List<OrderItens>) -> Unit
+    modifier: Modifier = Modifier,
+    onBack: () -> Unit
 ) {
+
     var nomeSolicitante by remember { mutableStateOf("") }
     var telefone by remember { mutableStateOf("") }
-    var status by remember { mutableStateOf("") }
+    var status by remember { mutableStateOf("Selecione uma opção") }
     var dataEntrega by remember { mutableStateOf("") }
     var totalCompra by remember { mutableStateOf("") }
     var produtos by remember { mutableStateOf(emptyList<OrderItens>()) }
-
-    var showCancelConfirmDialog by remember { mutableStateOf(false) }
-    var showAddItemDialog by remember { mutableStateOf(false) }
-
-    var expanded by remember { mutableStateOf(false) }
 
     val updateQuantidade: (Int, Int) -> Unit = { index, newQuantidade ->
         produtos = produtos.toMutableList().apply {
@@ -54,283 +64,197 @@ fun OrderCreate(
         }
     }
 
-    Dialog(onDismissRequest = onDismiss) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-        ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth()
-            ) {
+    var itensAdd by remember { mutableStateOf(false) }
 
-                // -- HEADER -------------------------
-                item {
-                    Row(
-                        Modifier.fillMaxWidth().padding(20.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.White),
+        verticalArrangement = Arrangement.spacedBy(24.dp),
+
+        ) {
+
+        item {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 15.dp, end = 15.dp, top = 15.dp)
+            ) {
+                Row(
+                    Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = onBack,
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(Color(0xFF005BA4), shape = CircleShape)
                     ) {
-                        Text("Criar Pedido", fontWeight = W600, color = Blue, fontSize = 20.sp)
-                        Button(onClick = { showCancelConfirmDialog = true }, colors = ButtonDefaults.buttonColors(Blue)) {
-                            Icon(imageVector = Icons.Default.Close, contentDescription = null, tint = White)
-                        }
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Voltar",
+                            tint = Color.White
+                        )
                     }
 
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        "Cadastrar Pedido",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.W600,
+                        color = Black,
+                        modifier = Modifier
+                            .padding(start = 16.dp)
+                            .weight(1f)
+                    )
                 }
 
-                //-- SOLICITANTE ----------------------
-                item {
-                    Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
-                        Text("Solicitante", fontWeight = W600, color = Blue)
-                        TextField(
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(24.dp),
+                ) {
+
+                    Column {
+                        InputLabel(
+                            text = "Solicitante",
                             value = nomeSolicitante,
                             onValueChange = { nomeSolicitante = it },
-                            colors = TextFieldDefaults.colors(
-                                focusedContainerColor = LightGray,
-                                unfocusedContainerColor = LightGray,
-                                focusedTextColor = Black,
-                                unfocusedTextColor = Black,
-                                focusedIndicatorColor = LightGray,
-                                unfocusedIndicatorColor = LightGray
-                            ),
-                            modifier = Modifier.clip(RoundedCornerShape(20)),
-                            singleLine = true
+                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Text
                         )
                     }
-                    Spacer(modifier = Modifier.height(10.dp))
-                }
 
-                //-----STATUS--------------------
-                item {
                     Column {
-                        Text(
-                            "Status do Pedido",
-                            Modifier.padding(start = 20.dp),
-                            fontWeight = W600,
-                            color = Blue
-                        )
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-
-                            TextField(
-                                value = status,
-                                onValueChange = {},
-                                readOnly = true,
-                                colors = TextFieldDefaults.colors(
-                                    focusedContainerColor = LightGray, // Cor de fundo quando focado
-                                    unfocusedContainerColor = LightGray,   // Cor de fundo quando não focado
-                                    focusedTextColor = Black,          // Cor do texto quando focado
-                                    unfocusedTextColor = Black,         // Cor do texto quando não focado
-                                    focusedIndicatorColor = LightGray, // Cor do indicador (borda) quando focado
-                                    unfocusedIndicatorColor = LightGray
-                                ),
-                                modifier = Modifier
-                                    .padding(start = 20.dp, end = 10.dp)
-                                    .width(240.dp)
-                                    .clip(RoundedCornerShape(20)),
-
-                                singleLine = true
-                            )
-
-                            Icon(
-                                imageVector = Icons.Default.ArrowDropDown,
-                                contentDescription = null,
-                                tint = Blue,
-
-                                modifier = Modifier
-                                    .clickable { expanded = !expanded }
-                                    .scale(2.0F, 2.0F)
-
-
-                            )
-                        }
-
-                        Box(
-                            Modifier
-                                .padding(start = 20.dp, bottom = 15.dp)
-
-                                .height(0.dp)
-                                .width(20.dp)
-                        ) {
-
-                            DropdownMenu(
-                                expanded = expanded,
-                                onDismissRequest = { expanded = false },
-                                modifier = Modifier
-                                    .width(240.dp)
-
-
-                            ) {
-                                listOf(
-                                    "Selecione uma opção",
-                                    "Pendente",
-                                    "Em Produção",
-                                    "Concluído",
-                                    "Cancelado"
-                                ).forEach { statusOption ->
-                                    DropdownMenuItem(
-                                        text = { Text(statusOption) },
-                                        onClick = {
-                                            status = statusOption
-                                            expanded = false
-                                        }
-                                    )
-                                }
-                            }
-
-                        }
-                    }
-                }
-
-                item {
-                    Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
-                        Text("Contato", fontWeight = W600, color = Blue)
-                        TextField(
+                        InputLabel(
+                            text = "Contato",
                             value = telefone,
                             onValueChange = { telefone = it },
-                            colors = TextFieldDefaults.colors(
-                                focusedContainerColor = LightGray,
-                                unfocusedContainerColor = LightGray,
-                                focusedTextColor = Black,
-                                unfocusedTextColor = Black,
-                                focusedIndicatorColor = LightGray,
-                                unfocusedIndicatorColor = LightGray
-                            ),
-                            modifier = Modifier.clip(RoundedCornerShape(20)),
-                            singleLine = true
+                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Phone
                         )
                     }
-                    Spacer(modifier = Modifier.height(10.dp))
-                }
 
-                //-----DATA----------------
-                item {
-                    Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
-                        Text("Data de Entrega", fontWeight = W600, color = Blue)
-                        TextField(
+                    Column {
+                        SelectOption(
+                            text = "Status do Pedido",
+                            value = status,
+                            onValueChange = { status = it },
+                            list = listOf(
+                                "Pendente",
+                                "Em Produção",
+                                "Concluído",
+                                "Cancelado"
+                            )
+                        )
+                    }
+
+                    Column {
+                        InputLabel(
+                            text = "Data de Entrega",
                             value = dataEntrega,
                             onValueChange = { dataEntrega = it },
-                            colors = TextFieldDefaults.colors(
-                                focusedContainerColor = LightGray,
-                                unfocusedContainerColor = LightGray,
-                                focusedTextColor = Black,
-                                unfocusedTextColor = Black,
-                                focusedIndicatorColor = LightGray,
-                                unfocusedIndicatorColor = LightGray
-                            ),
-                            modifier = Modifier.clip(RoundedCornerShape(20)),
-                            singleLine = true
+                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Text
                         )
                     }
-                    Spacer(modifier = Modifier.height(10.dp))
-                }
 
-                //-----VALOR----------------------
-                item {
-                    Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
-                        Text("Valor", fontWeight = W600, color = Blue)
-                        TextField(
+                    Column {
+                        InputLabel(
+                            text = "Valor",
                             value = totalCompra,
                             onValueChange = { totalCompra = it },
-                            colors = TextFieldDefaults.colors(
-                                focusedContainerColor = LightGray,
-                                unfocusedContainerColor = LightGray,
-                                focusedTextColor = Black,
-                                unfocusedTextColor = Black,
-                                focusedIndicatorColor = LightGray,
-                                unfocusedIndicatorColor = LightGray
-                            ),
-                            modifier = Modifier.clip(RoundedCornerShape(20)),
-                            singleLine = true
+                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Decimal
                         )
                     }
-                    Spacer(modifier = Modifier.height(10.dp))
+
                 }
 
-                //--- HEADER "ITENS" + BOTAO ADICIONAR -----------------
-                item {
+            }
+
+        }
+
+        if (!itensAdd) {
+            item {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(end = 20.dp, start = 20.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        "Itens",
+                        fontWeight = W600,
+                        color = Blue,
+                        fontSize = 18.sp
+                    )
+                    Button(
+                        onClick = { itensAdd = true },
+                        colors = ButtonDefaults.buttonColors(LightBlue)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = null,
+                            tint = White,
+
+                            )
+                        Text("  Adicionar", color = White)
+                    }
+                }
+
+                if (produtos.isEmpty()) {
+                    Text(
+                        "Para salvar o pedido, é necessário adicionar pelo menos um produto",
+                        fontSize = 14.sp,
+                        color = Black,
+                        modifier = Modifier.padding(
+                            start = 50.dp,
+                            end = 50.dp,
+                            top = 32.dp,
+                            bottom = 32.dp
+                        ),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                } else {
+                    Column(Modifier.padding(start = 20.dp, end = 20.dp, top = 24.dp)) {
+                        ItensBlock(produtos, updateQuantidade)
+                    }
+
                     Row(
                         Modifier
                             .fillMaxWidth()
-                            .padding(end = 20.dp, start = 20.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                            .padding(top = 10.dp, bottom = 10.dp),
+                        horizontalArrangement = Arrangement.Center
                     ) {
-                        Text(
-                            "Itens",
-                            fontWeight = W600,
-                            color = Blue,
-                            fontSize = 20.sp
-                        )
-                        Button(onClick = {showAddItemDialog = true}, colors = ButtonDefaults.buttonColors(LightBlue)) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = null,
-                                tint = White,
-
-                                )
-                            Text("  Adicionar", color = White)
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                }
-
-                item {
-                    Column(Modifier.padding(start = 20.dp, end = 20.dp)) {
-                        ItensBlock(produtos, updateQuantidade)
-                    }
-                    Spacer(modifier = Modifier.height(10.dp))
-                }
-
-
-                //-- BOTÕES CANCELAR E CONCLUIR ----------------------------------------
-                item {
-                    Row(Modifier.fillMaxWidth().padding(20.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Button(onClick = { showCancelConfirmDialog = true }, colors = ButtonDefaults.buttonColors(Blue)) {
-                            Icon(imageVector = Icons.Default.Clear, contentDescription = null, tint = White)
-                            Text("Cancelar", color = White)
-                        }
-                        Button(onClick = { onConfirm(nomeSolicitante, telefone, status, dataEntrega, produtos) }, colors = ButtonDefaults.buttonColors(LightBlue)) {
+                        Button(
+                            onClick = { },
+                            colors = ButtonDefaults.buttonColors(Blue),
+                        ) {
                             Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = White)
-                            Text("Criar", color = White)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Salvar", color = White,  fontSize = 16.sp)
                         }
                     }
                 }
             }
         }
+
+        if (itensAdd) {
+            item {
+                val viewModel: OrderApiViewModel = koinViewModel()
+
+                ItensAdd(
+                    viewModel,
+                    onConfirm = { selectedProducts ->
+                        produtos = produtos + selectedProducts.map {
+                            OrderItens(nome = it.nome, quantidade = 0)
+                        }
+                        itensAdd = false
+
+                    }
+                )
+            }
+        }
+
     }
 
-    if (showAddItemDialog) {
-        val viewModel: OrderApiViewModel = koinViewModel()
-
-        ItensAdd(
-            onDismiss = { showAddItemDialog = false },
-            onConfirm = { selectedProducts ->
-                produtos = produtos + selectedProducts.map {
-                    OrderItens(nome = it.nome, quantidade = 0)
-                }
-                showAddItemDialog = false
-            },
-            viewModel
-        )
-    }
-
-    if(showCancelConfirmDialog){
-        CancelConfirmationDialog(
-            onDismiss = {
-                showCancelConfirmDialog = false
-            },
-            onConfirm = {
-                showCancelConfirmDialog = false
-            },
-            externalOnDismiss = {onDismiss()}
-        )
-    }
 }

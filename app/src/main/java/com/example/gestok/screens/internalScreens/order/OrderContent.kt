@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.components.orderpage.OrderCard
 import com.example.gestok.components.orderpage.dialogs.OrderCreate
+import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.White
@@ -40,10 +41,9 @@ import com.example.gestok.viewModel.order.OrderApiViewModel
 fun OrderContent(
     modifier: Modifier = Modifier,
     viewModel: OrderApiViewModel,
-    currentPage: MutableState<String>
+    currentPage: MutableState<String>,
+    selectedOrder: MutableState<OrderData?>
 ) {
-
-//    var showCreateDialog by remember { mutableStateOf(false) }
 
     val erroPedidos = viewModel.pedidosErro
     val pedidos = viewModel.pedidos
@@ -143,7 +143,11 @@ fun OrderContent(
                 else -> {
 
                     pedidos.forEach { pedido ->
-                        OrderCard(pedido = pedido)
+                        OrderCard(
+                            pedido = pedido,
+                            currentPage = currentPage,
+                            selectedOrder = selectedOrder
+                        )
                     }
 
                 }
@@ -151,13 +155,4 @@ fun OrderContent(
         }
 
     }
-//
-//    if (showCreateDialog) {
-//        OrderCreate(
-//            onDismiss = { showCreateDialog = false },
-//            onConfirm = { newNome, newContato, newStatus, newData, newItens ->
-//                showCreateDialog = false
-//            }
-//        )
-//    }
 }
