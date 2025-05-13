@@ -3,6 +3,7 @@ package com.example.gestok.viewModel.order
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.gestok.network.service.OrderService
+import com.example.gestok.screens.internalScreens.order.data.OrderCreateData
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.screens.internalScreens.order.data.ProductData
 import com.example.gestok.screens.login.data.UserSession
@@ -17,9 +18,11 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
     OrderViewModel(sessaoUsuario) {
 
     override fun getPedidos() {
+        limparErros()
+
         viewModelScope.launch {
             try {
-                delay(1500)
+                delay(1100)
 
                 val resposta = api.getPedidos()
 
@@ -103,5 +106,28 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
             }
         }
 
+    }
+
+    override fun salvarPedido(pedido: OrderCreateData) {
+        limparErrosPedido()
+
+        var houveErro = false
+
+        if (pedido.nomeSolicitante.isBlank()) {
+            _nomeSolicitanteErro = "Nome do solicitante é obrigatório"
+            houveErro = true
+        }
+
+        if (pedido.nomeSolicitante.length < 2) {
+            _nomeSolicitanteErro = "Nome do solicitante deve ter pelo menos 2 caracteres"
+            houveErro = true
+        }
+
+        if (pedido.telefone.length < 11) {
+            _telefoneErro = "Número de telefone inválido"
+            houveErro = true
+        }
+
+        if (houveErro) return
     }
 }

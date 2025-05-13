@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import com.example.gestok.components.InputLabel
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.screens.internalScreens.order.data.OrderItens
+import com.example.gestok.screens.internalScreens.order.data.OrderItensBlock
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
@@ -57,11 +58,20 @@ fun OrderEdit(
     var editedStatusPedido by remember { mutableStateOf(order.status) }
     var editedDataEntrega by remember { mutableStateOf(order.dataEntrega ?: "") }
     var editedValorPedido by remember { mutableStateOf(order.totalCompra.toString()) }
-    var editedItens by remember { mutableStateOf(order.produtos) }
+    var editedItens by remember {
+        mutableStateOf(
+            order.produtos.map { item ->
+                OrderItensBlock(
+                    nome = item.nome,
+                    quantidade = item.quantidade
+                )
+            }
+        )
+    }
 
     val updateQuantidade: (Int, Int) -> Unit = { index, newQuantidade ->
         editedItens = editedItens.toMutableList().apply {
-            this.set(index, this[index].copy(quantidade = newQuantidade))
+            this[index] = this[index].copy(quantidade = newQuantidade)
         }
     }
 
@@ -122,7 +132,8 @@ fun OrderEdit(
                             text = "Solicitante",
                             value = editedNomeSolicitante,
                             onValueChange = { editedNomeSolicitante = it },
-                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Text
+                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
+                            maxLength = 45
                         )
                     }
 
@@ -131,7 +142,8 @@ fun OrderEdit(
                             text = "Contato",
                             value = editedContato,
                             onValueChange = { editedContato = it },
-                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Phone
+                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Phone,
+                            maxLength = 11
                         )
                     }
 
@@ -154,7 +166,8 @@ fun OrderEdit(
                             text = "Data de Entrega",
                             value = editedDataEntrega,
                             onValueChange = { editedDataEntrega = it },
-                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Text
+                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
+                            maxLength = 10
                         )
                     }
 
@@ -163,7 +176,8 @@ fun OrderEdit(
                             text = "Valor",
                             value = editedValorPedido,
                             onValueChange = { editedValorPedido = it },
-                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Decimal
+                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Decimal,
+                            maxLength = 15
                         )
                     }
 
@@ -247,7 +261,7 @@ fun OrderEdit(
                     viewModel,
                     onConfirm = { selectedProducts ->
                         editedItens = editedItens + selectedProducts.map {
-                            OrderItens(nome = it.nome, quantidade = 0)
+                            OrderItensBlock(nome = it.nome, quantidade = 0)
                         }
                         itensAdd = false
 

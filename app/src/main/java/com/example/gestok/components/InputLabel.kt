@@ -24,7 +24,10 @@ fun InputLabel(
     text : String,
     value : String,
     onValueChange: (String) -> Unit = {},
-    keyboardType: KeyboardType = KeyboardType.Text
+    erro: String? = null,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    readOnly: Boolean = false,
+    maxLength: Int
 
 ) {
 
@@ -32,7 +35,11 @@ fun InputLabel(
     Spacer(modifier = Modifier.height(8.dp))
     TextField(
         value = value,
-        onValueChange = onValueChange,
+        onValueChange = { newValue ->
+            if (newValue.length <= maxLength) {
+                onValueChange(newValue)
+            }
+        },
         colors = TextFieldDefaults.colors(
             focusedContainerColor = LightGray,
             focusedTextColor = Black,
@@ -40,6 +47,12 @@ fun InputLabel(
             unfocusedTextColor = Black
         ),
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType),
+        readOnly = readOnly,
+        isError = erro != null,
+        supportingText = {
+            erro?.let { Text(text = it) }
+        },
+        singleLine = true,
         modifier = Modifier
             .fillMaxWidth()
             .clip(shape = RoundedCornerShape(20))

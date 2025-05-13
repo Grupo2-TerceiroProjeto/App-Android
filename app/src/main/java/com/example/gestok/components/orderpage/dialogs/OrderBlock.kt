@@ -21,14 +21,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.gestok.screens.internalScreens.order.data.OrderItens
+import com.example.gestok.screens.internalScreens.order.data.OrderItensBlock
 
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.LightGray
 
 @Composable
 fun ItensBlock(
-    itens: List<OrderItens>,
+    itens: List<OrderItensBlock>,
     updateQuantidade: (Int, Int) -> Unit
 ) {
 

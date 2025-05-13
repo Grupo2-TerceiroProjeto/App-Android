@@ -456,7 +456,7 @@ fun Dashboard(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            "Faturamento por Mês (R$)",
+                            "Valor faturado por Mês (R$)",
                             color = Black,
                             fontWeight = FontWeight.Bold
                         )

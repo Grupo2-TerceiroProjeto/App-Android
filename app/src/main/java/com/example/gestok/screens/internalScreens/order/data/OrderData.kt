@@ -1,13 +1,20 @@
 package com.example.gestok.screens.internalScreens.order.data
 
-data class OrderItens(
-    val id: Int? = 0,
+import java.time.LocalDate
+
+data class OrderItensBlock(
     val nome: String,
-    val categoria: Int? = 0,
-    val preco: Double? = 0.0,
+    var quantidade: Int
+)
+
+data class OrderItens(
+    val id: Int,
+    val nome: String,
+    val categoria: Int,
+    val preco: Double,
     var quantidade: Int,
-    val imagem: String? = "",
-    val emProducao: Boolean? = false
+    val imagem: String,
+    val emProducao: Boolean
 
 )
 
@@ -19,5 +26,31 @@ data class OrderData(
     val status: String,
     val produtos: List<OrderItens>,
     val totalCompra: Double
+)
+
+data class OrderItensCreate(
+    val nome: String,
+    val categoria: Int,
+    val preco: Double,
+    var quantidade: Int,
+    val imagem: String,
+    val emProducao: Boolean
+
+)
+
+data class OrderCreateData(
+    val nomeSolicitante: String,
+    val dataEntrega: LocalDate?,
+    val telefone: String,
+    val status: String,
+    val produtos: List<OrderItensCreate>
+)
+
+data class OrderEditData(
+    val nomeSolicitante: String,
+    val dataEntrega: LocalDate?,
+    val telefone: String,
+    val status: String,
+    val produtos: List<OrderItensBlock>
 )
 

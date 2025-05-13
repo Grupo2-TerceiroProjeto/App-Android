@@ -36,13 +36,20 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.components.InputLabel
-import com.example.gestok.screens.internalScreens.order.data.OrderItens
+import com.example.gestok.screens.internalScreens.order.data.OrderCreateData
+import com.example.gestok.screens.internalScreens.order.data.OrderItensBlock
+import com.example.gestok.screens.internalScreens.order.data.OrderItensCreate
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.White
+import com.example.gestok.utils.formatDate
 import com.example.gestok.viewModel.order.OrderApiViewModel
 import org.koin.androidx.compose.koinViewModel
+import java.text.NumberFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 
 @Composable
@@ -55,14 +62,34 @@ fun OrderCreate(
     var telefone by remember { mutableStateOf("") }
     var status by remember { mutableStateOf("Selecione uma opção") }
     var dataEntrega by remember { mutableStateOf("") }
-    var totalCompra by remember { mutableStateOf("") }
-    var produtos by remember { mutableStateOf(emptyList<OrderItens>()) }
+    var produtos by remember { mutableStateOf(emptyList<OrderItensCreate>()) }
+    val totalCompra by remember(produtos) {
+        mutableStateOf(
+            NumberFormat.getCurrencyInstance(Locale("pt", "BR"))
+                .format(produtos.sumOf { it.preco * it.quantidade })
+        )
+    }
 
     val updateQuantidade: (Int, Int) -> Unit = { index, newQuantidade ->
         produtos = produtos.toMutableList().apply {
             this[index] = this[index].copy(quantidade = newQuantidade)
         }
     }
+
+    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+
+    val dataEntregaParsed = runCatching {
+        if (dataEntrega.isNotBlank()) LocalDate.parse(dataEntrega, formatter)
+        else null
+    }.getOrNull()
+
+    val novoPedido = OrderCreateData(
+        nomeSolicitante = nomeSolicitante,
+        dataEntrega = dataEntregaParsed,
+        telefone = telefone,
+        status = status,
+        produtos = produtos
+    )
 
     var itensAdd by remember { mutableStateOf(false) }
 
@@ -120,8 +147,12 @@ fun OrderCreate(
                         InputLabel(
                             text = "Solicitante",
                             value = nomeSolicitante,
-                            onValueChange = { nomeSolicitante = it },
-                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Text
+                            onValueChange = {
+                                val filtered = it.filter { char -> char.isLetter() || char.isWhitespace() }
+                                nomeSolicitante = filtered
+                            },
+                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
+                            maxLength = 45
                         )
                     }
 
@@ -130,7 +161,8 @@ fun OrderCreate(
                             text = "Contato",
                             value = telefone,
                             onValueChange = { telefone = it },
-                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Phone
+                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Phone,
+                            maxLength = 11
                         )
                     }
 
@@ -152,8 +184,11 @@ fun OrderCreate(
                         InputLabel(
                             text = "Data de Entrega",
                             value = dataEntrega,
-                            onValueChange = { dataEntrega = it },
-                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Text
+                            onValueChange = {
+                                dataEntrega = formatDate(it)
+                            },
+                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Number,
+                            maxLength = 10
                         )
                     }
 
@@ -161,8 +196,10 @@ fun OrderCreate(
                         InputLabel(
                             text = "Valor",
                             value = totalCompra,
-                            onValueChange = { totalCompra = it },
-                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Decimal
+                            onValueChange = { },
+                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Decimal,
+                            readOnly = true,
+                            maxLength = 15
                         )
                     }
 
@@ -216,7 +253,12 @@ fun OrderCreate(
                     )
                 } else {
                     Column(Modifier.padding(start = 20.dp, end = 20.dp, top = 24.dp)) {
-                        ItensBlock(produtos, updateQuantidade)
+                        ItensBlock(produtos.map { item ->
+                            OrderItensBlock(
+                                nome = item.nome,
+                                quantidade = item.quantidade
+                            )
+                        }, updateQuantidade)
                     }
 
                     Row(
@@ -246,7 +288,14 @@ fun OrderCreate(
                     viewModel,
                     onConfirm = { selectedProducts ->
                         produtos = produtos + selectedProducts.map {
-                            OrderItens(nome = it.nome, quantidade = 0)
+                            OrderItensCreate(
+                                nome = it.nome,
+                                categoria = it.fk_categoria,
+                                preco = it.preco,
+                                quantidade = 0,
+                                emProducao = it.em_producao,
+                                imagem = it.imagem ?: "",
+                                )
                         }
                         itensAdd = false
 

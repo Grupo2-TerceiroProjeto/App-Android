@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -36,7 +37,7 @@ class AuthActivity : ComponentActivity() {
                     ) {
                         composable("login") {
                             val viewModel: LoginApiViewModel = koinViewModel()
-                            BodyLayoutLogin ("Faça seu login") { Login(navController, viewModel) }
+                            BodyLayoutLogin (stringResource(R.string.title_login)) { Login(navController, viewModel) }
                         }
                         composable("passwordRecovery") {
                             PasswordRecoveryNavigation(navController)

@@ -161,7 +161,7 @@ fun ItensAdd(
                                 onCheckedChange = null
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(produto.nome, color = Black)
+                            Text(produto.nome + " " + "R$ " + produto.preco, color = Black)
                         }
                     }
                 }
