@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gestok.components.InputLabelDisable
 import com.example.gestok.screens.login.data.UserSession
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
@@ -82,89 +83,28 @@ fun Profile(
             ){
 
                 //--NOME-----------------------------------------
-                Text(
-                    "Nome",
-                    Modifier.padding(start = 20.dp, top = 30.dp),
-                    fontWeight = W600,
-                    color = Blue
+                InputLabelDisable(
+                    modifierText = Modifier.padding(start = 20.dp, top = 30.dp),
+                    modifierInput = Modifier.padding(horizontal = 15.dp),
+                    text = "Nome",
+                    value = sessaoUsuario.nome
                 )
-
-                TextField(
-                    value = sessaoUsuario.nome,
-                    onValueChange = {},
-                    enabled = false,
-                    trailingIcon = {
-                        Icon(Icons.Filled.Lock, contentDescription = "Campo bloqueado")
-                    },
-                    colors = TextFieldDefaults.colors(
-                       disabledTextColor = MediumGray,
-                        disabledContainerColor = LightGray,
-
-
-                    ),
-                    modifier = Modifier
-                        .padding(15.dp)
-                        .fillMaxWidth()
-                        .clip(shape = RoundedCornerShape(20)),
-                    singleLine = true
-                )
-
 
                 //--EMAIL -----------------------------------------
-                Text(
-                    "Email",
-                    Modifier.padding(start = 20.dp, top = 30.dp),
-                    fontWeight = W600,
-                    color = Blue
-                )
-
-                TextField(
-                    value = sessaoUsuario.login,
-                    onValueChange = {},
-                    enabled = false,
-                    trailingIcon = {
-                        Icon(Icons.Filled.Lock, contentDescription = "Campo bloqueado")
-                    },
-                    colors = TextFieldDefaults.colors(
-                        disabledTextColor = MediumGray,
-                        disabledContainerColor = LightGray,
-
-
-                        ),
-                    modifier = Modifier
-                        .padding(15.dp)
-                        .fillMaxWidth()
-                        .clip(shape = RoundedCornerShape(20)),
-                    singleLine = true
+                InputLabelDisable(
+                    modifierText = Modifier.padding(start = 20.dp, top = 30.dp),
+                    modifierInput = Modifier.padding(horizontal = 15.dp),
+                    text = "Email",
+                    value = sessaoUsuario.login
                 )
 
 
                 //--CARGO -----------------------------------------
-                Text(
-                    "Cargo",
-                    Modifier.padding(start = 20.dp, top = 30.dp),
-                    fontWeight = W600,
-                    color = Blue
-                )
-
-                TextField(
-                    value = sessaoUsuario.cargo,
-                    onValueChange = {},
-                    enabled = false,
-                    trailingIcon = {
-                        Icon(Icons.Filled.Lock, contentDescription = "Campo bloqueado")
-                    },
-                    colors = TextFieldDefaults.colors(
-                        disabledTextColor = MediumGray,
-                        disabledContainerColor = LightGray,
-
-
-                        ),
-                    modifier = Modifier
-                        .padding(15.dp)
-                        .fillMaxWidth()
-                        .clip(shape = RoundedCornerShape(20)),
-                    singleLine = true
+                InputLabelDisable(
+                    modifierText = Modifier.padding(start = 20.dp,top = 30.dp),
+                    modifierInput = Modifier.padding(horizontal = 15.dp).padding(bottom = 30.dp),
+                    text = "Cargo",
+                    value = sessaoUsuario.cargo
                 )
 
             }

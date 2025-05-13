@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.example.gestok.screens.internalScreens.order.data.OrderCreateData
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.screens.internalScreens.order.data.ProductData
 import com.example.gestok.screens.login.data.UserSession
@@ -21,6 +22,18 @@ abstract class OrderViewModel(open val sessaoUsuario : UserSession) : ViewModel(
     protected var _carregouPedidos by mutableStateOf(false)
 
     protected var _carregouProdutos by mutableStateOf(false)
+
+    protected var _nomeSolicitanteErro by mutableStateOf<String?>(null)
+
+    protected var _telefoneErro by mutableStateOf<String?>(null)
+
+    protected var _statusErro by mutableStateOf<String?>(null)
+
+    protected var _dataEntregaErro by mutableStateOf<String?>(null)
+
+    protected var _totalCompraErro by mutableStateOf<String?>(null)
+
+    protected var _itensErro by mutableStateOf<String?>(null)
 
     val pedidosErro: String?
         get() = _pedidosErro
@@ -48,7 +61,18 @@ abstract class OrderViewModel(open val sessaoUsuario : UserSession) : ViewModel(
        _produtosErro = null
     }
 
+    fun limparErrosPedido() {
+        _nomeSolicitanteErro = null
+        _telefoneErro = null
+        _statusErro = null
+        _dataEntregaErro = null
+        _totalCompraErro = null
+        _itensErro = null
+    }
+
     open fun getPedidos() {}
 
     open fun getProdutos() {}
+
+    open fun salvarPedido(pedido : OrderCreateData) {}
 }

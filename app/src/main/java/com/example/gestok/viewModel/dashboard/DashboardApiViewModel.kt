@@ -27,7 +27,7 @@ class DashboardApiViewModel(private val api: DashboardService, override val sess
 
         viewModelScope.launch {
             try {
-                delay(1500)
+                delay(1100)
                 val resposta = api.getPedidos()
 
                 _pedidos.clear()

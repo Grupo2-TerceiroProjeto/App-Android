@@ -13,13 +13,9 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
-
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,14 +24,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.R
-import com.example.gestok.components.orderpage.dialogs.EditarPedidoDialog
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.ui.theme.Blue
 
 @Composable
-fun OrderCard(pedido: OrderData) {
-
-    var showEditDialog by remember { mutableStateOf(false) }
+fun OrderCard(
+    pedido: OrderData,
+    currentPage: MutableState<String>,
+    selectedOrder: MutableState<OrderData?>
+) {
 
 
     Card(
@@ -136,7 +133,10 @@ fun OrderCard(pedido: OrderData) {
                     ) {
                         Row() {
                             IconButton(
-                                onClick = { showEditDialog = true },
+                                onClick = {
+                                    selectedOrder.value = pedido
+                                    currentPage.value = "editOrder"
+                                          },
                                 modifier = Modifier
                                     .size(50.dp)
 
@@ -175,24 +175,6 @@ fun OrderCard(pedido: OrderData) {
         }
 
     }
-
-
-
-    if (showEditDialog) {
-        EditarPedidoDialog(
-            nomeSolicitante = pedido.nomeSolicitante,
-            telefone = pedido.telefone,
-            status = pedido.status,
-            dataEntrega = pedido.dataEntrega ?: "",
-            produtos = pedido.produtos,
-            totalCompra = pedido.totalCompra,
-            onDismiss = { showEditDialog = false },
-            onConfirm = { newNome, newContato, newStatus, newData, newItens ->
-                showEditDialog = false
-            }
-        )
-    }
-
 
 
 }

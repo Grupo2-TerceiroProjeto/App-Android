@@ -17,6 +17,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.components.orderpage.OrderCard
 import com.example.gestok.components.orderpage.dialogs.OrderCreate
+import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.White
@@ -38,10 +40,10 @@ import com.example.gestok.viewModel.order.OrderApiViewModel
 @Composable
 fun OrderContent(
     modifier: Modifier = Modifier,
-    viewModel: OrderApiViewModel
+    viewModel: OrderApiViewModel,
+    currentPage: MutableState<String>,
+    selectedOrder: MutableState<OrderData?>
 ) {
-
-    var showCreateDialog by remember { mutableStateOf(false) }
 
     val erroPedidos = viewModel.pedidosErro
     val pedidos = viewModel.pedidos
@@ -76,7 +78,7 @@ fun OrderContent(
                         color = Black
                     )
                     Button(
-                        onClick = { showCreateDialog = true },
+                        onClick = { currentPage.value = "createOrder" },
                         colors = ButtonDefaults.buttonColors(containerColor = Blue)
                     ) {
                         Text("Cadastrar pedido", color = White)
@@ -141,21 +143,16 @@ fun OrderContent(
                 else -> {
 
                     pedidos.forEach { pedido ->
-                        OrderCard(pedido = pedido)
+                        OrderCard(
+                            pedido = pedido,
+                            currentPage = currentPage,
+                            selectedOrder = selectedOrder
+                        )
                     }
 
                 }
             }
         }
 
-    }
-
-    if (showCreateDialog) {
-        OrderCreate(
-            onDismiss = { showCreateDialog = false },
-            onConfirm = { newNome, newContato, newStatus, newData, newItens ->
-                showCreateDialog = false
-            }
-        )
     }
 }

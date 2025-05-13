@@ -13,12 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.gestok.components.adminpage.AdminContent
 import com.example.gestok.components.adminpage.RegisterData
+import com.example.gestok.components.orderpage.dialogs.OrderCreate
+import com.example.gestok.components.orderpage.dialogs.OrderEdit
 import com.example.gestok.screens.internalScreens.order.OrderContent
 import com.example.gestok.components.productpage.IngredientData
 import com.example.gestok.components.productpage.ProductContent
 import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.screens.internalScreens.dashboard.Dashboard
 import com.example.gestok.screens.internalScreens.Profile
+import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
 import com.example.gestok.viewModel.order.OrderApiViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -103,6 +106,8 @@ fun LayoutScreen(
 
     val currentPage = remember { mutableStateOf("dashboard") }
 
+    val selectedOrder = remember { mutableStateOf<OrderData?>(null) }
+
     Scaffold(Modifier.background(Color(0xFFF3F3F3)), //COR DO FUNDO DA TELA
         topBar = {
             Topbar(activity)
@@ -141,9 +146,37 @@ fun LayoutScreen(
                 OrderContent(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding), viewModel
+                        .padding(innerPadding),
+                    viewModel,
+                    currentPage = currentPage,
+                    selectedOrder = selectedOrder
                 )
 
+            }
+
+            "createOrder" -> {
+                OrderCreate(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    onBack = {
+                        currentPage.value = "pedidos"
+                    }
+                )
+            }
+
+            "editOrder" -> {
+                selectedOrder.value?.let {
+                    OrderEdit(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                        onBack = {
+                            currentPage.value = "pedidos"
+                        },
+                        order = it
+                    )
+                }
             }
 
             "config" -> {
