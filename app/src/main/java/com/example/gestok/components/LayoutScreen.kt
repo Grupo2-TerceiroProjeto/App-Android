@@ -155,13 +155,17 @@ fun LayoutScreen(
             }
 
             "createOrder" -> {
+                val viewModel: OrderApiViewModel = koinViewModel()
+
                 OrderCreate(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding),
                     onBack = {
                         currentPage.value = "pedidos"
-                    }
+                    },
+                    viewModel
+
                 )
             }
 

@@ -1,6 +1,7 @@
 package com.example.gestok.components.orderpage.dialogs
 
 import SelectOption
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gestok.MainActivity
 import com.example.gestok.components.InputLabel
 import com.example.gestok.screens.internalScreens.order.data.OrderCreateData
 import com.example.gestok.screens.internalScreens.order.data.OrderItensBlock
@@ -44,6 +47,7 @@ import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.White
 import com.example.gestok.utils.formatDate
+import com.example.gestok.utils.formatPhoneNumber
 import com.example.gestok.viewModel.order.OrderApiViewModel
 import org.koin.androidx.compose.koinViewModel
 import java.text.NumberFormat
@@ -55,7 +59,8 @@ import java.util.Locale
 @Composable
 fun OrderCreate(
     modifier: Modifier = Modifier,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    viewModel: OrderApiViewModel
 ) {
 
     var nomeSolicitante by remember { mutableStateOf("") }
@@ -76,22 +81,19 @@ fun OrderCreate(
         }
     }
 
-    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-
-    val dataEntregaParsed = runCatching {
-        if (dataEntrega.isNotBlank()) LocalDate.parse(dataEntrega, formatter)
-        else null
-    }.getOrNull()
-
     val novoPedido = OrderCreateData(
         nomeSolicitante = nomeSolicitante,
-        dataEntrega = dataEntregaParsed,
-        telefone = telefone,
+        dataEntrega = dataEntrega,
+        telefone = telefone.replace(Regex("[^\\d]"), ""),
         status = status,
         produtos = produtos
     )
 
     var itensAdd by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        viewModel.limparErrosPedido()
+    }
 
     LazyColumn(
         modifier = modifier
@@ -152,6 +154,7 @@ fun OrderCreate(
                                 nomeSolicitante = filtered
                             },
                             keyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
+                            erro = viewModel.nomeSolicitanteErro,
                             maxLength = 45
                         )
                     }
@@ -160,9 +163,10 @@ fun OrderCreate(
                         InputLabel(
                             text = "Contato",
                             value = telefone,
-                            onValueChange = { telefone = it },
+                            onValueChange = { telefone = formatPhoneNumber(it) },
                             keyboardType = androidx.compose.ui.text.input.KeyboardType.Phone,
-                            maxLength = 11
+                            erro = viewModel.telefoneErro,
+                            maxLength = 15
                         )
                     }
 
@@ -188,6 +192,7 @@ fun OrderCreate(
                                 dataEntrega = formatDate(it)
                             },
                             keyboardType = androidx.compose.ui.text.input.KeyboardType.Number,
+                            erro = viewModel.dataEntregaErro,
                             maxLength = 10
                         )
                     }
@@ -238,6 +243,21 @@ fun OrderCreate(
                     }
                 }
 
+
+                if (viewModel.itensErro != null) {
+                    Text(
+                        viewModel.itensErro!!,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.W600,
+                        color = Color(0xFFD32F2F),
+                        modifier = Modifier.padding(
+                            start = 20.dp,
+                            top = 32.dp
+                        ),
+                    )
+                }
+
+
                 if (produtos.isEmpty()) {
                     Text(
                         "Para salvar o pedido, é necessário adicionar pelo menos um produto",
@@ -252,13 +272,19 @@ fun OrderCreate(
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center
                     )
                 } else {
-                    Column(Modifier.padding(start = 20.dp, end = 20.dp, top = 24.dp)) {
-                        ItensBlock(produtos.map { item ->
-                            OrderItensBlock(
-                                nome = item.nome,
-                                quantidade = item.quantidade
+                    LazyColumn(
+                        modifier = Modifier
+                            .padding(start = 20.dp, end = 20.dp, top = 24.dp)
+                            .height(250.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(produtos.size) { index ->
+                            val item = produtos[index]
+                            ItensBlock(
+                                listOf(OrderItensBlock(nome = item.nome, quantidade = item.quantidade)),
+                                updateQuantidade = { _, newQtd -> updateQuantidade(index, newQtd) }
                             )
-                        }, updateQuantidade)
+                        }
                     }
 
                     Row(
@@ -268,7 +294,7 @@ fun OrderCreate(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Button(
-                            onClick = { },
+                            onClick = { viewModel.salvarPedido(novoPedido, onBack) },
                             colors = ButtonDefaults.buttonColors(Blue),
                         ) {
                             Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = White)

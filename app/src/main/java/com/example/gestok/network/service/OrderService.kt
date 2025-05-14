@@ -16,6 +16,6 @@ interface OrderService {
     @GET("produtos/pegar-todos/{idEmpresa}")
     suspend fun getProdutos(@Path("idEmpresa") idEmpresa:Int): List<ProductData>
 
-    @POST("produtos")
-    suspend fun postPedido(@Body pedido: OrderCreateData): OrderCreateData
+    @POST("pedidos")
+    suspend fun post(@Body pedido: OrderCreateData): OrderCreateData
 }

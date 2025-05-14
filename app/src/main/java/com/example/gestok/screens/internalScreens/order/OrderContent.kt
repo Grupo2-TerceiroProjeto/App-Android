@@ -87,7 +87,7 @@ fun OrderContent(
 
                 if (erroPedidos != null) {
                     Text(
-                        erroPedidos ?: "",
+                        erroPedidos,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.W600,
                         color = Color.Red,

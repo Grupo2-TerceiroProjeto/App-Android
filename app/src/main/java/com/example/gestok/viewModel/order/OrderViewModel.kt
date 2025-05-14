@@ -31,8 +31,6 @@ abstract class OrderViewModel(open val sessaoUsuario : UserSession) : ViewModel(
 
     protected var _dataEntregaErro by mutableStateOf<String?>(null)
 
-    protected var _totalCompraErro by mutableStateOf<String?>(null)
-
     protected var _itensErro by mutableStateOf<String?>(null)
 
     val pedidosErro: String?
@@ -53,6 +51,22 @@ abstract class OrderViewModel(open val sessaoUsuario : UserSession) : ViewModel(
     val carregouProdutos: Boolean
         get() = _carregouProdutos
 
+    val nomeSolicitanteErro: String?
+        get() = _nomeSolicitanteErro
+
+    val telefoneErro: String?
+        get() = _telefoneErro
+
+    val statusErro: String?
+        get() = _statusErro
+
+    val dataEntregaErro : String?
+        get() = _dataEntregaErro
+
+    val itensErro : String?
+        get() = _itensErro
+
+
     fun limparErros() {
         _pedidosErro = null
     }
@@ -66,7 +80,6 @@ abstract class OrderViewModel(open val sessaoUsuario : UserSession) : ViewModel(
         _telefoneErro = null
         _statusErro = null
         _dataEntregaErro = null
-        _totalCompraErro = null
         _itensErro = null
     }
 
@@ -74,5 +87,5 @@ abstract class OrderViewModel(open val sessaoUsuario : UserSession) : ViewModel(
 
     open fun getProdutos() {}
 
-    open fun salvarPedido(pedido : OrderCreateData) {}
+    open fun salvarPedido(pedido : OrderCreateData, onBack: () -> Unit) {}
 }

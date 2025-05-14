@@ -1,12 +1,15 @@
 package com.example.gestok.viewModel.order
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.example.gestok.network.service.OrderService
 import com.example.gestok.screens.internalScreens.order.data.OrderCreateData
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.screens.internalScreens.order.data.ProductData
+import com.example.gestok.screens.login.data.LoginUser
 import com.example.gestok.screens.login.data.UserSession
+import com.example.gestok.utils.formatDateApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -108,17 +111,17 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
 
     }
 
-    override fun salvarPedido(pedido: OrderCreateData) {
+    override fun salvarPedido(pedido: OrderCreateData, onBack: () -> Unit) {
         limparErrosPedido()
+
+        val cadastrado =  mutableStateOf(false)
 
         var houveErro = false
 
         if (pedido.nomeSolicitante.isBlank()) {
             _nomeSolicitanteErro = "Nome do solicitante é obrigatório"
             houveErro = true
-        }
-
-        if (pedido.nomeSolicitante.length < 2) {
+        } else if (pedido.nomeSolicitante.length < 2) {
             _nomeSolicitanteErro = "Nome do solicitante deve ter pelo menos 2 caracteres"
             houveErro = true
         }
@@ -128,6 +131,44 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
             houveErro = true
         }
 
+        if (pedido.status == "Selecione uma opção") {
+            _statusErro = "Status do pedido é obrigatório"
+            houveErro = true
+        }
+
+        if(pedido.dataEntrega.isBlank()) {
+            _dataEntregaErro = "Data de entrega é obrigatória"
+            houveErro = true
+
+        }
+        if (pedido.produtos.any { it.quantidade == 0 }) {
+            _itensErro = "Informe a quantidade dos produtos selecionados"
+            houveErro = true
+        }
+
         if (houveErro) return
+
+        viewModelScope.launch {
+            try {
+                cadastrado.value = false
+
+                val dataConvertida = formatDateApi(pedido.dataEntrega)
+                val pedidoFormatado = pedido.copy(dataEntrega = dataConvertida)
+
+                api.post(pedidoFormatado)
+
+                cadastrado.value = true
+                Log.d("API", "Pedido cadastrado com sucesso")
+
+                onBack()
+
+            } catch (e: HttpException) {
+                if (e.code() == 400) cadastrado.value = false
+                Log.d("API", "Erro ao cadastrar pedido: ${e.message}")
+
+            } catch (e: Exception) {
+                Log.d("API", "Erro ao conectar ao servidor: ${e.message}")
+            }
+        }
     }
 }

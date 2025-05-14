@@ -66,7 +66,8 @@ fun ItensAdd(
             .fillMaxWidth()
             .then(
                 if (!carregando) Modifier.height(200.dp)
-                else Modifier.height(600.dp)
+                else if (produtos.isEmpty()) Modifier.height(200.dp)
+                else Modifier.height(320.dp)
             ),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
     ) {
