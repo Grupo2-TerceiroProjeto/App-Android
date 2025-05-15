@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -105,8 +106,15 @@ fun LayoutScreen(
 ) {
 
     val currentPage = remember { mutableStateOf("dashboard") }
+    val previousPage = remember { mutableStateOf("") }
 
     val selectedOrder = remember { mutableStateOf<OrderData?>(null) }
+
+    LaunchedEffect(currentPage.value) {
+        if (currentPage.value != "sucess") {
+            previousPage.value = currentPage.value
+        }
+    }
 
     Scaffold(Modifier.background(Color(0xFFF3F3F3)), //COR DO FUNDO DA TELA
         topBar = {
@@ -115,8 +123,6 @@ fun LayoutScreen(
         bottomBar = {
             BottomNavBar() { navItem ->
                 currentPage.value = navItem.screen
-
-
             }
         }
     ) { innerPadding ->
@@ -164,6 +170,9 @@ fun LayoutScreen(
                     onBack = {
                         currentPage.value = "pedidos"
                     },
+                    onSucess = {
+                        currentPage.value = "sucess"
+                    },
                     viewModel
 
                 )
@@ -195,6 +204,34 @@ fun LayoutScreen(
                 ProductContent(modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding), listaProdutos)
+            }
+
+            "sucess" -> {
+
+                val (title, message) = when (previousPage.value) {
+                    "createOrder" -> Pair(
+                        "Pedido Cadastrado",
+                        "O pedido foi cadastrado com sucesso! \nConfira na aba Pedidos"
+                    )
+
+                    "editOrder" -> Pair(
+                        "Pedido Atualizado",
+                        "O pedido foi atualizado com sucesso! \nConfira na aba Pedidos"
+                    )
+
+                    else -> Pair(
+                        "",
+                        ""
+                    )
+                }
+
+                Sucess(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    title = title,
+                    message = message
+                )
             }
         }
 

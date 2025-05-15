@@ -48,7 +48,7 @@ data class OrderCreateData(
 
 data class OrderEditData(
     val nomeSolicitante: String,
-    val dataEntrega: LocalDate?,
+    val dataEntrega: String,
     val telefone: String,
     val status: String,
     val produtos: List<OrderItensBlock>

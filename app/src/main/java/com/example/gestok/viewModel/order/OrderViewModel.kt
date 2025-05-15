@@ -87,5 +87,5 @@ abstract class OrderViewModel(open val sessaoUsuario : UserSession) : ViewModel(
 
     open fun getProdutos() {}
 
-    open fun salvarPedido(pedido : OrderCreateData, onBack: () -> Unit) {}
+    open fun salvarPedido(pedido : OrderCreateData, onBack: () -> Unit, onSucess: () -> Unit) {}
 }

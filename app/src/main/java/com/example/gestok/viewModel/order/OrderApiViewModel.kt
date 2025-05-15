@@ -7,12 +7,12 @@ import com.example.gestok.network.service.OrderService
 import com.example.gestok.screens.internalScreens.order.data.OrderCreateData
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.screens.internalScreens.order.data.ProductData
-import com.example.gestok.screens.login.data.LoginUser
 import com.example.gestok.screens.login.data.UserSession
 import com.example.gestok.utils.formatDateApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -111,7 +111,7 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
 
     }
 
-    override fun salvarPedido(pedido: OrderCreateData, onBack: () -> Unit) {
+    override fun salvarPedido(pedido: OrderCreateData, onBack: () -> Unit, onSucess: () -> Unit) {
         limparErrosPedido()
 
         val cadastrado =  mutableStateOf(false)
@@ -126,7 +126,10 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
             houveErro = true
         }
 
-        if (pedido.telefone.length < 11) {
+        if (pedido.telefone.isBlank()) {
+            _telefoneErro = "Número de telefone é obrigatório"
+            houveErro = true
+        } else if (pedido.telefone.length < 11) {
             _telefoneErro = "Número de telefone inválido"
             houveErro = true
         }
@@ -140,7 +143,18 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
             _dataEntregaErro = "Data de entrega é obrigatória"
             houveErro = true
 
+        } else {
+            val formato = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            formato.isLenient = false
+
+            try {
+                formato.parse(pedido.dataEntrega)
+            } catch (e: Exception) {
+                _dataEntregaErro = "Data de entrega inválida"
+                houveErro = true
+            }
         }
+
         if (pedido.produtos.any { it.quantidade == 0 }) {
             _itensErro = "Informe a quantidade dos produtos selecionados"
             houveErro = true
@@ -160,6 +174,9 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
                 cadastrado.value = true
                 Log.d("API", "Pedido cadastrado com sucesso")
 
+                onSucess()
+
+                delay(1500)
                 onBack()
 
             } catch (e: HttpException) {

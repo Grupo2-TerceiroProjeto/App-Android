@@ -60,6 +60,7 @@ import java.util.Locale
 fun OrderCreate(
     modifier: Modifier = Modifier,
     onBack: () -> Unit,
+    onSucess: () -> Unit,
     viewModel: OrderApiViewModel
 ) {
 
@@ -180,7 +181,8 @@ fun OrderCreate(
                                 "Em Produção",
                                 "Concluído",
                                 "Cancelado"
-                            )
+                            ),
+                            erro = viewModel.statusErro
                         )
                     }
 
@@ -294,7 +296,7 @@ fun OrderCreate(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Button(
-                            onClick = { viewModel.salvarPedido(novoPedido, onBack) },
+                            onClick = { viewModel.salvarPedido(novoPedido, onBack, onSucess) },
                             colors = ButtonDefaults.buttonColors(Blue),
                         ) {
                             Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = White)

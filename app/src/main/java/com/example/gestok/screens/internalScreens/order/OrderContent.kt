@@ -55,7 +55,6 @@ fun OrderContent(
 
     LazyColumn(
         modifier = modifier
-            .fillMaxSize()
             .background(Color(0xFFF3F3F3))
 
     ) {
