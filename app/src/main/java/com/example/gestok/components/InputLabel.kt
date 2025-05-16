@@ -1,8 +1,13 @@
 package com.example.gestok.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
@@ -21,40 +26,42 @@ import com.example.gestok.ui.theme.LightGray
 
 @Composable
 fun InputLabel(
-    text : String,
-    value : String,
+    text: String,
+    value: String,
     onValueChange: (String) -> Unit = {},
-    erro: String? = null,
+
     keyboardType: KeyboardType = KeyboardType.Text,
-    readOnly: Boolean = false,
     maxLength: Int
 
 ) {
+    Column{
 
-    Text(text, fontWeight = W600, color = Blue)
-    Spacer(modifier = Modifier.height(8.dp))
-    TextField(
-        value = value,
-        onValueChange = { newValue ->
-            if (newValue.length <= maxLength) {
-                onValueChange(newValue)
-            }
-        },
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = LightGray,
-            focusedTextColor = Black,
-            unfocusedContainerColor = LightGray,
-            unfocusedTextColor = Black
-        ),
-        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType),
-        readOnly = readOnly,
-        isError = erro != null,
-        supportingText = {
-            erro?.let { Text(text = it) }
-        },
-        singleLine = true,
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(shape = RoundedCornerShape(20))
-    )
+        Text(text, Modifier.padding(start = 20.dp), fontWeight = W600, color = Blue)
+
+        TextField(
+            modifier = Modifier
+
+                .fillMaxWidth(0.94f)
+                .padding(start = 20.dp)
+                .clip(shape = RoundedCornerShape(20)),
+            value = value,
+            onValueChange = { newValue ->
+                if (newValue.length <= maxLength) {
+                    onValueChange(newValue)
+                }
+            },
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = LightGray,
+                unfocusedContainerColor = LightGray,
+                focusedTextColor = Black,
+                unfocusedTextColor = Black,
+                focusedIndicatorColor = LightGray,
+                unfocusedIndicatorColor = LightGray
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType),
+            singleLine = true
+
+        )
+    }
+
 }

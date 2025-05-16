@@ -80,111 +80,92 @@ fun OrderEdit(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White),
+            .background(White),
         verticalArrangement = Arrangement.spacedBy(24.dp),
-
-        ) {
+    ) {
 
         item {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 15.dp, end = 15.dp, top = 15.dp)
+            Row(
+                Modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp, top = 30.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                IconButton(
+                    onClick = onBack,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .background(Color(0xFF005BA4), shape = CircleShape)
                 ) {
-                    IconButton(
-                        onClick = onBack,
-                        modifier = Modifier
-                            .size(48.dp)
-                            .background(Color(0xFF005BA4), shape = CircleShape)
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Voltar",
-                            tint = Color.White
-                        )
-                    }
-
-                    Text(
-                        "Editar Pedido",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.W600,
-                        color = Black,
-                        modifier = Modifier
-                            .padding(start = 16.dp)
-                            .weight(1f)
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Voltar",
+                        tint = Color.White
                     )
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Column(
+                Text(
+                    "Editar Pedido",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.W600,
+                    color = Black,
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(24.dp),
-                ) {
-
-                    Column {
-                        InputLabel(
-                            text = "Solicitante",
-                            value = editedNomeSolicitante,
-                            onValueChange = { editedNomeSolicitante = it },
-                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
-                            maxLength = 45
-                        )
-                    }
-
-                    Column {
-                        InputLabel(
-                            text = "Contato",
-                            value = editedContato,
-                            onValueChange = { editedContato = it },
-                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Phone,
-                            maxLength = 11
-                        )
-                    }
-
-                    Column {
-                        SelectOption(
-                            text = "Status do Pedido",
-                            value = editedStatusPedido,
-                            onValueChange = { editedStatusPedido = it },
-                            list = listOf(
-                                "Pendente",
-                                "Em Produção",
-                                "Concluído",
-                                "Cancelado"
-                            )
-                        )
-                    }
-
-                    Column {
-                        InputLabel(
-                            text = "Data de Entrega",
-                            value = editedDataEntrega,
-                            onValueChange = { editedDataEntrega = it },
-                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
-                            maxLength = 10
-                        )
-                    }
-
-                    Column {
-                        InputLabel(
-                            text = "Valor",
-                            value = editedValorPedido,
-                            onValueChange = { editedValorPedido = it },
-                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Decimal,
-                            maxLength = 15
-                        )
-                    }
-
-                }
-
+                        .padding(start = 16.dp)
+                        .weight(1f)
+                )
             }
+        }
 
+        item {
+            InputLabel(
+                text = "Solicitante",
+                value = editedNomeSolicitante,
+                onValueChange = { editedNomeSolicitante = it },
+                keyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
+                maxLength = 45
+            )
+        }
+
+        item {
+            InputLabel(
+                text = "Contato",
+                value = editedContato,
+                onValueChange = { editedContato = it },
+                keyboardType = androidx.compose.ui.text.input.KeyboardType.Phone,
+                maxLength = 11
+            )
+        }
+
+        item {
+            SelectOption(
+                text = "Status do Pedido",
+                value = editedStatusPedido,
+                onValueChange = { editedStatusPedido = it },
+                list = listOf(
+                    "Pendente",
+                    "Em Produção",
+                    "Concluído",
+                    "Cancelado"
+                )
+            )
+        }
+
+        item {
+            InputLabel(
+                text = "Data de Entrega",
+                value = editedDataEntrega,
+                onValueChange = { editedDataEntrega = it },
+                keyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
+                maxLength = 10
+            )
+        }
+
+        item {
+            InputLabel(
+                text = "Valor",
+                value = editedValorPedido,
+                onValueChange = { editedValorPedido = it },
+                keyboardType = androidx.compose.ui.text.input.KeyboardType.Decimal,
+                maxLength = 15
+            )
         }
 
         if (!itensAdd) {
@@ -210,45 +191,52 @@ fun OrderEdit(
                             imageVector = Icons.Default.Add,
                             contentDescription = null,
                             tint = White,
-
-                            )
+                        )
                         Text("  Adicionar", color = White)
                     }
                 }
 
                 if (editedItens.isEmpty()) {
-                    Text(
-                        "Para salvar o pedido, é necessário adicionar pelo menos um produto",
-                        fontSize = 14.sp,
-                        color = Black,
-                        modifier = Modifier.padding(
-                            start = 50.dp,
-                            end = 50.dp,
-                            top = 32.dp,
-                            bottom = 32.dp
-                        ),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                    )
-                } else {
-                    Column(Modifier.padding(start = 20.dp, end = 20.dp, top = 24.dp)) {
-                        ItensBlock(editedItens, updateQuantidade)
-                    }
 
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(top = 10.dp, bottom = 10.dp),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Button(
-                            onClick = { },
-                            colors = ButtonDefaults.buttonColors(Blue),
-                        ) {
-                            Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = White)
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Salvar", color = White,  fontSize = 16.sp)
+                        Text(
+                            "Para salvar o pedido, é necessário adicionar pelo menos um produto",
+                            fontSize = 14.sp,
+                            color = Black,
+                            modifier = Modifier.padding(
+                                start = 50.dp,
+                                end = 50.dp,
+                                top = 32.dp,
+                                bottom = 32.dp
+                            ),
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+
+                } else {
+
+                        Column(Modifier.padding(start = 20.dp, end = 20.dp, top = 24.dp)) {
+                            ItensBlock(editedItens, updateQuantidade)
                         }
-                    }
+
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(top = 10.dp, bottom = 10.dp),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Button(
+                                onClick = { },
+                                colors = ButtonDefaults.buttonColors(Blue),
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = null,
+                                    tint = White
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("Salvar", color = White, fontSize = 16.sp)
+                            }
+                        }
+
                 }
             }
         }
@@ -258,18 +246,15 @@ fun OrderEdit(
                 val viewModel: OrderApiViewModel = koinViewModel()
 
                 ItensAdd(
-                    viewModel,
+                    viewModel = viewModel,
                     onConfirm = { selectedProducts ->
                         editedItens = editedItens + selectedProducts.map {
                             OrderItensBlock(nome = it.nome, quantidade = 0)
                         }
                         itensAdd = false
-
                     }
                 )
             }
         }
-
     }
-
 }

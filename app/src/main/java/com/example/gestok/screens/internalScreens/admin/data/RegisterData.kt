@@ -1,4 +1,4 @@
-package com.example.gestok.components.adminpage
+package com.example.gestok.screens.internalScreens.admin.data
 
 data class RegisterData(
     val nome: String,

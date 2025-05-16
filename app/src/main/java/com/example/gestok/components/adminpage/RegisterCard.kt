@@ -16,6 +16,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,10 +30,16 @@ import androidx.compose.ui.unit.dp
 import com.example.gestok.R
 import com.example.gestok.components.ExcludeConfirmationDialog
 import com.example.gestok.components.adminpage.dialogs.RegisterEdit
+import com.example.gestok.screens.internalScreens.admin.data.RegisterData
+import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.ui.theme.Blue
 
 @Composable
-fun RegisterCard(registerData: RegisterData, funcionariosLista: List<RegisterData>) {
+fun RegisterCard(registerData: RegisterData,
+                 funcionariosLista: List<RegisterData>,
+                 currentPage: MutableState<String>,
+                 selectedRegister: MutableState<RegisterData?>
+) {
 
 
     var showEditRegisterDialog by remember { mutableStateOf(false) }
@@ -61,7 +68,9 @@ fun RegisterCard(registerData: RegisterData, funcionariosLista: List<RegisterDat
                 }
                 Row () {
                     IconButton(
-                        onClick = {showEditRegisterDialog = true},
+                        onClick = {  selectedRegister.value = registerData
+                            currentPage.value = "registerEdit"
+                        },
                         modifier = Modifier
                             .size(50.dp)
 

@@ -32,13 +32,15 @@ fun SelectOption(
 
     Text(
         text,
+        Modifier.padding(start = 20.dp),
         fontWeight = W600,
         color = Blue
     )
 
     Row(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(start = 20.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
 
