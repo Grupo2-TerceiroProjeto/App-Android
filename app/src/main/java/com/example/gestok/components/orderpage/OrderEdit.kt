@@ -1,7 +1,6 @@
-package com.example.gestok.components.orderpage.dialogs
+package com.example.gestok.components.orderpage
 
 import SelectOption
-import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,7 +24,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,11 +35,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.gestok.MainActivity
 import com.example.gestok.components.InputLabel
-import com.example.gestok.screens.internalScreens.order.data.OrderCreateData
+import com.example.gestok.screens.internalScreens.order.data.OrderData
+import com.example.gestok.screens.internalScreens.order.data.OrderEditData
+import com.example.gestok.screens.internalScreens.order.data.OrderItens
 import com.example.gestok.screens.internalScreens.order.data.OrderItensBlock
-import com.example.gestok.screens.internalScreens.order.data.OrderItensCreate
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
@@ -49,52 +47,54 @@ import com.example.gestok.ui.theme.White
 import com.example.gestok.utils.formatDate
 import com.example.gestok.utils.formatPhoneNumber
 import com.example.gestok.viewModel.order.OrderApiViewModel
-import org.koin.androidx.compose.koinViewModel
 import java.text.NumberFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-
 @Composable
-fun OrderCreate(
+fun OrderEdit(
     modifier: Modifier = Modifier,
     onBack: () -> Unit,
+    order: OrderData,
     onSucess: () -> Unit,
     viewModel: OrderApiViewModel
 ) {
 
-    var nomeSolicitante by remember { mutableStateOf("") }
-    var telefone by remember { mutableStateOf("") }
-    var status by remember { mutableStateOf("Selecione uma opção") }
-    var dataEntrega by remember { mutableStateOf("") }
-    var produtos by remember { mutableStateOf(emptyList<OrderItensCreate>()) }
-    val totalCompra by remember(produtos) {
+    var editedNomeSolicitante by remember { mutableStateOf(order.nomeSolicitante) }
+    var editedContato by remember { mutableStateOf(order.telefone) }
+    var editedStatusPedido by remember { mutableStateOf(order.status) }
+    var editedDataEntrega by remember { mutableStateOf(order.dataEntrega ?: "") }
+    var editedItens by remember {
+        mutableStateOf(order.produtos.map {
+            it.copy(imagem = it.imagem ?: "")
+        })
+    }
+    val editedValorPedido by remember (editedItens) {
         mutableStateOf(
             NumberFormat.getCurrencyInstance(Locale("pt", "BR"))
-                .format(produtos.sumOf { it.preco * it.quantidade })
+                .format(editedItens.sumOf { it.preco * it.quantidade })
         )
     }
 
     val updateQuantidade: (Int, Int) -> Unit = { index, newQuantidade ->
-        produtos = produtos.toMutableList().apply {
+        editedItens = editedItens.toMutableList().apply {
             this[index] = this[index].copy(quantidade = newQuantidade)
         }
     }
 
-    val novoPedido = OrderCreateData(
-        nomeSolicitante = nomeSolicitante,
-        dataEntrega = dataEntrega,
-        telefone = telefone.replace(Regex("[^\\d]"), ""),
-        status = status,
-        produtos = produtos
+    val pedidoEditado = OrderEditData(
+        nomeSolicitante = editedNomeSolicitante,
+        dataEntrega = editedDataEntrega,
+        telefone = editedContato,
+        status = editedStatusPedido,
+        produtos = editedItens.map { item ->
+            OrderItensBlock(
+                nome = item.nome,
+                quantidade = item.quantidade
+            )
+        }
     )
 
     var itensAdd by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        viewModel.limparErrosPedido()
-    }
 
     LazyColumn(
         modifier = modifier
@@ -128,7 +128,7 @@ fun OrderCreate(
                     }
 
                     Text(
-                        "Cadastrar Pedido",
+                        "Editar Pedido",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W600,
                         color = Black,
@@ -149,10 +149,10 @@ fun OrderCreate(
                     Column {
                         InputLabel(
                             text = "Solicitante",
-                            value = nomeSolicitante,
+                            value = editedNomeSolicitante,
                             onValueChange = {
                                 val filtered = it.filter { char -> char.isLetter() || char.isWhitespace() }
-                                nomeSolicitante = filtered
+                                editedNomeSolicitante = filtered
                             },
                             keyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
                             erro = viewModel.nomeSolicitanteErro,
@@ -163,8 +163,11 @@ fun OrderCreate(
                     Column {
                         InputLabel(
                             text = "Contato",
-                            value = telefone,
-                            onValueChange = { telefone = formatPhoneNumber(it) },
+                            value = formatPhoneNumber(editedContato),
+                            onValueChange = {
+                                val cleaned = it.replace(Regex("[^\\d]"), "").take(11)
+                                editedContato = cleaned
+                            },
                             keyboardType = androidx.compose.ui.text.input.KeyboardType.Phone,
                             erro = viewModel.telefoneErro,
                             maxLength = 15
@@ -174,8 +177,8 @@ fun OrderCreate(
                     Column {
                         SelectOption(
                             text = "Status do Pedido",
-                            value = status,
-                            onValueChange = { status = it },
+                            value = editedStatusPedido,
+                            onValueChange = { editedStatusPedido = it },
                             list = listOf(
                                 "Pendente",
                                 "Em Produção",
@@ -189,11 +192,11 @@ fun OrderCreate(
                     Column {
                         InputLabel(
                             text = "Data de Entrega",
-                            value = dataEntrega,
+                            value = editedDataEntrega,
                             onValueChange = {
-                                dataEntrega = formatDate(it)
+                                editedDataEntrega = formatDate(it)
                             },
-                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Number,
+                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
                             erro = viewModel.dataEntregaErro,
                             maxLength = 10
                         )
@@ -202,7 +205,7 @@ fun OrderCreate(
                     Column {
                         InputLabel(
                             text = "Valor",
-                            value = totalCompra,
+                            value = editedValorPedido,
                             onValueChange = { },
                             keyboardType = androidx.compose.ui.text.input.KeyboardType.Decimal,
                             readOnly = true,
@@ -245,7 +248,6 @@ fun OrderCreate(
                     }
                 }
 
-
                 if (viewModel.itensErro != null) {
                     Text(
                         viewModel.itensErro!!,
@@ -259,8 +261,7 @@ fun OrderCreate(
                     )
                 }
 
-
-                if (produtos.isEmpty()) {
+                if (editedItens.isEmpty()) {
                     Text(
                         "Para salvar o pedido, é necessário adicionar pelo menos um produto",
                         fontSize = 14.sp,
@@ -280,8 +281,8 @@ fun OrderCreate(
                             .height(250.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        items(produtos.size) { index ->
-                            val item = produtos[index]
+                        items(editedItens.size) { index ->
+                            val item = editedItens[index]
                             ItensBlock(
                                 listOf(OrderItensBlock(nome = item.nome, quantidade = item.quantidade)),
                                 updateQuantidade = { _, newQtd -> updateQuantidade(index, newQtd) }
@@ -296,7 +297,7 @@ fun OrderCreate(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Button(
-                            onClick = { viewModel.salvarPedido(novoPedido, onBack, onSucess) },
+                            onClick = { viewModel.editarPedido(pedidoEditado, order.id, onBack, onSucess) },
                             colors = ButtonDefaults.buttonColors(Blue),
                         ) {
                             Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = White)
@@ -310,20 +311,20 @@ fun OrderCreate(
 
         if (itensAdd) {
             item {
-                val viewModel: OrderApiViewModel = koinViewModel()
 
                 ItensAdd(
                     viewModel,
                     onConfirm = { selectedProducts ->
-                        produtos = produtos + selectedProducts.map {
-                            OrderItensCreate(
+                        editedItens = editedItens + selectedProducts.map {
+                            OrderItens(
+                                id = it.id_produto,
                                 nome = it.nome,
                                 categoria = it.fk_categoria,
                                 preco = it.preco,
                                 quantidade = 0,
                                 emProducao = it.em_producao,
                                 imagem = it.imagem ?: "",
-                                )
+                            )
                         }
                         itensAdd = false
 

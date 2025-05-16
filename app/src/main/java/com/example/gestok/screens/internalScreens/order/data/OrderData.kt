@@ -1,7 +1,5 @@
 package com.example.gestok.screens.internalScreens.order.data
 
-import java.time.LocalDate
-
 data class OrderItensBlock(
     val nome: String,
     var quantidade: Int

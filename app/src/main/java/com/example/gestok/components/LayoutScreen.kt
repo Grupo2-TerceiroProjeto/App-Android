@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.gestok.components.adminpage.AdminContent
 import com.example.gestok.components.adminpage.RegisterData
-import com.example.gestok.components.orderpage.dialogs.OrderCreate
-import com.example.gestok.components.orderpage.dialogs.OrderEdit
+import com.example.gestok.components.orderpage.OrderCreate
+import com.example.gestok.components.orderpage.OrderEdit
 import com.example.gestok.screens.internalScreens.order.OrderContent
 import com.example.gestok.components.productpage.IngredientData
 import com.example.gestok.components.productpage.ProductContent
@@ -179,6 +179,8 @@ fun LayoutScreen(
             }
 
             "editOrder" -> {
+                val viewModel: OrderApiViewModel = koinViewModel()
+
                 selectedOrder.value?.let {
                     OrderEdit(
                         modifier = Modifier
@@ -187,7 +189,11 @@ fun LayoutScreen(
                         onBack = {
                             currentPage.value = "pedidos"
                         },
-                        order = it
+                        order = it,
+                        onSucess = {
+                            currentPage.value = "sucess"
+                        },
+                        viewModel
                     )
                 }
             }

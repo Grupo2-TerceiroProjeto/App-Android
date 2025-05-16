@@ -1,4 +1,4 @@
-package com.example.gestok.components.orderpage.dialogs
+package com.example.gestok.components.orderpage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
