@@ -55,9 +55,7 @@ fun OrderContent(
 
     LazyColumn(
         modifier = modifier
-            .fillMaxSize()
-            .background(White),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            .background(Color(0xFFF3F3F3))
 
     ) {
 
@@ -88,7 +86,7 @@ fun OrderContent(
 
                 if (erroPedidos != null) {
                     Text(
-                        erroPedidos ?: "",
+                        erroPedidos,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.W600,
                         color = Color.Red,
@@ -134,7 +132,7 @@ fun OrderContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            "Nenhum pedido encontrado.",
+                            "Nenhum pedido cadastrado",
                             fontSize = 16.sp,
                             color = Black
                         )
@@ -147,7 +145,8 @@ fun OrderContent(
                         OrderCard(
                             pedido = pedido,
                             currentPage = currentPage,
-                            selectedOrder = selectedOrder
+                            selectedOrder = selectedOrder,
+                            viewModel = viewModel
                         )
                     }
 

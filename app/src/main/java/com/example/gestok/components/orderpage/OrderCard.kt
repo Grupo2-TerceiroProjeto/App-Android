@@ -15,7 +15,12 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,16 +29,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.R
+import com.example.gestok.components.orderpage.popups.InfoDialog
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.ui.theme.Blue
+import com.example.gestok.utils.formatPhoneNumber
+import com.example.gestok.viewModel.order.OrderApiViewModel
 
 @Composable
 fun OrderCard(
     pedido: OrderData,
     currentPage: MutableState<String>,
-    selectedOrder: MutableState<OrderData?>
+    selectedOrder: MutableState<OrderData?>,
+    viewModel: OrderApiViewModel
 ) {
 
+    val enabled = pedido.status == "Cancelado" || pedido.status == "Concluído"
+
+    var showInfoDialog by remember { mutableStateOf(false) }
+
+    var showRecipeDialog by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
@@ -86,11 +100,13 @@ fun OrderCard(
                     Text(
                         text = "Contato",
                         fontWeight = FontWeight.Bold,
-                        color = Blue)
+                        color = Blue
+                    )
                     Text(
-                        text = pedido.telefone,
+                        text = formatPhoneNumber(pedido.telefone),
                         fontWeight = FontWeight.W300,
-                        color = Blue)
+                        color = Blue
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
 
@@ -132,34 +148,51 @@ fun OrderCard(
                         horizontalAlignment = Alignment.End
                     ) {
                         Row() {
-                            IconButton(
-                                onClick = {
-                                    selectedOrder.value = pedido
-                                    currentPage.value = "editOrder"
-                                          },
-                                modifier = Modifier
-                                    .size(50.dp)
+                            if (!enabled) {
+                                IconButton(
+                                    onClick = {
+                                        selectedOrder.value = pedido
+                                        currentPage.value = "editOrder"
+                                    },
+                                    modifier = Modifier
+                                        .size(50.dp)
 
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.edicao_f),
-                                    contentDescription = "Editar",
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.edicao_f),
+                                        contentDescription = "Editar",
 
 
+                                        )
+
+
+                                }
+                            }
+
+                            if (enabled) {
+                                IconButton(
+                                    onClick = { showInfoDialog = true },
+                                    modifier = Modifier
+                                        .size(50.dp)
+                                ) {
+
+                                    Image(
+                                        painter = painterResource(id = R.drawable.info),
+                                        contentDescription = "Informação do pedido"
                                     )
-
-
+                                }
                             }
 
                             IconButton(
-                                onClick = {},
+                                onClick = { showRecipeDialog = true
+                                          viewModel.getReceita(pedido)},
                                 modifier = Modifier
                                     .height(50.dp)
 
                             ) {
                                 Image(
                                     painter = painterResource(id = R.drawable.menu_f),
-                                    contentDescription = "Informação",
+                                    contentDescription = "Receita",
 
 
                                     )
@@ -176,6 +209,19 @@ fun OrderCard(
 
     }
 
+    if (showInfoDialog) {
+        InfoDialog(
+            message = "Este pedido foi ${pedido.status} e não pode mais ser editado.",
+            onDismiss = { showInfoDialog = false }
+        )
+    }
+
+    if (showRecipeDialog) {
+        Recipe(
+            ingredientes = viewModel.receita,
+            onDismiss = { showRecipeDialog = false }
+        )
+    }
 
 }
 

@@ -1,7 +1,5 @@
 package com.example.gestok.screens.internalScreens.order.data
 
-import java.time.LocalDate
-
 data class OrderItensBlock(
     val nome: String,
     var quantidade: Int
@@ -40,7 +38,7 @@ data class OrderItensCreate(
 
 data class OrderCreateData(
     val nomeSolicitante: String,
-    val dataEntrega: LocalDate?,
+    val dataEntrega: String,
     val telefone: String,
     val status: String,
     val produtos: List<OrderItensCreate>
@@ -48,7 +46,7 @@ data class OrderCreateData(
 
 data class OrderEditData(
     val nomeSolicitante: String,
-    val dataEntrega: LocalDate?,
+    val dataEntrega: String,
     val telefone: String,
     val status: String,
     val produtos: List<OrderItensBlock>

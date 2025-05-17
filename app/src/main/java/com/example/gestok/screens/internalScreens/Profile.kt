@@ -44,7 +44,6 @@ fun Profile(
 
     LazyColumn(
         modifier = modifier
-            .fillMaxSize()
             .background(LightGray),
         horizontalAlignment = Alignment.CenterHorizontally
     ){

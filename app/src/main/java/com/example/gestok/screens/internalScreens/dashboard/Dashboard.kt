@@ -90,7 +90,6 @@ fun Dashboard(
 
     LazyColumn(
         modifier = modifier
-            .fillMaxSize()
             .background(LightGray)
 
     ) {

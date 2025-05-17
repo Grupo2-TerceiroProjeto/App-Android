@@ -11,8 +11,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.example.gestok.screens.internalScreens.admin.AdminContent
-import com.example.gestok.screens.internalScreens.admin.data.RegisterData
+import com.example.gestok.components.adminpage.AdminContent
+import com.example.gestok.components.adminpage.RegisterData
 import com.example.gestok.components.orderpage.dialogs.OrderCreate
 import com.example.gestok.components.orderpage.dialogs.OrderEdit
 import com.example.gestok.screens.internalScreens.order.OrderContent
@@ -21,8 +21,6 @@ import com.example.gestok.components.productpage.ProductContent
 import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.screens.internalScreens.dashboard.Dashboard
 import com.example.gestok.screens.internalScreens.Profile
-import com.example.gestok.screens.internalScreens.admin.RegisterCreate
-import com.example.gestok.screens.internalScreens.admin.RegisterEdit
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
 import com.example.gestok.viewModel.order.OrderApiViewModel
@@ -41,38 +39,6 @@ val queijo: IngredientData = IngredientData("Queijo", 300, "g")
 val presunto: IngredientData = IngredientData("Presunto", 200, "g")
 val oleo: IngredientData = IngredientData("Óleo", 1, "L")
 val acucar: IngredientData = IngredientData("Açúcar", 300, "g")
-
-
-
-//// Pedidos mockados
-//val pedido1: OrderData
-//    get() = OrderData(
-//        nomeSolicitante = "Vitor Nunes",
-//        contato = "1140028922",
-//        statusPedido = "Em produção",
-//        dataEntrega = "20/11/2023",
-//        itens = mutableMapOf(coxinha to 20, esfirra to 30, brigadeiro to 100) // Pedido com alguns salgados e um doce
-//    )
-//
-//val pedido2: OrderData
-//    get() = OrderData(
-//        nomeSolicitante = "Emilly Ferreira",
-//        contato = "1198765432",
-//        statusPedido = "Aguardando entrega",
-//        dataEntrega = "22/11/2023",
-//        itens = mutableMapOf(pastel to 10, boloDeChocolate to 2) // Outro pedido com um salgado e um bolo
-//    )
-//
-//val pedido3: OrderData
-//    get() = OrderData(
-//        nomeSolicitante = "Thiago Rodrigues",
-//        contato = "1122334455",
-//        statusPedido = "Entregue",
-//        dataEntrega = "15/11/2023",
-//        itens = mutableMapOf(coxinha to 60, esfirra to 50, brigadeiro to 10) // Pedido com mais itens e repetidos
-//    )
-
-
 
 //Funcionário testes:
 val luca = RegisterData("Luca Sena", "Cozinheiro", "luca.souza@sptech.com")
@@ -98,7 +64,6 @@ val listaProdutos: List<ProductData> = listOf(
     pudim, quibe, mousseDeMaracuja, tortaDeFrango
 )
 val listaFuncionarios: List<RegisterData> = listOf(luca, emilly, vitor, thiago, vagner, kauan)
-//val listaPedidos: List<OrderData> = listOf(pedido1, pedido2, pedido3)
 
 @Composable
 fun LayoutScreen(
@@ -107,9 +72,16 @@ fun LayoutScreen(
 ) {
 
     val currentPage = remember { mutableStateOf("dashboard") }
+    val previousPage = remember { mutableStateOf("") }
 
     val selectedOrder = remember { mutableStateOf<OrderData?>(null) }
     val selectedRegister = remember { mutableStateOf<RegisterData?>(null) }
+
+    LaunchedEffect(currentPage.value) {
+        if (currentPage.value != "sucess") {
+            previousPage.value = currentPage.value
+        }
+    }
 
     Scaffold(Modifier.background(Color(0xFFF3F3F3)), //COR DO FUNDO DA TELA
         topBar = {
@@ -118,8 +90,6 @@ fun LayoutScreen(
         bottomBar = {
             BottomNavBar() { navItem ->
                 currentPage.value = navItem.screen
-
-
             }
         }
     ) { innerPadding ->
@@ -158,17 +128,26 @@ fun LayoutScreen(
             }
 
             "createOrder" -> {
+                val viewModel: OrderApiViewModel = koinViewModel()
+
                 OrderCreate(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding),
                     onBack = {
                         currentPage.value = "pedidos"
-                    }
+                    },
+                    onSucess = {
+                        currentPage.value = "sucess"
+                    },
+                    viewModel
+
                 )
             }
 
             "editOrder" -> {
+                val viewModel: OrderApiViewModel = koinViewModel()
+
                 selectedOrder.value?.let {
                     OrderEdit(
                         modifier = Modifier
@@ -177,7 +156,11 @@ fun LayoutScreen(
                         onBack = {
                             currentPage.value = "pedidos"
                         },
-                        order = it
+                        order = it,
+                        onSucess = {
+                            currentPage.value = "sucess"
+                        },
+                        viewModel
                     )
                 }
             }
@@ -224,6 +207,34 @@ fun LayoutScreen(
                 ProductContent(modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding), listaProdutos)
+            }
+
+            "sucess" -> {
+
+                val (title, message) = when (previousPage.value) {
+                    "createOrder" -> Pair(
+                        "Pedido Cadastrado",
+                        "O pedido foi cadastrado com sucesso! \nConfira na aba Pedidos"
+                    )
+
+                    "editOrder" -> Pair(
+                        "Pedido Atualizado",
+                        "O pedido foi atualizado com sucesso! \nConfira na aba Pedidos"
+                    )
+
+                    else -> Pair(
+                        "",
+                        ""
+                    )
+                }
+
+                Sucess(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    title = title,
+                    message = message
+                )
             }
         }
 
