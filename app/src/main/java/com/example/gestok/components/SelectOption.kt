@@ -26,7 +26,8 @@ fun SelectOption(
     text: String,
     value: String,
     onValueChange: (String) -> Unit,
-    list: List<String>
+    list: List<String>,
+    erro: String? = null,
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -54,6 +55,10 @@ fun SelectOption(
                 focusedIndicatorColor = LightGray,
                 unfocusedIndicatorColor = LightGray
             ),
+            isError = erro != null,
+            supportingText = {
+                erro?.let { Text(text = it) }
+            },
             modifier = Modifier
                 .padding(end = 10.dp)
                 .width(330.dp)

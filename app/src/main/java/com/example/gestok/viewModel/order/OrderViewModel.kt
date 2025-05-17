@@ -4,8 +4,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.example.gestok.screens.internalScreens.order.data.IngredientsFormat
 import com.example.gestok.screens.internalScreens.order.data.OrderCreateData
 import com.example.gestok.screens.internalScreens.order.data.OrderData
+import com.example.gestok.screens.internalScreens.order.data.OrderEditData
 import com.example.gestok.screens.internalScreens.order.data.ProductData
 import com.example.gestok.screens.login.data.UserSession
 
@@ -31,9 +33,9 @@ abstract class OrderViewModel(open val sessaoUsuario : UserSession) : ViewModel(
 
     protected var _dataEntregaErro by mutableStateOf<String?>(null)
 
-    protected var _totalCompraErro by mutableStateOf<String?>(null)
-
     protected var _itensErro by mutableStateOf<String?>(null)
+
+    protected var _receita = mutableListOf<IngredientsFormat>()
 
     val pedidosErro: String?
         get() = _pedidosErro
@@ -53,6 +55,25 @@ abstract class OrderViewModel(open val sessaoUsuario : UserSession) : ViewModel(
     val carregouProdutos: Boolean
         get() = _carregouProdutos
 
+    val nomeSolicitanteErro: String?
+        get() = _nomeSolicitanteErro
+
+    val telefoneErro: String?
+        get() = _telefoneErro
+
+    val statusErro: String?
+        get() = _statusErro
+
+    val dataEntregaErro : String?
+        get() = _dataEntregaErro
+
+    val itensErro : String?
+        get() = _itensErro
+
+    val receita : List<IngredientsFormat>
+        get() = _receita.toList()
+
+
     fun limparErros() {
         _pedidosErro = null
     }
@@ -66,7 +87,6 @@ abstract class OrderViewModel(open val sessaoUsuario : UserSession) : ViewModel(
         _telefoneErro = null
         _statusErro = null
         _dataEntregaErro = null
-        _totalCompraErro = null
         _itensErro = null
     }
 
@@ -74,5 +94,9 @@ abstract class OrderViewModel(open val sessaoUsuario : UserSession) : ViewModel(
 
     open fun getProdutos() {}
 
-    open fun salvarPedido(pedido : OrderCreateData) {}
+    open fun salvarPedido(pedido : OrderCreateData, onBack: () -> Unit, onSucess: () -> Unit) {}
+
+    open fun editarPedido(pedido : OrderEditData, idPedido: Int, onBack: () -> Unit, onSucess: () -> Unit) {}
+
+    open fun getReceita(pedido : OrderData) {}
 }

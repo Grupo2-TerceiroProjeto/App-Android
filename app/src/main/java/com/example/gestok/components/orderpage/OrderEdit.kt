@@ -1,4 +1,4 @@
-package com.example.gestok.components.orderpage.dialogs
+package com.example.gestok.components.orderpage
 
 import SelectOption
 import androidx.compose.foundation.background
@@ -36,59 +36,62 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.components.InputLabel
-import com.example.gestok.screens.internalScreens.order.data.OrderCreateData
+import com.example.gestok.screens.internalScreens.order.data.OrderData
+import com.example.gestok.screens.internalScreens.order.data.OrderEditData
+import com.example.gestok.screens.internalScreens.order.data.OrderItens
 import com.example.gestok.screens.internalScreens.order.data.OrderItensBlock
-import com.example.gestok.screens.internalScreens.order.data.OrderItensCreate
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.White
 import com.example.gestok.utils.formatDate
+import com.example.gestok.utils.formatPhoneNumber
 import com.example.gestok.viewModel.order.OrderApiViewModel
-import org.koin.androidx.compose.koinViewModel
 import java.text.NumberFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-
 @Composable
-fun OrderCreate(
+fun OrderEdit(
     modifier: Modifier = Modifier,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    order: OrderData,
+    onSucess: () -> Unit,
+    viewModel: OrderApiViewModel
 ) {
 
-    var nomeSolicitante by remember { mutableStateOf("") }
-    var telefone by remember { mutableStateOf("") }
-    var status by remember { mutableStateOf("Selecione uma opção") }
-    var dataEntrega by remember { mutableStateOf("") }
-    var produtos by remember { mutableStateOf(emptyList<OrderItensCreate>()) }
-    val totalCompra by remember(produtos) {
+    var editedNomeSolicitante by remember { mutableStateOf(order.nomeSolicitante) }
+    var editedContato by remember { mutableStateOf(order.telefone) }
+    var editedStatusPedido by remember { mutableStateOf(order.status) }
+    var editedDataEntrega by remember { mutableStateOf(order.dataEntrega ?: "") }
+    var editedItens by remember {
+        mutableStateOf(order.produtos.map {
+            it.copy(imagem = it.imagem ?: "")
+        })
+    }
+    val editedValorPedido by remember (editedItens) {
         mutableStateOf(
             NumberFormat.getCurrencyInstance(Locale("pt", "BR"))
-                .format(produtos.sumOf { it.preco * it.quantidade })
+                .format(editedItens.sumOf { it.preco * it.quantidade })
         )
     }
 
     val updateQuantidade: (Int, Int) -> Unit = { index, newQuantidade ->
-        produtos = produtos.toMutableList().apply {
+        editedItens = editedItens.toMutableList().apply {
             this[index] = this[index].copy(quantidade = newQuantidade)
         }
     }
 
-    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-
-    val dataEntregaParsed = runCatching {
-        if (dataEntrega.isNotBlank()) LocalDate.parse(dataEntrega, formatter)
-        else null
-    }.getOrNull()
-
-    val novoPedido = OrderCreateData(
-        nomeSolicitante = nomeSolicitante,
-        dataEntrega = dataEntregaParsed,
-        telefone = telefone,
-        status = status,
-        produtos = produtos
+    val pedidoEditado = OrderEditData(
+        nomeSolicitante = editedNomeSolicitante,
+        dataEntrega = editedDataEntrega,
+        telefone = editedContato,
+        status = editedStatusPedido,
+        produtos = editedItens.map { item ->
+            OrderItensBlock(
+                nome = item.nome,
+                quantidade = item.quantidade
+            )
+        }
     )
 
     var itensAdd by remember { mutableStateOf(false) }
@@ -125,7 +128,7 @@ fun OrderCreate(
                     }
 
                     Text(
-                        "Cadastrar Pedido",
+                        "Editar Pedido",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W600,
                         color = Black,
@@ -146,12 +149,13 @@ fun OrderCreate(
                     Column {
                         InputLabel(
                             text = "Solicitante",
-                            value = nomeSolicitante,
+                            value = editedNomeSolicitante,
                             onValueChange = {
                                 val filtered = it.filter { char -> char.isLetter() || char.isWhitespace() }
-                                nomeSolicitante = filtered
+                                editedNomeSolicitante = filtered
                             },
                             keyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
+                            erro = viewModel.nomeSolicitanteErro,
                             maxLength = 45
                         )
                     }
@@ -159,35 +163,41 @@ fun OrderCreate(
                     Column {
                         InputLabel(
                             text = "Contato",
-                            value = telefone,
-                            onValueChange = { telefone = it },
+                            value = formatPhoneNumber(editedContato),
+                            onValueChange = {
+                                val cleaned = it.replace(Regex("[^\\d]"), "").take(11)
+                                editedContato = cleaned
+                            },
                             keyboardType = androidx.compose.ui.text.input.KeyboardType.Phone,
-                            maxLength = 11
+                            erro = viewModel.telefoneErro,
+                            maxLength = 15
                         )
                     }
 
                     Column {
                         SelectOption(
                             text = "Status do Pedido",
-                            value = status,
-                            onValueChange = { status = it },
+                            value = editedStatusPedido,
+                            onValueChange = { editedStatusPedido = it },
                             list = listOf(
                                 "Pendente",
                                 "Em Produção",
                                 "Concluído",
                                 "Cancelado"
-                            )
+                            ),
+                            erro = viewModel.statusErro
                         )
                     }
 
                     Column {
                         InputLabel(
                             text = "Data de Entrega",
-                            value = dataEntrega,
+                            value = editedDataEntrega,
                             onValueChange = {
-                                dataEntrega = formatDate(it)
+                                editedDataEntrega = formatDate(it)
                             },
-                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Number,
+                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
+                            erro = viewModel.dataEntregaErro,
                             maxLength = 10
                         )
                     }
@@ -195,7 +205,7 @@ fun OrderCreate(
                     Column {
                         InputLabel(
                             text = "Valor",
-                            value = totalCompra,
+                            value = editedValorPedido,
                             onValueChange = { },
                             keyboardType = androidx.compose.ui.text.input.KeyboardType.Decimal,
                             readOnly = true,
@@ -238,7 +248,20 @@ fun OrderCreate(
                     }
                 }
 
-                if (produtos.isEmpty()) {
+                if (viewModel.itensErro != null) {
+                    Text(
+                        viewModel.itensErro!!,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.W600,
+                        color = Color(0xFFD32F2F),
+                        modifier = Modifier.padding(
+                            start = 20.dp,
+                            top = 32.dp
+                        ),
+                    )
+                }
+
+                if (editedItens.isEmpty()) {
                     Text(
                         "Para salvar o pedido, é necessário adicionar pelo menos um produto",
                         fontSize = 14.sp,
@@ -252,13 +275,19 @@ fun OrderCreate(
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center
                     )
                 } else {
-                    Column(Modifier.padding(start = 20.dp, end = 20.dp, top = 24.dp)) {
-                        ItensBlock(produtos.map { item ->
-                            OrderItensBlock(
-                                nome = item.nome,
-                                quantidade = item.quantidade
+                    LazyColumn(
+                        modifier = Modifier
+                            .padding(start = 20.dp, end = 20.dp, top = 24.dp)
+                            .height(250.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(editedItens.size) { index ->
+                            val item = editedItens[index]
+                            ItensBlock(
+                                listOf(OrderItensBlock(nome = item.nome, quantidade = item.quantidade)),
+                                updateQuantidade = { _, newQtd -> updateQuantidade(index, newQtd) }
                             )
-                        }, updateQuantidade)
+                        }
                     }
 
                     Row(
@@ -268,7 +297,7 @@ fun OrderCreate(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Button(
-                            onClick = { },
+                            onClick = { viewModel.editarPedido(pedidoEditado, order.id, onBack, onSucess) },
                             colors = ButtonDefaults.buttonColors(Blue),
                         ) {
                             Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = White)
@@ -282,20 +311,20 @@ fun OrderCreate(
 
         if (itensAdd) {
             item {
-                val viewModel: OrderApiViewModel = koinViewModel()
 
                 ItensAdd(
                     viewModel,
                     onConfirm = { selectedProducts ->
-                        produtos = produtos + selectedProducts.map {
-                            OrderItensCreate(
+                        editedItens = editedItens + selectedProducts.map {
+                            OrderItens(
+                                id = it.id_produto,
                                 nome = it.nome,
                                 categoria = it.fk_categoria,
                                 preco = it.preco,
                                 quantidade = 0,
                                 emProducao = it.em_producao,
                                 imagem = it.imagem ?: "",
-                                )
+                            )
                         }
                         itensAdd = false
 

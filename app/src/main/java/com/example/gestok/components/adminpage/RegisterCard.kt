@@ -16,6 +16,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,10 +30,15 @@ import androidx.compose.ui.unit.dp
 import com.example.gestok.R
 import com.example.gestok.components.ExcludeConfirmationDialog
 import com.example.gestok.components.adminpage.dialogs.RegisterEdit
+import com.example.gestok.screens.internalScreens.admin.data.RegisterData
+import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.ui.theme.Blue
 
 @Composable
-fun RegisterCard(registerData: RegisterData, funcionariosLista: List<RegisterData>) {
+fun RegisterCard(funcionario: RegisterData,
+                 currentPage: MutableState<String>,
+                 selectedRegister: MutableState<RegisterData?>
+) {
 
 
     var showEditRegisterDialog by remember { mutableStateOf(false) }
@@ -54,14 +60,17 @@ fun RegisterCard(registerData: RegisterData, funcionariosLista: List<RegisterDat
                 Column (modifier = Modifier
                     .align(Alignment.CenterVertically)){
                     Text(
-                        text = registerData.nome,
+                        text = funcionario.nome,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF196BAD)
                     )
                 }
                 Row () {
                     IconButton(
-                        onClick = {showEditRegisterDialog = true},
+                        onClick = {
+                            selectedRegister.value = funcionario
+                            currentPage.value = "registerEdit"
+                        },
                         modifier = Modifier
                             .size(50.dp)
 
@@ -102,7 +111,7 @@ fun RegisterCard(registerData: RegisterData, funcionariosLista: List<RegisterDat
                         color = Blue
                     )
 
-                    Text(text = registerData.cargo,
+                    Text(text = funcionario.cargo,
                         fontWeight = FontWeight.W300,
                         color = Blue,
                         modifier = Modifier.width(100.dp))
@@ -118,7 +127,7 @@ fun RegisterCard(registerData: RegisterData, funcionariosLista: List<RegisterDat
                     color = Blue
                 )
 
-                    Text(text = registerData.email,
+                    Text(text = funcionario.email,
                         fontWeight = FontWeight.W300,
                         color = Blue)}
             }
@@ -127,7 +136,7 @@ fun RegisterCard(registerData: RegisterData, funcionariosLista: List<RegisterDat
     }
 
     if(showEditRegisterDialog){
-        RegisterEdit(funcionario = registerData,
+        RegisterEdit(funcionario = funcionario,
             onDismiss = { showEditRegisterDialog = false },
             onConfirm = { nome, cargo, email -> showEditRegisterDialog = false })
     }

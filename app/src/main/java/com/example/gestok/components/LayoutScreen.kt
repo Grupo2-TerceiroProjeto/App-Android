@@ -7,20 +7,23 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.example.gestok.components.adminpage.AdminContent
-import com.example.gestok.components.adminpage.RegisterData
-import com.example.gestok.components.orderpage.dialogs.OrderCreate
-import com.example.gestok.components.orderpage.dialogs.OrderEdit
+import com.example.gestok.components.orderpage.OrderCreate
+import com.example.gestok.components.orderpage.OrderEdit
 import com.example.gestok.screens.internalScreens.order.OrderContent
 import com.example.gestok.components.productpage.IngredientData
 import com.example.gestok.components.productpage.ProductContent
 import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.screens.internalScreens.dashboard.Dashboard
 import com.example.gestok.screens.internalScreens.Profile
+import com.example.gestok.screens.internalScreens.admin.AdminContent
+import com.example.gestok.screens.internalScreens.admin.RegisterCreate
+import com.example.gestok.screens.internalScreens.admin.RegisterEdit
+import com.example.gestok.screens.internalScreens.admin.data.RegisterData
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
 import com.example.gestok.viewModel.order.OrderApiViewModel
@@ -40,45 +43,13 @@ val presunto: IngredientData = IngredientData("Presunto", 200, "g")
 val oleo: IngredientData = IngredientData("Óleo", 1, "L")
 val acucar: IngredientData = IngredientData("Açúcar", 300, "g")
 
-
-
-//// Pedidos mockados
-//val pedido1: OrderData
-//    get() = OrderData(
-//        nomeSolicitante = "Vitor Nunes",
-//        contato = "1140028922",
-//        statusPedido = "Em produção",
-//        dataEntrega = "20/11/2023",
-//        itens = mutableMapOf(coxinha to 20, esfirra to 30, brigadeiro to 100) // Pedido com alguns salgados e um doce
-//    )
-//
-//val pedido2: OrderData
-//    get() = OrderData(
-//        nomeSolicitante = "Emilly Ferreira",
-//        contato = "1198765432",
-//        statusPedido = "Aguardando entrega",
-//        dataEntrega = "22/11/2023",
-//        itens = mutableMapOf(pastel to 10, boloDeChocolate to 2) // Outro pedido com um salgado e um bolo
-//    )
-//
-//val pedido3: OrderData
-//    get() = OrderData(
-//        nomeSolicitante = "Thiago Rodrigues",
-//        contato = "1122334455",
-//        statusPedido = "Entregue",
-//        dataEntrega = "15/11/2023",
-//        itens = mutableMapOf(coxinha to 60, esfirra to 50, brigadeiro to 10) // Pedido com mais itens e repetidos
-//    )
-
-
-
 //Funcionário testes:
-val luca = RegisterData("Luca Sena", "Cozinheiro", "luca.souza@sptech.com")
-val emilly = RegisterData("Emilly Ferreira", "Atendente", "emilly.ferreira@sptech.com")
-val vitor = RegisterData("Vitor Hugo", "Gerente", "vitor.hugo@sptech.com")
-val thiago = RegisterData("Thiago Rodrigues", "Auxiliar de Cozinha", "thiago.rodrigues@sptech.com")
-val vagner = RegisterData("Vagner Benedito", "Chef de Cozinha", "vagner.benedito@sptech.com")
-val kauan = RegisterData("Kauan Parente", "Estoquista", "kauan.parente@sptech.com")
+val luca = RegisterData(1, "Cozinheiro", "ADMIN", 1, "luca.souza@sptech.com")
+val emilly = RegisterData(2, "Atendente", "ADMIN", 1,"emilly.ferreira@sptech.com")
+val vitor = RegisterData(3, "Gerente", "ADMIN", 1, "vitor.hugo@sptech.com")
+val thiago = RegisterData(4, "Auxiliar de Cozinha", "ADMIN", 1, "thiago.rodrigues@sptech.com")
+val vagner = RegisterData(5, "Chef de Cozinha", "ADMIN", 1, "vagner.benedito@sptech.com")
+val kauan = RegisterData(6, "Estoquista", "ADMIN", 1, "kauan.parente@sptech.com")
 
 //Produtos testes:
 val coxinha = ProductData("Coxinha", 10, "Salgados", 100.10, mutableListOf(margarina, farinha, frango, ovo), true)
@@ -96,7 +67,6 @@ val listaProdutos: List<ProductData> = listOf(
     pudim, quibe, mousseDeMaracuja, tortaDeFrango
 )
 val listaFuncionarios: List<RegisterData> = listOf(luca, emilly, vitor, thiago, vagner, kauan)
-//val listaPedidos: List<OrderData> = listOf(pedido1, pedido2, pedido3)
 
 @Composable
 fun LayoutScreen(
@@ -105,8 +75,16 @@ fun LayoutScreen(
 ) {
 
     val currentPage = remember { mutableStateOf("dashboard") }
+    val previousPage = remember { mutableStateOf("") }
 
     val selectedOrder = remember { mutableStateOf<OrderData?>(null) }
+    val selectedRegister = remember { mutableStateOf<RegisterData?>(null) }
+
+    LaunchedEffect(currentPage.value) {
+        if (currentPage.value != "sucess") {
+            previousPage.value = currentPage.value
+        }
+    }
 
     Scaffold(Modifier.background(Color(0xFFF3F3F3)), //COR DO FUNDO DA TELA
         topBar = {
@@ -115,8 +93,6 @@ fun LayoutScreen(
         bottomBar = {
             BottomNavBar() { navItem ->
                 currentPage.value = navItem.screen
-
-
             }
         }
     ) { innerPadding ->
@@ -155,17 +131,26 @@ fun LayoutScreen(
             }
 
             "createOrder" -> {
+                val viewModel: OrderApiViewModel = koinViewModel()
+
                 OrderCreate(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding),
                     onBack = {
                         currentPage.value = "pedidos"
-                    }
+                    },
+                    onSucess = {
+                        currentPage.value = "sucess"
+                    },
+                    viewModel
+
                 )
             }
 
             "editOrder" -> {
+                val viewModel: OrderApiViewModel = koinViewModel()
+
                 selectedOrder.value?.let {
                     OrderEdit(
                         modifier = Modifier
@@ -174,7 +159,11 @@ fun LayoutScreen(
                         onBack = {
                             currentPage.value = "pedidos"
                         },
-                        order = it
+                        order = it,
+                        onSucess = {
+                            currentPage.value = "sucess"
+                        },
+                        viewModel
                     )
                 }
             }
@@ -183,14 +172,70 @@ fun LayoutScreen(
                 AdminContent(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding), listaFuncionarios
+                        .padding(innerPadding),
+                    listaFuncionarios,
+                    currentPage = currentPage,
+                    selectedRegister = selectedRegister
                 )
+            }
+
+            "registerCreate" -> {
+                RegisterCreate(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    onBack = {
+                        currentPage.value = "config"
+                    }
+                )
+            }
+
+            "registerEdit" -> {
+                selectedRegister.value?.let {
+                    RegisterEdit(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                        onBack = {
+                            currentPage.value = "config"
+                        },
+                        funcionario = it
+                    )
+                }
             }
 
             "produtos" -> {
                 ProductContent(modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding), listaProdutos)
+            }
+
+            "sucess" -> {
+
+                val (title, message) = when (previousPage.value) {
+                    "createOrder" -> Pair(
+                        "Pedido Cadastrado",
+                        "O pedido foi cadastrado com sucesso! \nConfira na aba Pedidos"
+                    )
+
+                    "editOrder" -> Pair(
+                        "Pedido Atualizado",
+                        "O pedido foi atualizado com sucesso! \nConfira na aba Pedidos"
+                    )
+
+                    else -> Pair(
+                        "",
+                        ""
+                    )
+                }
+
+                Sucess(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    title = title,
+                    message = message
+                )
             }
         }
 

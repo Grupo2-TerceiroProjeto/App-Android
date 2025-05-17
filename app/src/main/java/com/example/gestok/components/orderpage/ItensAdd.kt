@@ -1,4 +1,4 @@
-package com.example.gestok.components.orderpage.dialogs
+package com.example.gestok.components.orderpage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -66,7 +66,8 @@ fun ItensAdd(
             .fillMaxWidth()
             .then(
                 if (!carregando) Modifier.height(200.dp)
-                else Modifier.height(600.dp)
+                else if (produtos.isEmpty()) Modifier.height(200.dp)
+                else Modifier.height(320.dp)
             ),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
     ) {
@@ -125,7 +126,7 @@ fun ItensAdd(
                         .fillMaxHeight()
                         .wrapContentSize(Alignment.Center)
                 ) {
-                    Text("Nenhum produto encontrado", color = MediumGray)
+                    Text("Nenhum produto cadastrado", color = MediumGray)
                 }
             }
 
