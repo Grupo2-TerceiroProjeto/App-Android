@@ -9,14 +9,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,17 +33,21 @@ import com.example.gestok.components.orderpage.popups.InfoDialog
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.utils.formatPhoneNumber
+import com.example.gestok.viewModel.order.OrderApiViewModel
 
 @Composable
 fun OrderCard(
     pedido: OrderData,
     currentPage: MutableState<String>,
-    selectedOrder: MutableState<OrderData?>
+    selectedOrder: MutableState<OrderData?>,
+    viewModel: OrderApiViewModel
 ) {
 
     val enabled = pedido.status == "Cancelado" || pedido.status == "Concluído"
 
     var showInfoDialog by remember { mutableStateOf(false) }
+
+    var showRecipeDialog by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
@@ -181,7 +184,8 @@ fun OrderCard(
                             }
 
                             IconButton(
-                                onClick = {},
+                                onClick = { showRecipeDialog = true
+                                          viewModel.getReceita(pedido)},
                                 modifier = Modifier
                                     .height(50.dp)
 
@@ -209,6 +213,13 @@ fun OrderCard(
         InfoDialog(
             message = "Este pedido foi ${pedido.status} e não pode mais ser editado.",
             onDismiss = { showInfoDialog = false }
+        )
+    }
+
+    if (showRecipeDialog) {
+        Recipe(
+            ingredientes = viewModel.receita,
+            onDismiss = { showRecipeDialog = false }
         )
     }
 

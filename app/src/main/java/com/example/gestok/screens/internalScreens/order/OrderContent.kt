@@ -126,7 +126,7 @@ fun OrderContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            "Nenhum pedido encontrado.",
+                            "Nenhum pedido cadastrado",
                             fontSize = 16.sp,
                             color = Black
                         )
@@ -139,7 +139,8 @@ fun OrderContent(
                         OrderCard(
                             pedido = pedido,
                             currentPage = currentPage,
-                            selectedOrder = selectedOrder
+                            selectedOrder = selectedOrder,
+                            viewModel = viewModel
                         )
                     }
 

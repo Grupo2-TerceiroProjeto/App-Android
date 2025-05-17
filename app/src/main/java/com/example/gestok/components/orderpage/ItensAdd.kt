@@ -126,7 +126,7 @@ fun ItensAdd(
                         .fillMaxHeight()
                         .wrapContentSize(Alignment.Center)
                 ) {
-                    Text("Nenhum produto encontrado", color = MediumGray)
+                    Text("Nenhum produto cadastrado", color = MediumGray)
                 }
             }
 

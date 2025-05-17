@@ -4,10 +4,13 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.example.gestok.network.service.OrderService
+import com.example.gestok.screens.internalScreens.order.data.IngredientsData
+import com.example.gestok.screens.internalScreens.order.data.IngredientsFormat
 import com.example.gestok.screens.internalScreens.order.data.OrderCreateData
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.screens.internalScreens.order.data.OrderEditData
 import com.example.gestok.screens.internalScreens.order.data.ProductData
+import com.example.gestok.screens.internalScreens.order.data.RecipeData
 import com.example.gestok.screens.login.data.UserSession
 import com.example.gestok.utils.formatDateApi
 import com.example.gestok.utils.formatPhoneNumber
@@ -265,6 +268,54 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
 
             } catch (e: Exception) {
                 Log.d("API", "Erro ao conectar ao servidor: ${e.message}")
+            }
+        }
+    }
+
+    override fun getReceita(pedido: OrderData) {
+
+        viewModelScope.launch {
+            try {
+
+                val receitas : List<RecipeData> = api.getReceitas()
+
+                val ingredientes : List<IngredientsData> = api.getIngredientes()
+
+                val idProdutos = pedido.produtos.map {it.id}
+
+                val receitasFiltradas = receitas.filter { receita ->
+                    idProdutos.contains(receita.produto)
+                }
+
+                val medidasMap = mapOf(
+                    1 to "g",
+                    2 to "ml",
+                    3 to "kg",
+                    4 to "unidade"
+                )
+
+                val ingredientesFiltrados = receitasFiltradas.mapNotNull { receita ->
+                    val ingrediente = ingredientes.find { it.id == receita.ingrediente }
+
+                    ingrediente?.let {
+                        val medidaInt = it.medida.toInt()
+                        val medidaString = medidasMap[medidaInt] ?: "medida desconhecida"
+
+                        IngredientsFormat(
+                            id = it.id,
+                            nome = it.nome,
+                            medida = medidaString,
+                            quantidade = receita.quantidade.toInt()
+                        )
+                    }
+                }
+
+                _receita.addAll(ingredientesFiltrados)
+
+                Log.d("API", "Receita obtida com sucesso")
+
+            } catch (e: Exception) {
+                Log.d("API", "Erro ao obter ingredientes da receita: ${e.message}")
             }
         }
     }
