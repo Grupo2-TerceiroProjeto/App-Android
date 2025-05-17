@@ -7,20 +7,23 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.example.gestok.components.adminpage.AdminContent
-import com.example.gestok.components.adminpage.RegisterData
-import com.example.gestok.components.orderpage.dialogs.OrderCreate
-import com.example.gestok.components.orderpage.dialogs.OrderEdit
+import com.example.gestok.components.orderpage.OrderCreate
+import com.example.gestok.components.orderpage.OrderEdit
 import com.example.gestok.screens.internalScreens.order.OrderContent
 import com.example.gestok.components.productpage.IngredientData
 import com.example.gestok.components.productpage.ProductContent
 import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.screens.internalScreens.dashboard.Dashboard
 import com.example.gestok.screens.internalScreens.Profile
+import com.example.gestok.screens.internalScreens.admin.AdminContent
+import com.example.gestok.screens.internalScreens.admin.RegisterCreate
+import com.example.gestok.screens.internalScreens.admin.RegisterEdit
+import com.example.gestok.screens.internalScreens.admin.data.RegisterData
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
 import com.example.gestok.viewModel.order.OrderApiViewModel
@@ -41,12 +44,12 @@ val oleo: IngredientData = IngredientData("Óleo", 1, "L")
 val acucar: IngredientData = IngredientData("Açúcar", 300, "g")
 
 //Funcionário testes:
-val luca = RegisterData("Luca Sena", "Cozinheiro", "luca.souza@sptech.com")
-val emilly = RegisterData("Emilly Ferreira", "Atendente", "emilly.ferreira@sptech.com")
-val vitor = RegisterData("Vitor Hugo", "Gerente", "vitor.hugo@sptech.com")
-val thiago = RegisterData("Thiago Rodrigues", "Auxiliar de Cozinha", "thiago.rodrigues@sptech.com")
-val vagner = RegisterData("Vagner Benedito", "Chef de Cozinha", "vagner.benedito@sptech.com")
-val kauan = RegisterData("Kauan Parente", "Estoquista", "kauan.parente@sptech.com")
+val luca = RegisterData(1, "Cozinheiro", "ADMIN", 1, "luca.souza@sptech.com")
+val emilly = RegisterData(2, "Atendente", "ADMIN", 1,"emilly.ferreira@sptech.com")
+val vitor = RegisterData(3, "Gerente", "ADMIN", 1, "vitor.hugo@sptech.com")
+val thiago = RegisterData(4, "Auxiliar de Cozinha", "ADMIN", 1, "thiago.rodrigues@sptech.com")
+val vagner = RegisterData(5, "Chef de Cozinha", "ADMIN", 1, "vagner.benedito@sptech.com")
+val kauan = RegisterData(6, "Estoquista", "ADMIN", 1, "kauan.parente@sptech.com")
 
 //Produtos testes:
 val coxinha = ProductData("Coxinha", 10, "Salgados", 100.10, mutableListOf(margarina, farinha, frango, ovo), true)
@@ -171,7 +174,8 @@ fun LayoutScreen(
                         .fillMaxSize()
                         .padding(innerPadding),
                     listaFuncionarios,
-                    currentPage = currentPage
+                    currentPage = currentPage,
+                    selectedRegister = selectedRegister
                 )
             }
 
@@ -188,20 +192,17 @@ fun LayoutScreen(
 
             "registerEdit" -> {
                 selectedRegister.value?.let {
-                RegisterEdit(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    onBack = {
-                        currentPage.value = "config"
-                    },
-                    funcionario = it
-                )
+                    RegisterEdit(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                        onBack = {
+                            currentPage.value = "config"
+                        },
+                        funcionario = it
+                    )
+                }
             }
-            }
-
-
-
 
             "produtos" -> {
                 ProductContent(modifier = Modifier

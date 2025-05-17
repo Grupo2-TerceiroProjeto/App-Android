@@ -33,7 +33,7 @@ import com.example.gestok.viewModel.login.LoginApiViewModel
 
 fun Login(navController: NavController, viewModel: LoginApiViewModel) {
 
-    var email by remember { mutableStateOf("luca.sena@sptech.school") }
+    var email by remember { mutableStateOf("emmily.jesus@sptech.school") }
     var senha by remember { mutableStateOf("Admin123") }
 
     val contexto = LocalContext.current

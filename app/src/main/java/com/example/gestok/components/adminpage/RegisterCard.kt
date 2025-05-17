@@ -35,8 +35,7 @@ import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.ui.theme.Blue
 
 @Composable
-fun RegisterCard(registerData: RegisterData,
-                 funcionariosLista: List<RegisterData>,
+fun RegisterCard(funcionario: RegisterData,
                  currentPage: MutableState<String>,
                  selectedRegister: MutableState<RegisterData?>
 ) {
@@ -61,14 +60,15 @@ fun RegisterCard(registerData: RegisterData,
                 Column (modifier = Modifier
                     .align(Alignment.CenterVertically)){
                     Text(
-                        text = registerData.nome,
+                        text = funcionario.nome,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF196BAD)
                     )
                 }
                 Row () {
                     IconButton(
-                        onClick = {  selectedRegister.value = registerData
+                        onClick = {
+                            selectedRegister.value = funcionario
                             currentPage.value = "registerEdit"
                         },
                         modifier = Modifier
@@ -111,7 +111,7 @@ fun RegisterCard(registerData: RegisterData,
                         color = Blue
                     )
 
-                    Text(text = registerData.cargo,
+                    Text(text = funcionario.cargo,
                         fontWeight = FontWeight.W300,
                         color = Blue,
                         modifier = Modifier.width(100.dp))
@@ -127,7 +127,7 @@ fun RegisterCard(registerData: RegisterData,
                     color = Blue
                 )
 
-                    Text(text = registerData.email,
+                    Text(text = funcionario.email,
                         fontWeight = FontWeight.W300,
                         color = Blue)}
             }
@@ -136,7 +136,7 @@ fun RegisterCard(registerData: RegisterData,
     }
 
     if(showEditRegisterDialog){
-        RegisterEdit(funcionario = registerData,
+        RegisterEdit(funcionario = funcionario,
             onDismiss = { showEditRegisterDialog = false },
             onConfirm = { nome, cargo, email -> showEditRegisterDialog = false })
     }

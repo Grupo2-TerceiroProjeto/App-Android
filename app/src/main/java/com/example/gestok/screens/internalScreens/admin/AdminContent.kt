@@ -35,7 +35,8 @@ import com.example.gestok.screens.internalScreens.admin.data.RegisterData
 @Composable
 fun AdminContent(modifier: Modifier = Modifier,
                  funcionariosLista: List<RegisterData>,
-                 currentPage: MutableState<String>
+                 currentPage: MutableState<String>,
+                 selectedRegister: MutableState<RegisterData?>
 ){
 
     var showEditRegisterDialog by remember { mutableStateOf(false) }
@@ -76,7 +77,6 @@ fun AdminContent(modifier: Modifier = Modifier,
 
             RegisterCard(
                 funcionario,
-                funcionariosLista,
                 currentPage,
                 selectedRegister = remember { mutableStateOf(null) })
 
