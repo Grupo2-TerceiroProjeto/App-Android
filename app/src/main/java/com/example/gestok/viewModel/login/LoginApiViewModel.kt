@@ -20,13 +20,16 @@ class LoginApiViewModel(
 
         var houveErro = false
 
-        if (email.isBlank() || !email.matches(Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"))) {
+        if (email.isBlank()) {
+            _emailErro = "E-mail é obrigatório"
+            houveErro = true
+        } else if(!email.matches(Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"))) {
             _emailErro = "E-mail inválido"
             houveErro = true
         }
 
         if (senha.isBlank()) {
-            _senhaErro = "Senha inválida"
+            _senhaErro = "Senha é obrigatória"
             houveErro = true
         }
 

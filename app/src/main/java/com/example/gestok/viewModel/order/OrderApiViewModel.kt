@@ -117,9 +117,7 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
     }
 
     override fun salvarPedido(pedido: OrderCreateData, onBack: () -> Unit, onSucess: () -> Unit) {
-        limparErrosPedido()
-
-        val cadastrado =  mutableStateOf(false)
+        limparErrosFormulario()
 
         var houveErro = false
 
@@ -169,23 +167,22 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
 
         viewModelScope.launch {
             try {
-                cadastrado.value = false
 
                 val dataConvertida = formatDateApi(pedido.dataEntrega)
                 val pedidoFormatado = pedido.copy(dataEntrega = dataConvertida)
 
                 api.post(pedidoFormatado)
 
-                cadastrado.value = true
                 Log.d("API", "Pedido cadastrado com sucesso")
 
                 onSucess()
+                getPedidos()
 
                 delay(1500)
                 onBack()
 
             } catch (e: HttpException) {
-                if (e.code() == 400) cadastrado.value = false
+                if (e.code() == 400) {}
                 Log.d("API", "Erro ao cadastrar pedido: ${e.message}")
 
             } catch (e: Exception) {
@@ -195,9 +192,7 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
     }
 
     override fun editarPedido(pedido: OrderEditData, idPedido: Int, onBack: () -> Unit, onSucess: () -> Unit) {
-        limparErrosPedido()
-
-        val cadastrado =  mutableStateOf(false)
+        limparErrosFormulario()
 
         var houveErro = false
 
@@ -247,23 +242,22 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
 
         viewModelScope.launch {
             try {
-                cadastrado.value = false
 
                 val dataConvertida = formatDateApi(pedido.dataEntrega)
                 val pedidoFormatado = pedido.copy(dataEntrega = dataConvertida)
 
                 api.put(pedidoFormatado, idPedido)
 
-                cadastrado.value = true
                 Log.d("API", "Pedido editado com sucesso")
 
                 onSucess()
+                getPedidos()
 
                 delay(1500)
                 onBack()
 
             } catch (e: HttpException) {
-                if (e.code() == 400 || e.code() == 401) cadastrado.value = false
+                if (e.code() == 400 || e.code() == 401) {}
                 Log.d("API", "Erro ao editar pedido: ${e.message}")
 
             } catch (e: Exception) {

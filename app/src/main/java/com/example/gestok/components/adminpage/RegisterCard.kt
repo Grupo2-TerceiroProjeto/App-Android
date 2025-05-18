@@ -29,19 +29,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.gestok.R
 import com.example.gestok.components.ExcludeConfirmationDialog
-import com.example.gestok.components.adminpage.dialogs.RegisterEdit
 import com.example.gestok.screens.internalScreens.admin.data.RegisterData
-import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.ui.theme.Blue
+import com.example.gestok.viewModel.admin.AdminApiViewModel
 
 @Composable
-fun RegisterCard(funcionario: RegisterData,
-                 currentPage: MutableState<String>,
-                 selectedRegister: MutableState<RegisterData?>
+fun RegisterCard(
+    funcionario: RegisterData,
+    currentPage: MutableState<String>,
+    selectedRegister: MutableState<RegisterData?>,
+    viewModel: AdminApiViewModel
 ) {
 
-
-    var showEditRegisterDialog by remember { mutableStateOf(false) }
     var showExcludeConfirmDialog by remember { mutableStateOf(false) }
 
     Card(
@@ -69,7 +68,7 @@ fun RegisterCard(funcionario: RegisterData,
                     IconButton(
                         onClick = {
                             selectedRegister.value = funcionario
-                            currentPage.value = "registerEdit"
+                            currentPage.value = "editRegister"
                         },
                         modifier = Modifier
                             .size(50.dp)
@@ -114,7 +113,7 @@ fun RegisterCard(funcionario: RegisterData,
                     Text(text = funcionario.cargo,
                         fontWeight = FontWeight.W300,
                         color = Blue,
-                        modifier = Modifier.width(100.dp))
+                        modifier = Modifier.width(150.dp))
 
                     Spacer(modifier = Modifier.height(4.dp))
 
@@ -122,12 +121,13 @@ fun RegisterCard(funcionario: RegisterData,
 
                 }
 
-                Column {  Text("Email",
+                Column(Modifier.weight(0.6F)) {
+                    Text("Email",
                     fontWeight = FontWeight.Bold,
                     color = Blue
                 )
 
-                    Text(text = funcionario.email,
+                    Text(text = funcionario.login,
                         fontWeight = FontWeight.W300,
                         color = Blue)}
             }
@@ -135,16 +135,13 @@ fun RegisterCard(funcionario: RegisterData,
         }
     }
 
-    if(showEditRegisterDialog){
-        RegisterEdit(funcionario = funcionario,
-            onDismiss = { showEditRegisterDialog = false },
-            onConfirm = { nome, cargo, email -> showEditRegisterDialog = false })
-    }
-
     if(showExcludeConfirmDialog){
         ExcludeConfirmationDialog(
             onDismiss = { showExcludeConfirmDialog = false },
-            onConfirm = { showExcludeConfirmDialog = false }
+            onConfirm = {
+                viewModel.deletarFuncionario(funcionario.id)
+                showExcludeConfirmDialog = false
+            }
         )
     }
 

@@ -82,7 +82,7 @@ abstract class OrderViewModel(open val sessaoUsuario : UserSession) : ViewModel(
        _produtosErro = null
     }
 
-    fun limparErrosPedido() {
+    fun limparErrosFormulario() {
         _nomeSolicitanteErro = null
         _telefoneErro = null
         _statusErro = null

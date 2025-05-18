@@ -2,6 +2,7 @@ package com.example.gestok.di
 
 import com.example.gestok.network.ApiClient
 import com.example.gestok.screens.login.data.UserSession
+import com.example.gestok.viewModel.admin.AdminApiViewModel
 import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
 import com.example.gestok.viewModel.login.LoginApiViewModel
 import com.example.gestok.viewModel.order.OrderApiViewModel
@@ -34,6 +35,12 @@ val moduloApi = module {
         )
     }
 
+    factory {
+        ApiClient.adminService(
+            get<UserSession>().token
+        )
+    }
+
     viewModel {
         LoginApiViewModel(get(), get())
     }
@@ -44,6 +51,10 @@ val moduloApi = module {
 
     viewModel {
         OrderApiViewModel(get(), get())
+    }
+
+    viewModel {
+        AdminApiViewModel(get(), get())
     }
 
 

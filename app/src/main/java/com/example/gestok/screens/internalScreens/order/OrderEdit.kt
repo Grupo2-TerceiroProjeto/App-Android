@@ -1,4 +1,4 @@
-package com.example.gestok.components.orderpage
+package com.example.gestok.screens.internalScreens.order
 
 import SelectOption
 import androidx.compose.foundation.background
@@ -36,6 +36,8 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.components.InputLabel
+import com.example.gestok.components.orderpage.ItensAdd
+import com.example.gestok.components.orderpage.ItensBlock
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.screens.internalScreens.order.data.OrderEditData
 import com.example.gestok.screens.internalScreens.order.data.OrderItens
@@ -143,7 +145,7 @@ fun OrderEdit(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(24.dp),
+                    verticalArrangement = Arrangement.spacedBy(14.dp),
                 ) {
 
                     Column {
