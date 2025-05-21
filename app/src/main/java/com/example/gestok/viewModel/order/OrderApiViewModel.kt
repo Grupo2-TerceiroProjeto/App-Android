@@ -1,7 +1,7 @@
 package com.example.gestok.viewModel.order
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.viewModelScope
 import com.example.gestok.network.service.OrderService
 import com.example.gestok.screens.internalScreens.order.data.IngredientsData
@@ -13,7 +13,6 @@ import com.example.gestok.screens.internalScreens.order.data.ProductData
 import com.example.gestok.screens.internalScreens.order.data.RecipeData
 import com.example.gestok.screens.login.data.UserSession
 import com.example.gestok.utils.formatDateApi
-import com.example.gestok.utils.formatPhoneNumber
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -60,6 +59,7 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
                 }
                 _carregouPedidos = true
                 Log.d("API", "Quantidade de pedidos encontrados: ${pedidos.size}")
+                Log.d("API", "PEDIDOS: ${pedidos}")
 
             } catch (e: HttpException) {
 
@@ -88,14 +88,13 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
                 if (resposta.isNotEmpty()) {
                     _produtos.addAll(resposta.map {
                         ProductData(
-                            id_produto = it.id_produto,
-                            fk_empresa = it.fk_empresa,
-                            fk_categoria = it.fk_categoria,
+                            id = it.id,
                             nome = it.nome,
+                            categoria = it.categoria,
                             preco = it.preco,
-                            qtd_estoque = it.qtd_estoque,
-                            em_producao = it.em_producao,
-                            imagem = it.imagem
+                            quantidade = it.quantidade,
+                            imagem = it.imagem,
+                            emProducao = it.emProducao
                         )
                     })
                 }
@@ -117,9 +116,7 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
     }
 
     override fun salvarPedido(pedido: OrderCreateData, onBack: () -> Unit, onSucess: () -> Unit) {
-        limparErrosPedido()
-
-        val cadastrado =  mutableStateOf(false)
+        limparErrosFormulario()
 
         var houveErro = false
 
@@ -169,23 +166,22 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
 
         viewModelScope.launch {
             try {
-                cadastrado.value = false
 
                 val dataConvertida = formatDateApi(pedido.dataEntrega)
                 val pedidoFormatado = pedido.copy(dataEntrega = dataConvertida)
 
                 api.post(pedidoFormatado)
 
-                cadastrado.value = true
                 Log.d("API", "Pedido cadastrado com sucesso")
 
                 onSucess()
+                getPedidos()
 
                 delay(1500)
                 onBack()
 
             } catch (e: HttpException) {
-                if (e.code() == 400) cadastrado.value = false
+                if (e.code() == 400) {}
                 Log.d("API", "Erro ao cadastrar pedido: ${e.message}")
 
             } catch (e: Exception) {
@@ -195,9 +191,7 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
     }
 
     override fun editarPedido(pedido: OrderEditData, idPedido: Int, onBack: () -> Unit, onSucess: () -> Unit) {
-        limparErrosPedido()
-
-        val cadastrado =  mutableStateOf(false)
+        limparErrosFormulario()
 
         var houveErro = false
 
@@ -247,23 +241,22 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
 
         viewModelScope.launch {
             try {
-                cadastrado.value = false
 
                 val dataConvertida = formatDateApi(pedido.dataEntrega)
                 val pedidoFormatado = pedido.copy(dataEntrega = dataConvertida)
 
                 api.put(pedidoFormatado, idPedido)
 
-                cadastrado.value = true
                 Log.d("API", "Pedido editado com sucesso")
 
                 onSucess()
+                getPedidos()
 
                 delay(1500)
                 onBack()
 
             } catch (e: HttpException) {
-                if (e.code() == 400 || e.code() == 401) cadastrado.value = false
+                if (e.code() == 400 || e.code() == 401) {}
                 Log.d("API", "Erro ao editar pedido: ${e.message}")
 
             } catch (e: Exception) {
@@ -272,16 +265,20 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
         }
     }
 
-    override fun getReceita(pedido: OrderData) {
+    override fun getReceita(pedido: OrderData, onResult: (List<IngredientsFormat>) -> Unit) {
 
         viewModelScope.launch {
             try {
 
+                val produtos : List<ProductData> = api.getProdutos(sessaoUsuario.idEmpresa)
                 val receitas : List<RecipeData> = api.getReceitas()
-
                 val ingredientes : List<IngredientsData> = api.getIngredientes()
 
-                val idProdutos = pedido.produtos.map {it.id}
+                val nomesProdutosPedido = pedido.produtos.map { it.nome }
+
+                val produtosFiltrados = produtos.filter { nomesProdutosPedido.contains(it.nome) }
+
+                val idProdutos = produtosFiltrados.map { it.id }
 
                 val receitasFiltradas = receitas.filter { receita ->
                     idProdutos.contains(receita.produto)
@@ -310,12 +307,13 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
                     }
                 }
 
-                _receita.addAll(ingredientesFiltrados)
-
                 Log.d("API", "Receita obtida com sucesso")
 
+                onResult(ingredientesFiltrados)
+
             } catch (e: Exception) {
-                Log.d("API", "Erro ao obter ingredientes da receita: ${e.message}")
+                Log.d("API", "Erro ao obter receita: ${e.message}")
+                onResult(emptyList())
             }
         }
     }

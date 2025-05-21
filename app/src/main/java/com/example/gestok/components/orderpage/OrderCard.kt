@@ -9,13 +9,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.R
 import com.example.gestok.components.orderpage.popups.InfoDialog
+import com.example.gestok.components.orderpage.popups.Recipe
+import com.example.gestok.screens.internalScreens.order.data.IngredientsFormat
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.utils.formatPhoneNumber
@@ -49,6 +51,9 @@ fun OrderCard(
 
     var showRecipeDialog by remember { mutableStateOf(false) }
 
+    var receita by remember { mutableStateOf<List<IngredientsFormat>>(emptyList()) }
+    var loadingReceita by remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -64,62 +69,33 @@ fun OrderCard(
 
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column {
-                    Text(
-                        text = "Solicitante",
-                        fontWeight = FontWeight.Bold,
-                        color = Blue
-                    )
-                    Text(
-                        text = pedido.nomeSolicitante,
-                        fontWeight = FontWeight.W300,
-                        color = Blue
-                    )
-
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    Text(
-                        text = "Status do pedido",
-                        fontWeight = FontWeight.Bold,
-                        color = Blue
-                    )
-                    Text(
-                        text = pedido.status,
-                        fontWeight = FontWeight.W300,
-                        color = Blue
-                    )
-
+            Row(Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text("Solicitante", fontWeight = FontWeight.Bold, color = Blue)
+                    Text(pedido.nomeSolicitante, fontWeight = FontWeight.W300, color = Blue)
                 }
-
-                Column {
-
+                Spacer(modifier = Modifier.width(16.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text("Contato", fontWeight = FontWeight.Bold, color = Blue)
                     Text(
-                        text = "Contato",
-                        fontWeight = FontWeight.Bold,
-                        color = Blue
-                    )
-                    Text(
-                        text = formatPhoneNumber(pedido.telefone),
+                        formatPhoneNumber(pedido.telefone),
                         fontWeight = FontWeight.W300,
                         color = Blue
                     )
+                }
+            }
 
-                    Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-                    Text(
-                        text = "Data entrega",
-                        fontWeight = FontWeight.Bold,
-                        color = Blue
-                    )
-                    Text(
-                        text = pedido.dataEntrega ?: "",
-                        fontWeight = FontWeight.W300,
-                        color = Blue
-                    )
+            Row(Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text("Status do pedido", fontWeight = FontWeight.Bold, color = Blue)
+                    Text(pedido.status, fontWeight = FontWeight.W300, color = Blue)
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text("Data entrega", fontWeight = FontWeight.Bold, color = Blue)
+                    Text(pedido.dataEntrega ?: "", fontWeight = FontWeight.W300, color = Blue)
                 }
             }
 
@@ -130,7 +106,7 @@ fun OrderCard(
             Spacer(modifier = Modifier.height(8.dp))
 
             Column(Modifier.padding(top = 16.dp)) {
-                Row {
+                Row{
                     Column {
                         pedido.produtos.forEach { item ->
                             Text(
@@ -184,18 +160,22 @@ fun OrderCard(
                             }
 
                             IconButton(
-                                onClick = { showRecipeDialog = true
-                                          viewModel.getReceita(pedido)},
-                                modifier = Modifier
-                                    .height(50.dp)
+                                onClick = {
+                                    loadingReceita = true
+                                    receita = emptyList()
 
+                                    viewModel.getReceita(pedido) { ingredientes ->
+                                        receita = ingredientes
+                                        loadingReceita = false
+                                        showRecipeDialog = true
+                                    }
+                                },
+                                modifier = Modifier.height(50.dp)
                             ) {
                                 Image(
                                     painter = painterResource(id = R.drawable.menu_f),
                                     contentDescription = "Receita",
-
-
-                                    )
+                                )
                             }
                         }
                     }
@@ -218,7 +198,7 @@ fun OrderCard(
 
     if (showRecipeDialog) {
         Recipe(
-            ingredientes = viewModel.receita,
+            ingredientes = receita,
             onDismiss = { showRecipeDialog = false }
         )
     }

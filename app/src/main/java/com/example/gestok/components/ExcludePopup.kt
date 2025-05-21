@@ -32,7 +32,7 @@ import com.example.gestok.ui.theme.White
 @Composable
 fun ExcludeConfirmationDialog(
     onDismiss: () -> Unit,
-    onConfirm: @Composable () -> Unit
+    onConfirm: () -> Unit
 ){
 
     Dialog(onDismissRequest = onDismiss) {
@@ -79,7 +79,7 @@ fun ExcludeConfirmationDialog(
                             Text("Não")
                         }
                         Button(
-                            onClick = {onDismiss()},
+                            onClick = {onConfirm()},
                             colors = ButtonDefaults.buttonColors(Blue)
                         ) {
                             Icon(

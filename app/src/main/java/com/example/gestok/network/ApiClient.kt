@@ -1,6 +1,6 @@
 package com.example.gestok.network
 
-import android.util.Log
+import com.example.gestok.network.service.AdminService
 import com.example.gestok.network.service.AuthService
 import com.example.gestok.network.service.DashboardService
 import com.example.gestok.network.service.OrderService
@@ -44,5 +44,9 @@ object ApiClient {
 
     fun orderService(token: String): OrderService {
         return getApi(token).create(OrderService::class.java)
+    }
+
+    fun adminService(token: String): AdminService {
+        return getApi(token).create(AdminService::class.java)
     }
 }

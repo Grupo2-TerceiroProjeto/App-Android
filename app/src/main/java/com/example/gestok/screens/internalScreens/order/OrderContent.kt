@@ -27,6 +27,7 @@ import com.example.gestok.components.orderpage.OrderCard
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
+import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.White
 import com.example.gestok.viewModel.order.OrderApiViewModel
 
@@ -49,7 +50,7 @@ fun OrderContent(
 
     LazyColumn(
         modifier = modifier
-            .background(Color(0xFFF3F3F3))
+            .background(LightGray)
 
     ) {
 

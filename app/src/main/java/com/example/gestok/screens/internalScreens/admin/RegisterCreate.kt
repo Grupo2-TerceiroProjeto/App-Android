@@ -11,56 +11,62 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.font.FontWeight.Companion.W600
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.components.InputLabel
-import com.example.gestok.screens.internalScreens.admin.data.RegisterData
+import com.example.gestok.screens.internalScreens.admin.data.RegisterCreateData
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
-import com.example.gestok.ui.theme.DarkBlue
-import com.example.gestok.ui.theme.LightBlue
-import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.White
+import com.example.gestok.viewModel.admin.AdminApiViewModel
 
 
 @Composable
 fun RegisterCreate(
     modifier: Modifier = Modifier,
     onBack: () -> Unit,
+    onSucess: () -> Unit,
+    viewModel: AdminApiViewModel
     ){
 
-    var editedNome by remember { mutableStateOf("") }
+    var nome by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var cargo by remember { mutableStateOf("Selecione um opção") }
+    var senha by remember { mutableStateOf("") }
 
-    var editedCargo by remember { mutableStateOf("Selecione um opção") }
-    var editedEmail by remember { mutableStateOf("") }
+    val novoFuncionario = RegisterCreateData(
+        nome = nome,
+        login = email,
+        senha = senha,
+        cargo = cargo,
+        idEmpresa = 0
+    )
 
-    var showCancelConfirmDialog by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        viewModel.limparErrosFormulario()
+    }
 
     LazyColumn (  modifier = modifier
         .fillMaxSize()
@@ -68,99 +74,123 @@ fun RegisterCreate(
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ){
 
-        // -- HEADER -------------------------
         item {
-
-            Row(
-                Modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp, top = 30.dp),
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 15.dp, end = 15.dp, top = 15.dp)
             ) {
-                IconButton(
-                    onClick = onBack,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .background(color = DarkBlue, shape = CircleShape)
+                Row(
+                    Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Voltar",
-                        tint = Color.White
+                    IconButton(
+                        onClick = onBack,
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(Color(0xFF005BA4), shape = CircleShape)
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Voltar",
+                            tint = Color.White
+                        )
+                    }
+
+                    Text(
+                        "Cadastrar Funcionário",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.W600,
+                        color = Black,
+                        modifier = Modifier
+                            .padding(start = 16.dp)
+                            .weight(1f)
                     )
                 }
 
-                Text(
-                    "Cadastrar Funcionário",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.W600,
-                    color = Black,
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Column(
                     modifier = Modifier
-                        .padding(start = 16.dp)
-                        .weight(1f)
-                )
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+
+                    Column {
+                        InputLabel(
+                            text = "Nome",
+                            value = nome,
+                            onValueChange = {
+                                val filtered = it.filter { char -> char.isLetter() || char.isWhitespace() }
+                                nome = filtered
+                            },
+                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
+                            erro = viewModel.nomeErro,
+                            maxLength = 30
+                        )
+                    }
+
+                    Column {
+                        InputLabel(
+                            text = "Email",
+                            value = email,
+                            onValueChange = { email = (it) },
+                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Email,
+                            erro = viewModel.emailErro,
+                            maxLength = 45
+                        )
+                    }
+
+                    Column {
+                        SelectOption(
+                            text = "Cargo",
+                            value = cargo,
+                            onValueChange = { cargo = it },
+                            list = listOf(
+                                "ADMIN",
+                                "SUPERVISOR"
+                            ),
+                            erro = viewModel.cargoErro
+                        )
+                    }
+
+                    Column {
+                        InputLabel(
+                            text = "Senha",
+                            value = senha,
+                            onValueChange = {
+                               senha = (it)
+                            },
+                            visualTransformation = PasswordVisualTransformation(),
+                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Password,
+                            erro = viewModel.senhaErro,
+                            maxLength = 300
+                        )
+                    }
+
+                }
+
             }
 
         }
 
-        //--- NOME COLABORADOR -------------------------------------------
-        item {
-            InputLabel(
-                text = "Nome",
-                value = editedNome,
-                onValueChange = {
-                    val filtered = it.filter { char -> char.isLetter() || char.isWhitespace() }
-                    editedNome =  filtered},
-                keyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
-                maxLength = 45
-            )
-        }
-
-        //--- EMAIL COLABORADOR -------------------------------------------
-        item {
-            InputLabel(
-                text = "Email",
-                value = editedEmail,
-                onValueChange = { editedEmail = it },
-                keyboardType = androidx.compose.ui.text.input.KeyboardType.Email,
-                maxLength = 45
-            )
-        }
-
-        //--- CARGO COLABORADOR -------------------------------------------
-        item {
-            SelectOption(
-                text = "Cargo",
-                value = editedCargo,
-                onValueChange = { editedCargo = it },
-                list = listOf(
-                    "Cozinheiro(a)",
-                    "Gerente",
-                    "Atendente",
-                    "Administrador(a)"
-                )
-            )
-        }
-
-        //--- BOTÃO CONFIRMAR -------------------------------------------
         item {
             Row(
-                Modifier.fillMaxWidth()
-                    .padding(20.dp),
-                horizontalArrangement = Arrangement.End
-
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp, bottom = 10.dp),
+                horizontalArrangement = Arrangement.Center
             ) {
-
                 Button(
-                    onClick = {  },
-                    colors = ButtonDefaults.buttonColors(LightBlue)
+                    onClick = { viewModel.salvarFuncionario(novoFuncionario, onBack, onSucess) },
+                    colors = ButtonDefaults.buttonColors(Blue),
                 ) {
-                    Icon(imageVector = Icons.Default.Check,
-                        contentDescription = null,
-                        tint = White)
-                    Text("Concluir", color = White)
+                    Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = White)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Salvar", color = White,  fontSize = 16.sp)
                 }
             }
         }
-
 
     }
 }

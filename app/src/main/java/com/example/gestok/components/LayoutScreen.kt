@@ -12,11 +12,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.example.gestok.components.orderpage.OrderCreate
-import com.example.gestok.components.orderpage.OrderEdit
+import com.example.gestok.screens.internalScreens.order.OrderCreate
+import com.example.gestok.screens.internalScreens.order.OrderEdit
 import com.example.gestok.screens.internalScreens.order.OrderContent
 import com.example.gestok.components.productpage.IngredientData
-import com.example.gestok.components.productpage.ProductContent
+import com.example.gestok.screens.internalScreens.product.ProductContent
 import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.screens.internalScreens.dashboard.Dashboard
 import com.example.gestok.screens.internalScreens.Profile
@@ -25,6 +25,7 @@ import com.example.gestok.screens.internalScreens.admin.RegisterCreate
 import com.example.gestok.screens.internalScreens.admin.RegisterEdit
 import com.example.gestok.screens.internalScreens.admin.data.RegisterData
 import com.example.gestok.screens.internalScreens.order.data.OrderData
+import com.example.gestok.viewModel.admin.AdminApiViewModel
 import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
 import com.example.gestok.viewModel.order.OrderApiViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -43,13 +44,6 @@ val presunto: IngredientData = IngredientData("Presunto", 200, "g")
 val oleo: IngredientData = IngredientData("Óleo", 1, "L")
 val acucar: IngredientData = IngredientData("Açúcar", 300, "g")
 
-//Funcionário testes:
-val luca = RegisterData(1, "Cozinheiro", "ADMIN", 1, "luca.souza@sptech.com")
-val emilly = RegisterData(2, "Atendente", "ADMIN", 1,"emilly.ferreira@sptech.com")
-val vitor = RegisterData(3, "Gerente", "ADMIN", 1, "vitor.hugo@sptech.com")
-val thiago = RegisterData(4, "Auxiliar de Cozinha", "ADMIN", 1, "thiago.rodrigues@sptech.com")
-val vagner = RegisterData(5, "Chef de Cozinha", "ADMIN", 1, "vagner.benedito@sptech.com")
-val kauan = RegisterData(6, "Estoquista", "ADMIN", 1, "kauan.parente@sptech.com")
 
 //Produtos testes:
 val coxinha = ProductData("Coxinha", 10, "Salgados", 100.10, mutableListOf(margarina, farinha, frango, ovo), true)
@@ -66,7 +60,6 @@ val listaProdutos: List<ProductData> = listOf(
     coxinha, esfirra, pastel, brigadeiro, boloDeChocolate,
     pudim, quibe, mousseDeMaracuja, tortaDeFrango
 )
-val listaFuncionarios: List<RegisterData> = listOf(luca, emilly, vitor, thiago, vagner, kauan)
 
 @Composable
 fun LayoutScreen(
@@ -169,28 +162,38 @@ fun LayoutScreen(
             }
 
             "config" -> {
+                val viewModel: AdminApiViewModel = koinViewModel()
+
                 AdminContent(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding),
-                    listaFuncionarios,
+                    viewModel,
                     currentPage = currentPage,
                     selectedRegister = selectedRegister
                 )
             }
 
-            "registerCreate" -> {
+            "createRegister" -> {
+                val viewModel: AdminApiViewModel = koinViewModel()
+
                 RegisterCreate(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding),
                     onBack = {
                         currentPage.value = "config"
-                    }
+                    },
+                    onSucess = {
+                        currentPage.value = "sucess"
+                    },
+                    viewModel
                 )
             }
 
-            "registerEdit" -> {
+            "editRegister" -> {
+                val viewModel: AdminApiViewModel = koinViewModel()
+
                 selectedRegister.value?.let {
                     RegisterEdit(
                         modifier = Modifier
@@ -199,7 +202,11 @@ fun LayoutScreen(
                         onBack = {
                             currentPage.value = "config"
                         },
-                        funcionario = it
+                        funcionario = it,
+                        onSucess = {
+                            currentPage.value = "sucess"
+                        },
+                        viewModel
                     )
                 }
             }
@@ -221,6 +228,16 @@ fun LayoutScreen(
                     "editOrder" -> Pair(
                         "Pedido Atualizado",
                         "O pedido foi atualizado com sucesso! \nConfira na aba Pedidos"
+                    )
+
+                    "createRegister" -> Pair(
+                        "Funcionário Cadastrado",
+                        "O funcionario foi cadastrado com sucesso! \nConfira na aba Administração"
+                    )
+
+                    "editRegister" -> Pair(
+                        "Funcionário Atualizado",
+                        "O funcionário foi atualizado com sucesso! \nConfira na aba Administração"
                     )
 
                     else -> Pair(

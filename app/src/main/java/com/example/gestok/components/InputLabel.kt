@@ -31,6 +31,7 @@ fun InputLabel(
     onValueChange: (String) -> Unit = {},
     erro: String? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     readOnly: Boolean = false,
     maxLength: Int
 
@@ -53,6 +54,7 @@ fun InputLabel(
                 unfocusedTextColor = Black
             ),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType),
+            visualTransformation = visualTransformation,
             readOnly = readOnly,
             isError = erro != null,
             supportingText = {

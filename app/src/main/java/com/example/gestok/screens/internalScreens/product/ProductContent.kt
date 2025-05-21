@@ -1,4 +1,4 @@
-package com.example.gestok.components.productpage
+package com.example.gestok.screens.internalScreens.product
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.components.productpage.dialogs.AdicionarAoEstoque
 import com.example.gestok.components.productpage.dialogs.ProductCreateDialog
 

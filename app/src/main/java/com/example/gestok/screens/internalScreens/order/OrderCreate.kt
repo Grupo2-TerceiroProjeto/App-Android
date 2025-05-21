@@ -1,4 +1,4 @@
-package com.example.gestok.components.orderpage
+package com.example.gestok.screens.internalScreens.order
 
 import SelectOption
 import androidx.compose.foundation.background
@@ -37,6 +37,8 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.components.InputLabel
+import com.example.gestok.components.orderpage.ItensAdd
+import com.example.gestok.components.orderpage.ItensBlock
 import com.example.gestok.screens.internalScreens.order.data.OrderCreateData
 import com.example.gestok.screens.internalScreens.order.data.OrderItensBlock
 import com.example.gestok.screens.internalScreens.order.data.OrderItensCreate
@@ -88,14 +90,14 @@ fun OrderCreate(
     var itensAdd by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        viewModel.limparErrosPedido()
+        viewModel.limparErrosFormulario()
     }
 
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
             .background(Color.White),
-        verticalArrangement = Arrangement.spacedBy(24.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
 
         ) {
 
@@ -138,7 +140,7 @@ fun OrderCreate(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(24.dp),
+                    verticalArrangement = Arrangement.spacedBy(14.dp),
                 ) {
 
                     Column {
@@ -312,10 +314,10 @@ fun OrderCreate(
                         produtos = produtos + selectedProducts.map {
                             OrderItensCreate(
                                 nome = it.nome,
-                                categoria = it.fk_categoria,
+                                categoria = it.categoria,
                                 preco = it.preco,
                                 quantidade = 0,
-                                emProducao = it.em_producao,
+                                emProducao = it.emProducao,
                                 imagem = it.imagem ?: "",
                                 )
                         }
