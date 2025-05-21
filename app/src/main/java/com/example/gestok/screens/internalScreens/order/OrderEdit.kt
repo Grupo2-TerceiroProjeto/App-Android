@@ -319,12 +319,12 @@ fun OrderEdit(
                     onConfirm = { selectedProducts ->
                         editedItens = editedItens + selectedProducts.map {
                             OrderItens(
-                                id = it.id_produto,
+                                id = it.id,
                                 nome = it.nome,
-                                categoria = it.fk_categoria,
+                                categoria = it.categoria,
                                 preco = it.preco,
                                 quantidade = 0,
-                                emProducao = it.em_producao,
+                                emProducao = it.emProducao,
                                 imagem = it.imagem ?: "",
                             )
                         }

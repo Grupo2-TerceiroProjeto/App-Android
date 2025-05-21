@@ -1,7 +1,11 @@
 package com.example.gestok.components.orderpage.popups
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -31,70 +35,78 @@ import com.example.gestok.ui.theme.White
 fun Recipe(
     onDismiss: () -> Unit,
     ingredientes: List<IngredientsFormat>
-
 ) {
-
     Dialog(onDismissRequest = onDismiss) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(300.dp),
-
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            ), elevation = CardDefaults.cardElevation(
-                defaultElevation = 8.dp
-            )
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
 
-            Row(
-                Modifier.fillMaxWidth().padding(20.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    "Lista de Ingredintes",
-                    fontWeight = W600,
-                    color = Blue,
-                    fontSize = 20.sp
-                )
-                Button(
-                    onClick = { onDismiss() },
-                    colors = ButtonDefaults.buttonColors(Blue)
+            Column(modifier = Modifier.fillMaxSize()) {
+
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = null,
-                        tint = White
+                    Text(
+                        "Lista de Ingredientes",
+                        fontWeight = W600,
+                        color = Blue,
+                        fontSize = 18.sp
                     )
-                }
-            }
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = 190.dp)
-            ) {
-
-                item{
-
-                    ingredientes.forEach{ ingrediente ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 2.dp, horizontal = 20.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                    Button(
+                        onClick = onDismiss,
+                        colors = ButtonDefaults.buttonColors(Blue)
                     ) {
-                        Text(text = ingrediente.nome)
-                        Text(text = "${ingrediente.quantidade} ${ingrediente.medida}")
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Fechar",
+                            tint = White
+                        )
+                    }
+                }
+
+                when {
+
+                    ingredientes.isEmpty() -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("Nenhuma receita encontrada", color = Color.Gray)
+                        }
+                    }
+
+                    else -> {
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 20.dp)
+                        ) {
+                            items(ingredientes.size) { index ->
+                                val ingrediente = ingredientes[index]
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 4.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(text = ingrediente.nome)
+                                    Text(text = "${ingrediente.quantidade} ${ingrediente.medida}")
+                                }
+                            }
+                        }
                     }
                 }
             }
-
-            }
-
         }
-
     }
-
 }

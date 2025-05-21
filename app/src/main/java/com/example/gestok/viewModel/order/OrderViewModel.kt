@@ -1,5 +1,6 @@
 package com.example.gestok.viewModel.order
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -35,7 +36,7 @@ abstract class OrderViewModel(open val sessaoUsuario : UserSession) : ViewModel(
 
     protected var _itensErro by mutableStateOf<String?>(null)
 
-    protected var _receita = mutableListOf<IngredientsFormat>()
+    var _receita = mutableListOf<IngredientsFormat>()
 
     val pedidosErro: String?
         get() = _pedidosErro
@@ -98,5 +99,5 @@ abstract class OrderViewModel(open val sessaoUsuario : UserSession) : ViewModel(
 
     open fun editarPedido(pedido : OrderEditData, idPedido: Int, onBack: () -> Unit, onSucess: () -> Unit) {}
 
-    open fun getReceita(pedido : OrderData) {}
+    open fun getReceita(pedido: OrderData, onResult: (List<IngredientsFormat>) -> Unit) {}
 }

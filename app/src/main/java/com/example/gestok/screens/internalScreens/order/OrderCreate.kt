@@ -314,10 +314,10 @@ fun OrderCreate(
                         produtos = produtos + selectedProducts.map {
                             OrderItensCreate(
                                 nome = it.nome,
-                                categoria = it.fk_categoria,
+                                categoria = it.categoria,
                                 preco = it.preco,
                                 quantidade = 0,
-                                emProducao = it.em_producao,
+                                emProducao = it.emProducao,
                                 imagem = it.imagem ?: "",
                                 )
                         }

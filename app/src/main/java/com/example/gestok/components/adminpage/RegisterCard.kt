@@ -57,7 +57,8 @@ fun RegisterCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column (modifier = Modifier
-                    .align(Alignment.CenterVertically)){
+                    .align(Alignment.CenterVertically)
+                    .weight(1F)){
                     Text(
                         text = funcionario.nome,
                         fontWeight = FontWeight.Bold,

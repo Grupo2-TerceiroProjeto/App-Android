@@ -16,7 +16,7 @@ import com.example.gestok.screens.internalScreens.order.OrderCreate
 import com.example.gestok.screens.internalScreens.order.OrderEdit
 import com.example.gestok.screens.internalScreens.order.OrderContent
 import com.example.gestok.components.productpage.IngredientData
-import com.example.gestok.components.productpage.ProductContent
+import com.example.gestok.screens.internalScreens.product.ProductContent
 import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.screens.internalScreens.dashboard.Dashboard
 import com.example.gestok.screens.internalScreens.Profile
