@@ -137,7 +137,8 @@ fun AdminContent(
                             funcionario = funcionario,
                             currentPage = currentPage,
                             selectedRegister = selectedRegister,
-                            viewModel = viewModel
+                            viewModel = viewModel,
+                            excluirHabilitado = funcionario.id != viewModel.sessaoUsuario.id
                         )
                     }
 

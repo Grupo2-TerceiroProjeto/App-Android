@@ -292,13 +292,27 @@ fun OrderCreate(
                             .padding(top = 10.dp, bottom = 10.dp),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Button(
-                            onClick = { viewModel.salvarPedido(novoPedido, onBack, onSucess) },
-                            colors = ButtonDefaults.buttonColors(Blue),
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = White)
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Salvar", color = White,  fontSize = 16.sp)
+                            Button(
+                                onClick = { viewModel.salvarPedido(novoPedido, onBack, onSucess) },
+                                colors = ButtonDefaults.buttonColors(Blue),
+                            ) {
+                                Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = White)
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("Salvar", color = White, fontSize = 16.sp)
+                            }
+
+                            if (viewModel.cadastroErro != null) {
+                                Text(
+                                    viewModel.cadastroErro!!,
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.W600,
+                                    color = Color(0xFFD32F2F),
+                                    modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
+                                )
+                            }
                         }
                     }
                 }

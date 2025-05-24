@@ -41,6 +41,7 @@ class LoginApiViewModel(
 
                 val resposta = api.login(LoginUser(email, senha))
 
+                _sessaoUsuario.id = resposta.id
                 _sessaoUsuario.nome = resposta.nome
                 _sessaoUsuario.login = resposta.login
                 _sessaoUsuario.cargo = resposta.cargo

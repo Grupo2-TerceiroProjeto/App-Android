@@ -183,9 +183,11 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
             } catch (e: HttpException) {
                 if (e.code() == 400) {}
                 Log.d("API", "Erro ao cadastrar pedido: ${e.message}")
+                _cadastroErro = "Erro ao cadastrar pedido"
 
             } catch (e: Exception) {
                 Log.d("API", "Erro ao conectar ao servidor: ${e.message}")
+                _cadastroErro = "Erro ao conectar ao servidor"
             }
         }
     }
@@ -258,9 +260,11 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
             } catch (e: HttpException) {
                 if (e.code() == 400 || e.code() == 401) {}
                 Log.d("API", "Erro ao editar pedido: ${e.message}")
+                _edicaoErro = "Erro ao editar pedido"
 
             } catch (e: Exception) {
                 Log.d("API", "Erro ao conectar ao servidor: ${e.message}")
+                _edicaoErro = "Erro ao conectar ao servidor"
             }
         }
     }

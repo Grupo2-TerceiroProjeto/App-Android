@@ -110,9 +110,10 @@ fun OrderContent(
                                 defaultElevation = 8.dp
                             )
                         ) {
-                            SkeletonLoader(modifier = Modifier
-                                .fillMaxWidth()
-                                .height(235.dp),
+                            SkeletonLoader(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(235.dp),
                             )
                         }
                     }
@@ -135,16 +136,18 @@ fun OrderContent(
                 }
 
                 else -> {
+                    val statusOrder = listOf("Pendente", "Em Produção", "Concluído", "Cancelado")
 
-                    pedidos.forEach { pedido ->
-                        OrderCard(
-                            pedido = pedido,
-                            currentPage = currentPage,
-                            selectedOrder = selectedOrder,
-                            viewModel = viewModel
-                        )
-                    }
-
+                    pedidos
+                        .sortedBy { statusOrder.indexOf(it.status) }
+                        .forEach { pedido ->
+                            OrderCard(
+                                pedido = pedido,
+                                currentPage = currentPage,
+                                selectedOrder = selectedOrder,
+                                viewModel = viewModel
+                            )
+                        }
                 }
             }
         }

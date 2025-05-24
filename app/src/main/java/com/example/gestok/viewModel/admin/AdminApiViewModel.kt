@@ -7,12 +7,9 @@ import com.example.gestok.screens.internalScreens.admin.data.RegisterCreateData
 import com.example.gestok.screens.internalScreens.admin.data.RegisterData
 import com.example.gestok.screens.internalScreens.admin.data.RegisterEditData
 import com.example.gestok.screens.login.data.UserSession
-import com.example.gestok.utils.formatDateApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class AdminApiViewModel(private val api: AdminService, override val sessaoUsuario: UserSession) :
     AdminViewModel(sessaoUsuario) {
@@ -108,9 +105,11 @@ class AdminApiViewModel(private val api: AdminService, override val sessaoUsuari
             } catch (e: HttpException) {
                 if (e.code() == 500){}
                 Log.d("API", "Erro ao cadastrar funcionário: ${e.message}")
+                _cadastroErro = "Já possui um usuário com esses dados"
 
             } catch (e: Exception) {
                 Log.d("API", "Erro ao conectar ao servidor: ${e.message}")
+                _cadastroErro = "Erro ao conectar ao servidor"
             }
         }
     }
@@ -171,14 +170,16 @@ class AdminApiViewModel(private val api: AdminService, override val sessaoUsuari
             } catch (e: HttpException) {
                 if (e.code() == 403 || e.code() == 500){}
                 Log.d("API", "Erro ao editar funcionário: ${e.message}")
+                _edicaoErro = "Erro ao editar funcionário"
 
             } catch (e: Exception) {
                 Log.d("API", "Erro ao conectar ao servidor: ${e.message}")
+                _edicaoErro = "Erro ao conectar ao servidor"
             }
         }
     }
 
-    override fun deletarFuncionario(idFuncionario: Int) {
+    override fun deletarFuncionario(idFuncionario: Int, onBack: () -> Unit) {
         viewModelScope.launch {
             try {
                 api.delete(idFuncionario)
@@ -186,6 +187,9 @@ class AdminApiViewModel(private val api: AdminService, override val sessaoUsuari
                 Log.d("API", "Funcionário excluído com sucesso")
 
                 getFuncionarios()
+
+                delay(2000)
+                onBack()
 
             } catch (e: HttpException) {
                 if (e.code() == 500){}

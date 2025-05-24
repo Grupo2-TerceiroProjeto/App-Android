@@ -70,7 +70,7 @@ fun OrderEdit(
             it.copy(imagem = it.imagem ?: "")
         })
     }
-    val editedValorPedido by remember (editedItens) {
+    val editedValorPedido by remember(editedItens) {
         mutableStateOf(
             NumberFormat.getCurrencyInstance(Locale("pt", "BR"))
                 .format(editedItens.sumOf { it.preco * it.quantidade })
@@ -153,7 +153,8 @@ fun OrderEdit(
                             text = "Solicitante",
                             value = editedNomeSolicitante,
                             onValueChange = {
-                                val filtered = it.filter { char -> char.isLetter() || char.isWhitespace() }
+                                val filtered =
+                                    it.filter { char -> char.isLetter() || char.isWhitespace() }
                                 editedNomeSolicitante = filtered
                             },
                             keyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
@@ -286,7 +287,12 @@ fun OrderEdit(
                         items(editedItens.size) { index ->
                             val item = editedItens[index]
                             ItensBlock(
-                                listOf(OrderItensBlock(nome = item.nome, quantidade = item.quantidade)),
+                                listOf(
+                                    OrderItensBlock(
+                                        nome = item.nome,
+                                        quantidade = item.quantidade
+                                    )
+                                ),
                                 updateQuantidade = { _, newQtd -> updateQuantidade(index, newQtd) }
                             )
                         }
@@ -298,15 +304,41 @@ fun OrderEdit(
                             .padding(top = 10.dp, bottom = 10.dp),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Button(
-                            onClick = { viewModel.editarPedido(pedidoEditado, order.id, onBack, onSucess) },
-                            colors = ButtonDefaults.buttonColors(Blue),
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = White)
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Salvar", color = White,  fontSize = 16.sp)
+                            Button(
+                                onClick = {
+                                    viewModel.editarPedido(
+                                        pedidoEditado,
+                                        order.id,
+                                        onBack,
+                                        onSucess
+                                    )
+                                },
+                                colors = ButtonDefaults.buttonColors(Blue),
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = null,
+                                    tint = White
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("Salvar", color = White, fontSize = 16.sp)
+                            }
+
+                            if (viewModel.edicaoErro != null) {
+                                Text(
+                                    viewModel.edicaoErro!!,
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.W600,
+                                    color = Color(0xFFD32F2F),
+                                    modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
+                                )
+                            }
                         }
                     }
+
                 }
             }
         }
