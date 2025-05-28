@@ -32,10 +32,6 @@ abstract class DashboardViewModel(open val sessaoUsuario : UserSession) : ViewMo
     val mediaAvaliacao: Double
         get() = _mediaAvaliacao
 
-    fun limparErros() {
-        _dashboardErro = null
-    }
-
     open fun getPedidos() {}
 
     abstract fun getBuscarPedidosProximos7Dias(): List<OrderData>

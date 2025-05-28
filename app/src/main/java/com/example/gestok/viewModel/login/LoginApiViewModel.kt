@@ -56,11 +56,11 @@ class LoginApiViewModel(
                     _senhaErro = "Credenciais inválidas"
                 } else {
                     _senhaErro = "Erro ao processar solicitação"
-                    Log.d("API", "Erro ao processar solicitação: ${e.message}")
+                    Log.e("API", "Erro ao processar solicitação: ${e.message}")
                 }
             } catch (e: Exception) {
                 _senhaErro = "Erro ao conectar ao servidor"
-                Log.d("API", "Erro ao conectar ao servidor: ${e.message}")
+                Log.e("API", "Erro ao conectar ao servidor: ${e.message}")
             }
         }
     }

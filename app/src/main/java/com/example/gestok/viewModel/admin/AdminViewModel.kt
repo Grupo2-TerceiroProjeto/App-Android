@@ -57,10 +57,6 @@ abstract class AdminViewModel (open val sessaoUsuario : UserSession) : ViewModel
     val edicaoErro : String?
         get() = _edicaoErro
 
-    fun limparErros() {
-        _funcionariosErro = null
-    }
-
     fun limparErrosFormulario() {
         _nomeErro = null
         _emailErro = null

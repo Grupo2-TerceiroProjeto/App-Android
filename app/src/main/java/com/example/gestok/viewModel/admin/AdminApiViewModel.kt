@@ -15,7 +15,7 @@ class AdminApiViewModel(private val api: AdminService, override val sessaoUsuari
     AdminViewModel(sessaoUsuario) {
 
     override fun getFuncionarios() {
-        limparErros()
+        _funcionariosErro = null
 
         viewModelScope.launch {
             try {
@@ -104,11 +104,11 @@ class AdminApiViewModel(private val api: AdminService, override val sessaoUsuari
 
             } catch (e: HttpException) {
                 if (e.code() == 500){}
-                Log.d("API", "Erro ao cadastrar funcionário: ${e.message}")
+                Log.w("API", "Erro ao cadastrar funcionário: ${e.message}")
                 _cadastroErro = "Já possui um usuário com esses dados"
 
             } catch (e: Exception) {
-                Log.d("API", "Erro ao conectar ao servidor: ${e.message}")
+                Log.e("API", "Erro ao conectar ao servidor: ${e.message}")
                 _cadastroErro = "Erro ao conectar ao servidor"
             }
         }
@@ -169,11 +169,11 @@ class AdminApiViewModel(private val api: AdminService, override val sessaoUsuari
 
             } catch (e: HttpException) {
                 if (e.code() == 403 || e.code() == 500){}
-                Log.d("API", "Erro ao editar funcionário: ${e.message}")
+                Log.e("API", "Erro ao editar funcionário: ${e.message}")
                 _edicaoErro = "Erro ao editar funcionário"
 
             } catch (e: Exception) {
-                Log.d("API", "Erro ao conectar ao servidor: ${e.message}")
+                Log.e("API", "Erro ao conectar ao servidor: ${e.message}")
                 _edicaoErro = "Erro ao conectar ao servidor"
             }
         }
@@ -193,10 +193,10 @@ class AdminApiViewModel(private val api: AdminService, override val sessaoUsuari
 
             } catch (e: HttpException) {
                 if (e.code() == 500){}
-                Log.d("API", "Erro ao excluir funcionário: ${e.message}")
+                Log.e("API", "Erro ao excluir funcionário: ${e.message}")
 
             } catch (e: Exception) {
-                Log.d("API", "Erro ao conectar ao servidor: ${e.message}")
+                Log.e("API", "Erro ao conectar ao servidor: ${e.message}")
             }
         }
     }

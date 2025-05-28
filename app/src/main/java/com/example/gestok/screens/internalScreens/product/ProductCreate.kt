@@ -97,8 +97,8 @@ fun ProductCreate(
         imagemUri?.let {
             isUploading = true
             val file = it.toFile(context)
-//            val id = viewModel.uploadImagem(file)
-            publicId = ""
+            val id = viewModel.uploadImagem(file)
+            publicId = id
             isUploading = false
         }
     }

@@ -78,15 +78,6 @@ abstract class OrderViewModel(open val sessaoUsuario : UserSession) : ViewModel(
     val edicaoErro : String?
         get() = _edicaoErro
 
-
-    fun limparErros() {
-        _pedidosErro = null
-    }
-
-    fun limparErrosProdutos() {
-       _produtosErro = null
-    }
-
     fun limparErrosFormulario() {
         _nomeSolicitanteErro = null
         _telefoneErro = null

@@ -49,6 +49,10 @@ val moduloApi = module {
         )
     }
 
+    factory {
+        ApiCloudinary.cloudinaryService()
+    }
+
     viewModel {
         LoginApiViewModel(get(), get())
     }
@@ -66,7 +70,7 @@ val moduloApi = module {
     }
 
     viewModel {
-        ProductApiViewModel(get(), get())
+        ProductApiViewModel(get(), get(), get())
     }
 
 

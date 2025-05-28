@@ -19,7 +19,7 @@ import retrofit2.HttpException
 import retrofit2.awaitResponse
 import java.io.File
 
-class ProductApiViewModel(private val api: ProductService, override val sessaoUsuario: UserSession) :
+class ProductApiViewModel(private val api: ProductService, private val cloudinary: CloudinaryService, override val sessaoUsuario: UserSession) :
     ProductViewModel(sessaoUsuario) {
 
     override fun getProdutos() {
@@ -113,10 +113,10 @@ class ProductApiViewModel(private val api: ProductService, override val sessaoUs
 
             } catch (e: HttpException) {
                 if (e.code() == 500){}
-                Log.d("API", "Erro ao excluir produto: ${e.message}")
+                Log.e("API", "Erro ao excluir produto: ${e.message}")
 
             } catch (e: Exception) {
-                Log.d("API", "Erro ao conectar ao servidor: ${e.message}")
+                Log.e("API", "Erro ao conectar ao servidor: ${e.message}")
             }
         }
     }
@@ -159,26 +159,26 @@ class ProductApiViewModel(private val api: ProductService, override val sessaoUs
 
     }
 
-//    override suspend fun uploadImagem(file: File): String? {
-//        return try {
-//            val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-//            val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
-//
-//            val response = withContext(Dispatchers.IO) {
-//                cloudinary.uploadImage(body, "ml_default").awaitResponse()
-//            }
-//
-//            if (response.isSuccessful) {
-//                response.body()?.public_id.also {
-//                    Log.d("Cloudinary", "Upload bem-sucedido: $it")
-//                }
-//            } else {
-//                Log.e("Cloudinary", "Erro no upload: ${response.errorBody()?.string()}")
-//                null
-//            }
-//        } catch (e: Exception) {
-//            Log.e("Cloudinary", "Erro ao enviar imagem: ${e.message}")
-//            null
-//        }
-//    }
+    override suspend fun uploadImagem(file: File): String? {
+        return try {
+            val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+            val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
+
+            val response = withContext(Dispatchers.IO) {
+                cloudinary.uploadImage(body, "ml_default").awaitResponse()
+            }
+
+            if (response.isSuccessful) {
+                response.body()?.public_id.also {
+                    Log.d("Cloudinary", "Upload bem-sucedido: $it")
+                }
+            } else {
+                Log.e("Cloudinary", "Erro no upload: ${response.errorBody()?.string()}")
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("Cloudinary", "Erro ao enviar imagem: ${e.message}")
+            null
+        }
+    }
 }

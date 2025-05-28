@@ -24,7 +24,7 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
     OrderViewModel(sessaoUsuario) {
 
     override fun getPedidos() {
-        limparErros()
+        _pedidosErro = null
 
         viewModelScope.launch {
             try {
@@ -74,7 +74,7 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
     }
 
     override fun getProdutos() {
-        limparErrosProdutos()
+        _produtosErro = null
 
         viewModelScope.launch {
             try {
@@ -181,11 +181,11 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
 
             } catch (e: HttpException) {
                 if (e.code() == 400) {}
-                Log.d("API", "Erro ao cadastrar pedido: ${e.message}")
+                Log.e("API", "Erro ao cadastrar pedido: ${e.message}")
                 _cadastroErro = "Erro ao cadastrar pedido"
 
             } catch (e: Exception) {
-                Log.d("API", "Erro ao conectar ao servidor: ${e.message}")
+                Log.e("API", "Erro ao conectar ao servidor: ${e.message}")
                 _cadastroErro = "Erro ao conectar ao servidor"
             }
         }
@@ -258,11 +258,11 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
 
             } catch (e: HttpException) {
                 if (e.code() == 400 || e.code() == 401) {}
-                Log.d("API", "Erro ao editar pedido: ${e.message}")
+                Log.e("API", "Erro ao editar pedido: ${e.message}")
                 _edicaoErro = "Erro ao editar pedido"
 
             } catch (e: Exception) {
-                Log.d("API", "Erro ao conectar ao servidor: ${e.message}")
+                Log.e("API", "Erro ao conectar ao servidor: ${e.message}")
                 _edicaoErro = "Erro ao conectar ao servidor"
             }
         }
@@ -315,7 +315,7 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
                 onResult(ingredientesFiltrados)
 
             } catch (e: Exception) {
-                Log.d("API", "Erro ao obter receita: ${e.message}")
+                Log.e("API", "Erro ao obter receita: ${e.message}")
                 onResult(emptyList())
             }
         }

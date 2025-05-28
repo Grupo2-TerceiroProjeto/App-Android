@@ -105,6 +105,6 @@ abstract class ProductViewModel(open val sessaoUsuario : UserSession) : ViewMode
 
     open fun getIngredientes() {}
 
-//    abstract suspend fun uploadImagem(file: File): String?
+    abstract suspend fun uploadImagem(file: File): String?
 
 }
