@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,7 +43,7 @@ import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.White
 import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
-import org.koin.compose.koinInject
+import java.util.Locale;
 
 @Composable
 fun Dashboard(
@@ -230,7 +229,7 @@ fun Dashboard(
                                     )
 
                                     Text(
-                                        text = kpiMediaAvaliacao.toString(),
+                                        text = String.format(Locale.US, "%.1f", kpiMediaAvaliacao),
                                         fontSize = 30.sp,
                                         fontWeight = FontWeight.Bold,
                                         color = White

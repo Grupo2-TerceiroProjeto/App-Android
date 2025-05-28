@@ -4,11 +4,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.gestok.screens.internalScreens.order.data.IngredientsFormat
 import com.example.gestok.screens.internalScreens.order.data.OrderCreateData
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.screens.internalScreens.order.data.OrderEditData
-import com.example.gestok.screens.internalScreens.order.data.ProductData
+import com.example.gestok.screens.internalScreens.product.data.IngredientsFormat
+import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.screens.login.data.UserSession
 
 abstract class OrderViewModel(open val sessaoUsuario : UserSession) : ViewModel() {

@@ -1,11 +1,11 @@
 package com.example.gestok.network.service
 
-import com.example.gestok.screens.internalScreens.order.data.IngredientsData
 import com.example.gestok.screens.internalScreens.order.data.OrderCreateData
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.screens.internalScreens.order.data.OrderEditData
-import com.example.gestok.screens.internalScreens.order.data.ProductData
 import com.example.gestok.screens.internalScreens.order.data.RecipeData
+import com.example.gestok.screens.internalScreens.product.data.IngredientsData
+import com.example.gestok.screens.internalScreens.product.data.ProductData
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

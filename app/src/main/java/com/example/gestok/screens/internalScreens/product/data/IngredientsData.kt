@@ -1,4 +1,4 @@
-package com.example.gestok.screens.internalScreens.order.data
+package com.example.gestok.screens.internalScreens.product.data
 
 data class IngredientsData (
     val id: Int,
@@ -13,3 +13,15 @@ data class IngredientsFormat (
     val medida: String,
     val quantidade: Int
 )
+
+data class IngredientsProduct (
+    val id: Int,
+    val nome: String,
+    val quantidade: Double
+)
+
+data class IngredientsBlock (
+    val nome: String,
+    val quantidade: Int
+)
+

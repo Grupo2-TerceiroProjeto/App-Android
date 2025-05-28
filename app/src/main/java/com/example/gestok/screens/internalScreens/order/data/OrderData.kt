@@ -51,4 +51,3 @@ data class OrderEditData(
     val status: String,
     val produtos: List<OrderItensBlock>
 )
-

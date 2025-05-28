@@ -27,7 +27,7 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.example.gestok.screens.internalScreens.order.data.IngredientsFormat
+import com.example.gestok.screens.internalScreens.product.data.IngredientsFormat
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.White
 

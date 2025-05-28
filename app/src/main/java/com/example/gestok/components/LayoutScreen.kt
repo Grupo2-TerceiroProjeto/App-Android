@@ -15,51 +15,21 @@ import androidx.compose.ui.graphics.Color
 import com.example.gestok.screens.internalScreens.order.OrderCreate
 import com.example.gestok.screens.internalScreens.order.OrderEdit
 import com.example.gestok.screens.internalScreens.order.OrderContent
-import com.example.gestok.components.productpage.IngredientData
 import com.example.gestok.screens.internalScreens.product.ProductContent
-import com.example.gestok.components.productpage.ProductData
 import com.example.gestok.screens.internalScreens.dashboard.Dashboard
-import com.example.gestok.screens.internalScreens.Profile
+import com.example.gestok.screens.internalScreens.profile.Profile
 import com.example.gestok.screens.internalScreens.admin.AdminContent
 import com.example.gestok.screens.internalScreens.admin.RegisterCreate
 import com.example.gestok.screens.internalScreens.admin.RegisterEdit
 import com.example.gestok.screens.internalScreens.admin.data.RegisterData
 import com.example.gestok.screens.internalScreens.order.data.OrderData
+import com.example.gestok.screens.internalScreens.product.ProductCreate
+import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.viewModel.admin.AdminApiViewModel
 import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
 import com.example.gestok.viewModel.order.OrderApiViewModel
+import com.example.gestok.viewModel.product.ProductApiViewModel
 import org.koin.androidx.compose.koinViewModel
-
-
-//Ingredientes testes:
-val farinha: IngredientData = IngredientData("Farinha", 1, "kg")
-val margarina: IngredientData = IngredientData("Margarina", 500, "g")
-val leite: IngredientData = IngredientData("Leite", 1, "L")
-val ovo: IngredientData = IngredientData("Ovo", 12, "unidades")
-val fermento: IngredientData = IngredientData("Fermento", 10, "g")
-val chocolate: IngredientData = IngredientData("Chocolate", 200, "g")
-val frango: IngredientData = IngredientData("Frango", 500, "g")
-val queijo: IngredientData = IngredientData("Queijo", 300, "g")
-val presunto: IngredientData = IngredientData("Presunto", 200, "g")
-val oleo: IngredientData = IngredientData("Óleo", 1, "L")
-val acucar: IngredientData = IngredientData("Açúcar", 300, "g")
-
-
-//Produtos testes:
-val coxinha = ProductData("Coxinha", 10, "Salgados", 100.10, mutableListOf(margarina, farinha, frango, ovo), true)
-val esfirra = ProductData("Esfirra", 15, "Salgados", 80.50, mutableListOf(farinha, margarina, queijo, presunto), true)
-val pastel = ProductData("Pastel", 20, "Salgados", 90.00, mutableListOf(farinha, ovo, queijo, presunto, oleo), true)
-val brigadeiro = ProductData("Brigadeiro", 30, "Doces", 60.75, mutableListOf(chocolate, leite, acucar, margarina), true)
-val boloDeChocolate = ProductData("Bolo de Chocolate", 5, "Doces", 120.00, mutableListOf(farinha, leite, chocolate, ovo, fermento, acucar), true)
-val pudim = ProductData("Pudim", 25, "Doces", 70.50, mutableListOf(chocolate, leite, acucar, margarina), true)
-val quibe = ProductData("Quibe", 18, "Salgados", 85.00, mutableListOf(chocolate, leite, acucar, margarina), true)
-val mousseDeMaracuja = ProductData("Mousse de Maracujá", 8, "Doces", 65.00, mutableListOf(chocolate, leite, acucar, margarina), true)
-val tortaDeFrango = ProductData("Torta de Frango", 12, "Salgados", 110.00, mutableListOf(chocolate, leite, acucar, margarina), true)
-
-val listaProdutos: List<ProductData> = listOf(
-    coxinha, esfirra, pastel, brigadeiro, boloDeChocolate,
-    pudim, quibe, mousseDeMaracuja, tortaDeFrango
-)
 
 @Composable
 fun LayoutScreen(
@@ -72,6 +42,7 @@ fun LayoutScreen(
 
     val selectedOrder = remember { mutableStateOf<OrderData?>(null) }
     val selectedRegister = remember { mutableStateOf<RegisterData?>(null) }
+    val selectedProduct = remember { mutableStateOf<ProductData?>(null) }
 
     LaunchedEffect(currentPage.value) {
         if (currentPage.value != "sucess") {
@@ -212,9 +183,34 @@ fun LayoutScreen(
             }
 
             "produtos" -> {
-                ProductContent(modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding), listaProdutos)
+                val viewModel: ProductApiViewModel = koinViewModel()
+
+                ProductContent(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    viewModel,
+                    currentPage = currentPage,
+                    selectedProduct = selectedProduct
+                )
+            }
+
+            "createProduct" -> {
+                val viewModel: ProductApiViewModel = koinViewModel()
+
+                ProductCreate(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    onBack = {
+                        currentPage.value = "produtos"
+                    },
+                    onSucess = {
+                        currentPage.value = "sucess"
+                    },
+                    viewModel
+
+                )
             }
 
             "sucess" -> {
@@ -240,6 +236,16 @@ fun LayoutScreen(
                         "O funcionário foi atualizado com sucesso! \nConfira na aba Administração"
                     )
 
+                    "createProduct" -> Pair(
+                        "Produto Cadastrado",
+                        "O produto foi cadastrado com sucesso! \nConfira na aba Produtos"
+                    )
+
+                    "editProduct" -> Pair(
+                        "Produto Atualizado",
+                        "O produto foi atualizado com sucesso! \nConfira na aba Produtos"
+                    )
+
                     else -> Pair(
                         "",
                         ""
@@ -259,3 +265,4 @@ fun LayoutScreen(
 
     }
 }
+

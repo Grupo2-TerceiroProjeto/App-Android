@@ -31,8 +31,8 @@ import androidx.compose.ui.unit.sp
 import com.example.gestok.R
 import com.example.gestok.components.orderpage.popups.InfoDialog
 import com.example.gestok.components.orderpage.popups.Recipe
-import com.example.gestok.screens.internalScreens.order.data.IngredientsFormat
 import com.example.gestok.screens.internalScreens.order.data.OrderData
+import com.example.gestok.screens.internalScreens.product.data.IngredientsFormat
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.utils.formatPhoneNumber
 import com.example.gestok.viewModel.order.OrderApiViewModel

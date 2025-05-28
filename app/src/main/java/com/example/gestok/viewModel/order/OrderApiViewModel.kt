@@ -1,16 +1,15 @@
 package com.example.gestok.viewModel.order
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.viewModelScope
 import com.example.gestok.network.service.OrderService
-import com.example.gestok.screens.internalScreens.order.data.IngredientsData
-import com.example.gestok.screens.internalScreens.order.data.IngredientsFormat
 import com.example.gestok.screens.internalScreens.order.data.OrderCreateData
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.screens.internalScreens.order.data.OrderEditData
-import com.example.gestok.screens.internalScreens.order.data.ProductData
 import com.example.gestok.screens.internalScreens.order.data.RecipeData
+import com.example.gestok.screens.internalScreens.product.data.IngredientsData
+import com.example.gestok.screens.internalScreens.product.data.IngredientsFormat
+import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.screens.login.data.UserSession
 import com.example.gestok.utils.formatDateApi
 import kotlinx.coroutines.delay
