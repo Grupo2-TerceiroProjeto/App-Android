@@ -148,18 +148,15 @@ fun ProductCard(
 
             }
 
-            var isDisponivel by remember { mutableStateOf(produto.emProducao) }
-
             Row(
                 modifier = Modifier.padding(top = 25.dp),
                 verticalAlignment = Alignment.CenterVertically
             ){
 
                 Switch(
-                    checked = isDisponivel,
-                    onCheckedChange = {
-                        isDisponivel = it
-                    },
+                    checked = produto.emProducao,
+                    onCheckedChange = {viewModel.atualizarProducao(produto)},
+                    enabled = !(viewModel.isUpdatingMap[produto.id] ?: false),
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = LightGray,
                         checkedTrackColor = Blue,

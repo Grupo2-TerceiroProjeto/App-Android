@@ -9,6 +9,8 @@ import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.screens.login.data.UserSession
 import com.example.gestok.screens.internalScreens.product.data.CategoryData
 import com.example.gestok.screens.internalScreens.product.data.IngredientsData
+import com.example.gestok.screens.internalScreens.product.data.ProductEditData
+import com.example.gestok.screens.internalScreens.product.data.ProductStepData
 import java.io.File
 
 abstract class ProductViewModel(open val sessaoUsuario : UserSession) : ViewModel() {
@@ -105,6 +107,10 @@ abstract class ProductViewModel(open val sessaoUsuario : UserSession) : ViewMode
 
     open fun getIngredientes() {}
 
+    open fun salvarProoduto(produto : ProductStepData, onBack: () -> Unit, onSucess: () -> Unit) {}
+
     abstract suspend fun uploadImagem(file: File): String?
+
+    open fun atualizarProducao(produto : ProductData) {}
 
 }

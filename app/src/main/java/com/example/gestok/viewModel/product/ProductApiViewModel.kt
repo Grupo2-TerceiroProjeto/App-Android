@@ -1,12 +1,16 @@
 package com.example.gestok.viewModel.product
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.viewModelScope
 import com.example.gestok.network.service.CloudinaryService
 import com.example.gestok.network.service.ProductService
 import com.example.gestok.screens.internalScreens.product.data.CategoryData
 import com.example.gestok.screens.internalScreens.product.data.IngredientsData
+import com.example.gestok.screens.internalScreens.product.data.ProductCreateData
 import com.example.gestok.screens.internalScreens.product.data.ProductData
+import com.example.gestok.screens.internalScreens.product.data.ProductEditData
+import com.example.gestok.screens.internalScreens.product.data.ProductStepData
 import com.example.gestok.screens.login.data.UserSession
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -179,6 +183,119 @@ class ProductApiViewModel(private val api: ProductService, private val cloudinar
         } catch (e: Exception) {
             Log.e("Cloudinary", "Erro ao enviar imagem: ${e.message}")
             null
+        }
+    }
+
+    override fun salvarProoduto(
+        produto: ProductStepData,
+        onBack: () -> Unit,
+        onSucess: () -> Unit
+    ) {
+
+        limparErrosFormulario()
+
+        var houveErro = false
+
+        if (produto.nome.isBlank()) {
+            _nomeErro = "Nome do produto é obrigatório"
+            houveErro = true
+        } else if (produto.nome.length < 2) {
+            _nomeErro = "Nome do produto deve ter pelo menos 2 caracteres"
+            houveErro = true
+        }
+
+        if (produto.preco == 0.0) {
+            _precoErro = "Preço do produto é obrigatório"
+            houveErro = true
+        }
+
+        if (produto.quantidade == 0) {
+            _estoqueErro = "Quantidade em estoque é obrigatória"
+            houveErro = true
+        }
+
+        if (produto.categoria == 0) {
+            _categoriaErro = "Categoria do produto é obrigatória"
+            houveErro = true
+        }
+
+        if (produto.subCategoria == 0) {
+            _subCategoriaErro = "Sub Categoria do produto é obrigatória"
+            houveErro = true
+        }
+
+        if (produto.ingredientes.any { it.quantidade == 0.0 }) {
+            _itensErro = "Informe a quantidade dos ingredientes selecionados"
+            houveErro = true
+        }
+
+        if (houveErro) return
+
+        viewModelScope.launch {
+            try {
+
+                val produtoFormatado = ProductCreateData(
+                    nome = produto.nome,
+                    categoria = produto.subCategoria,
+                    preco = produto.preco,
+                    quantidade = produto.quantidade,
+                    imagem = produto.imagem,
+                    emProducao = produto.emProducao,
+                    ingredientes = produto.ingredientes
+                )
+
+                api.post(produtoFormatado, sessaoUsuario.idEmpresa)
+
+                Log.d("API", "Produto cadastrado com sucesso")
+
+                onSucess()
+                getProdutos()
+
+                delay(1500)
+                onBack()
+
+            } catch (e: HttpException) {
+                if (e.code() == 400) {}
+                Log.e("API", "Erro ao cadastrar produto: ${e.message}")
+                _cadastroErro = "Erro ao cadastrar produto"
+
+            } catch (e: Exception) {
+                Log.e("API", "Erro ao conectar ao servidor: ${e.message}")
+                _cadastroErro = "Erro ao conectar ao servidor"
+            }
+        }
+    }
+
+    val isUpdatingMap = mutableStateMapOf<Int, Boolean>()
+
+    override fun atualizarProducao(produto: ProductData) {
+        viewModelScope.launch {
+            try {
+                isUpdatingMap[produto.id] = true
+                val produtoAtualizado = ProductEditData(
+                    nome = produto.nome,
+                    categoria = produto.categoria,
+                    preco = produto.preco,
+                    quantidade = produto.quantidade,
+                    imagem = produto.imagem,
+                    emProducao = !produto.emProducao
+                )
+
+                api.put(produto.id, produtoAtualizado,)
+
+                Log.d("API", "Produto atualizado com sucesso")
+
+                delay(500)
+                isUpdatingMap[produto.id] = false
+                getProdutos()
+
+            } catch (e: HttpException) {
+                if (e.code() == 400) {}
+                Log.e("API", "Erro ao atualizar produto: ${e.message}")
+
+            } catch (e: Exception) {
+                Log.e("API", "Erro ao conectar ao servidor: ${e.message}")
+            }
         }
     }
 }

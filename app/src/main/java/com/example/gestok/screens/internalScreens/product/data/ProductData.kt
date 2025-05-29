@@ -10,6 +10,15 @@ data class ProductData(
     val emProducao: Boolean
 )
 
+data class ProductEditData(
+    val nome: String,
+    val categoria: Int,
+    val preco: Double,
+    val quantidade: Int,
+    val imagem: String?,
+    val emProducao: Boolean
+)
+
 data class ProductCreateData(
     val nome: String,
     val categoria: Int,

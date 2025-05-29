@@ -2,9 +2,14 @@ package com.example.gestok.network.service
 
 import com.example.gestok.screens.internalScreens.product.data.CategoryData
 import com.example.gestok.screens.internalScreens.product.data.IngredientsData
+import com.example.gestok.screens.internalScreens.product.data.ProductCreateData
 import com.example.gestok.screens.internalScreens.product.data.ProductData
+import com.example.gestok.screens.internalScreens.product.data.ProductEditData
+import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface ProductService {
@@ -20,4 +25,10 @@ interface ProductService {
 
     @GET("ingredientes/all")
     suspend fun getIngredientes(): List<IngredientsData>
+
+    @POST("produtos/{empresaId}")
+    suspend fun post(@Body produto: ProductCreateData, @Path("empresaId") empresaId:Int): ProductCreateData
+
+    @PUT("produtos/{idProduto}")
+    suspend fun put(@Path("idProduto") idProduto:Int, @Body produto: ProductEditData): ProductEditData
 }

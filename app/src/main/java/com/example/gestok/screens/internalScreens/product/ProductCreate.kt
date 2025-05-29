@@ -270,7 +270,7 @@ fun ProductCreate(
                             },
                             keyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
                             erro = viewModel.nomeErro,
-                            maxLength = 45
+                            maxLength = 45,
                         )
                     }
 
@@ -283,6 +283,7 @@ fun ProductCreate(
                                 preco = it.toDoubleOrNull() ?: 0.0
                             },
                             keyboardType = androidx.compose.ui.text.input.KeyboardType.Decimal,
+                            erro = viewModel.precoErro,
                             maxLength = 15
                         )
                     }
@@ -296,6 +297,7 @@ fun ProductCreate(
                                 estoque = it.toIntOrNull() ?: 0
                             },
                             keyboardType = androidx.compose.ui.text.input.KeyboardType.Number,
+                            erro = viewModel.estoqueErro,
                             maxLength = 15
                         )
                     }
@@ -420,7 +422,7 @@ fun ProductCreate(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Button(
-                                onClick = { },
+                                onClick = { viewModel.salvarProoduto(novoProduto, onBack, onSucess) },
                                 colors = ButtonDefaults.buttonColors(Blue),
                             ) {
                                 Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = White)
