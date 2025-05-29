@@ -94,12 +94,12 @@ fun OrderCreate(
     }
 
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.White),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = modifier
+                .fillMaxSize()
+                .background(Color.White),
+    verticalArrangement = Arrangement.spacedBy(16.dp),
 
-        ) {
+    ) {
 
         item {
             Column(
@@ -333,7 +333,7 @@ fun OrderCreate(
                                 quantidade = 0,
                                 emProducao = it.emProducao,
                                 imagem = it.imagem ?: "",
-                                )
+                            )
                         }
                         itensAdd = false
 

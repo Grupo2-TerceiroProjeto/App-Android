@@ -298,4 +298,43 @@ class ProductApiViewModel(private val api: ProductService, private val cloudinar
             }
         }
     }
+
+    override fun atualizarEstoque(produtos: List<ProductData>, onBack: () -> Unit, onSucess: () -> Unit) {
+        var houveErro = false
+
+        if (produtos.any { it.quantidade == 0 }) {
+            _itensErro = "Informe a quantidade dos produtos selecionados"
+            houveErro = true
+        }
+
+        if (houveErro) return
+
+        viewModelScope.launch {
+            try {
+                for (produto in produtos) {
+                    val produtoAtualizado = ProductEditData(
+                        nome = produto.nome,
+                        categoria = produto.categoria,
+                        preco = produto.preco,
+                        quantidade = produto.quantidade,
+                        imagem = produto.imagem,
+                        emProducao = produto.emProducao
+                    )
+
+                    api.put(produto.id, produtoAtualizado)
+                    Log.d("API", "Produto ${produto.nome} atualizado com sucesso")
+                }
+                onSucess()
+                getProdutos()
+
+                delay(1500)
+                onBack()
+            } catch (e: HttpException) {
+                if (e.code() == 400) {}
+                Log.e("API", "Erro ao atualizar estoque: ${e.message}")
+            } catch (e: Exception) {
+                Log.e("API", "Erro ao conectar ao servidor: ${e.message}")
+            }
+        }
+    }
 }

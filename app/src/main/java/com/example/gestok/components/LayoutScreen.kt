@@ -24,6 +24,7 @@ import com.example.gestok.screens.internalScreens.admin.RegisterEdit
 import com.example.gestok.screens.internalScreens.admin.data.RegisterData
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.screens.internalScreens.product.ProductCreate
+import com.example.gestok.screens.internalScreens.product.StockAdd
 import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.viewModel.admin.AdminApiViewModel
 import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
@@ -213,6 +214,24 @@ fun LayoutScreen(
                 )
             }
 
+            "stockAdd" -> {
+                val viewModel: ProductApiViewModel = koinViewModel()
+
+                StockAdd(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    onBack = {
+                        currentPage.value = "produtos"
+                    },
+                    onSucess = {
+                        currentPage.value = "sucess"
+                    },
+                    viewModel
+
+                )
+            }
+
             "sucess" -> {
 
                 val (title, message) = when (previousPage.value) {
@@ -244,6 +263,11 @@ fun LayoutScreen(
                     "editProduct" -> Pair(
                         "Produto Atualizado",
                         "O produto foi atualizado com sucesso! \nConfira na aba Produtos"
+                    )
+
+                    "stockAdd" -> Pair(
+                        "Estoque Atualizado",
+                        "O estoque foi atualizado com sucesso! \nConfira na aba Produtos"
                     )
 
                     else -> Pair(

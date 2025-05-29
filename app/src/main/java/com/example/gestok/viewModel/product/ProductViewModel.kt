@@ -113,4 +113,6 @@ abstract class ProductViewModel(open val sessaoUsuario : UserSession) : ViewMode
 
     open fun atualizarProducao(produto : ProductData) {}
 
+    open fun atualizarEstoque(produtos : List<ProductData>, onBack: () -> Unit, onSucess: () -> Unit) {}
+
 }

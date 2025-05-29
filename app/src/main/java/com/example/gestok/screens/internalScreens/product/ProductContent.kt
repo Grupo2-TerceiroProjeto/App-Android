@@ -74,7 +74,7 @@ fun ProductContent(
                     )
 
                     Button(
-                        onClick = {currentPage.value = "addProduct"},
+                        onClick = {currentPage.value = "stockAdd"},
                         colors = ButtonDefaults.buttonColors(containerColor = Blue)
                     ) {
                         Text("Add Estoque", color = White)
