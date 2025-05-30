@@ -19,6 +19,17 @@ data class ProductEditData(
     val emProducao: Boolean
 )
 
+data class ProductStepEditData(
+    val id: Int,
+    val nome: String,
+    val categoria: Int,
+    val preco: Double,
+    val quantidade: Int,
+    val imagem: String?,
+    val emProducao: Boolean,
+    val ingredientes: List<IngredientsRecipe>
+)
+
 data class ProductCreateData(
     val nome: String,
     val categoria: Int,

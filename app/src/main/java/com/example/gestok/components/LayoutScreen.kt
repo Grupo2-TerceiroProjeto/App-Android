@@ -24,6 +24,7 @@ import com.example.gestok.screens.internalScreens.admin.RegisterEdit
 import com.example.gestok.screens.internalScreens.admin.data.RegisterData
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.screens.internalScreens.product.ProductCreate
+import com.example.gestok.screens.internalScreens.product.ProductEdit
 import com.example.gestok.screens.internalScreens.product.StockAdd
 import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.viewModel.admin.AdminApiViewModel
@@ -212,6 +213,26 @@ fun LayoutScreen(
                     viewModel
 
                 )
+            }
+
+            "editProduct" -> {
+                val viewModel: ProductApiViewModel = koinViewModel()
+
+                selectedProduct.value?.let {
+                    ProductEdit(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                        onBack = {
+                            currentPage.value = "produtos"
+                        },
+                        product = it,
+                        onSucess = {
+                            currentPage.value = "sucess"
+                        },
+                        viewModel
+                    )
+                }
             }
 
             "stockAdd" -> {

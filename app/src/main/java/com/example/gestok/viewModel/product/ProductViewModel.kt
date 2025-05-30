@@ -9,8 +9,9 @@ import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.screens.login.data.UserSession
 import com.example.gestok.screens.internalScreens.product.data.CategoryData
 import com.example.gestok.screens.internalScreens.product.data.IngredientsData
-import com.example.gestok.screens.internalScreens.product.data.ProductEditData
+import com.example.gestok.screens.internalScreens.product.data.IngredientsRecipe
 import com.example.gestok.screens.internalScreens.product.data.ProductStepData
+import com.example.gestok.screens.internalScreens.product.data.ProductStepEditData
 import java.io.File
 
 abstract class ProductViewModel(open val sessaoUsuario : UserSession) : ViewModel() {
@@ -31,6 +32,8 @@ abstract class ProductViewModel(open val sessaoUsuario : UserSession) : ViewMode
 
     protected var _carregouIngredientes by mutableStateOf(false)
 
+    protected var _carregouReceita by mutableStateOf(false)
+
     protected var _nomeErro by mutableStateOf<String?>(null)
 
     protected var _precoErro by mutableStateOf<String?>(null)
@@ -44,6 +47,8 @@ abstract class ProductViewModel(open val sessaoUsuario : UserSession) : ViewMode
     protected var _itensErro by mutableStateOf<String?>(null)
 
     protected var _cadastroErro by mutableStateOf<String?>(null)
+
+    protected var _edicaoErro by mutableStateOf<String?>(null)
 
     val produtosErro: String?
         get() = _produtosErro
@@ -62,6 +67,9 @@ abstract class ProductViewModel(open val sessaoUsuario : UserSession) : ViewMode
 
     val carregouIngredientes: Boolean
         get() = _carregouIngredientes
+
+    val carregouReceita: Boolean
+        get() = _carregouReceita
 
     val categoriasErro: String?
         get() = _categoriasErro
@@ -90,6 +98,9 @@ abstract class ProductViewModel(open val sessaoUsuario : UserSession) : ViewMode
     val cadastroErro: String?
         get() = _cadastroErro
 
+    val edicaoErro: String?
+        get() = _edicaoErro
+
     fun limparErrosFormulario() {
         _nomeErro = null
         _precoErro = null
@@ -107,12 +118,16 @@ abstract class ProductViewModel(open val sessaoUsuario : UserSession) : ViewMode
 
     open fun getIngredientes() {}
 
-    open fun salvarProoduto(produto : ProductStepData, onBack: () -> Unit, onSucess: () -> Unit) {}
+    open fun salvarProduto(produto : ProductStepData, onBack: () -> Unit, onSucess: () -> Unit) {}
 
     abstract suspend fun uploadImagem(file: File): String?
 
     open fun atualizarProducao(produto : ProductData) {}
 
     open fun atualizarEstoque(produtos : List<ProductData>, onBack: () -> Unit, onSucess: () -> Unit) {}
+
+    open fun getReceita(produto: ProductData, onResult: (List<IngredientsRecipe>) -> Unit) {}
+
+    open fun editarProduto(produto : ProductStepEditData, onBack: () -> Unit, onSucess: () -> Unit) {}
 
 }

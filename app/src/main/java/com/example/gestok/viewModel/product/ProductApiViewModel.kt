@@ -5,12 +5,16 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.viewModelScope
 import com.example.gestok.network.service.CloudinaryService
 import com.example.gestok.network.service.ProductService
+import com.example.gestok.screens.internalScreens.order.data.RecipeBody
+import com.example.gestok.screens.internalScreens.order.data.RecipeData
 import com.example.gestok.screens.internalScreens.product.data.CategoryData
 import com.example.gestok.screens.internalScreens.product.data.IngredientsData
+import com.example.gestok.screens.internalScreens.product.data.IngredientsRecipe
 import com.example.gestok.screens.internalScreens.product.data.ProductCreateData
 import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.screens.internalScreens.product.data.ProductEditData
 import com.example.gestok.screens.internalScreens.product.data.ProductStepData
+import com.example.gestok.screens.internalScreens.product.data.ProductStepEditData
 import com.example.gestok.screens.login.data.UserSession
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -186,7 +190,7 @@ class ProductApiViewModel(private val api: ProductService, private val cloudinar
         }
     }
 
-    override fun salvarProoduto(
+    override fun salvarProduto(
         produto: ProductStepData,
         onBack: () -> Unit,
         onSucess: () -> Unit
@@ -337,4 +341,121 @@ class ProductApiViewModel(private val api: ProductService, private val cloudinar
             }
         }
     }
+
+    override fun getReceita(produto: ProductData, onResult: (List<IngredientsRecipe>) -> Unit) {
+        viewModelScope.launch {
+            try {
+                delay(1000)
+
+                val receitas: List<RecipeData> = api.getReceitas()
+                val ingredientes: List<IngredientsData> = api.getIngredientes()
+
+                val receitasDoProduto = receitas.filter { it.produto == produto.id }
+
+                val ingredientesReceita = receitasDoProduto.mapNotNull { receita ->
+                    val ingrediente = ingredientes.find { it.id == receita.ingrediente }
+
+                    ingrediente?.let {
+                        IngredientsRecipe(
+                            id = receita.idReceita,
+                            idIngrediente = it.id,
+                            nome = it.nome,
+                            quantidade = receita.quantidade
+                        )
+                    }
+                }
+
+                Log.d("API", "Ingredientes da receita obtidos com sucesso")
+                onResult(ingredientesReceita)
+                _carregouReceita = true
+
+            } catch (e: Exception) {
+                Log.e("API", "Erro ao obter ingredientes: ${e.message}")
+                onResult(emptyList())
+            }
+        }
+    }
+
+    override fun editarProduto(
+        produto: ProductStepEditData,
+        onBack: () -> Unit,
+        onSucess: () -> Unit
+    ) {
+        limparErrosFormulario()
+
+        var houveErro = false
+
+        if (produto.nome.isBlank()) {
+            _nomeErro = "Nome do produto é obrigatório"
+            houveErro = true
+        } else if (produto.nome.length < 2) {
+            _nomeErro = "Nome do produto deve ter pelo menos 2 caracteres"
+            houveErro = true
+        }
+
+        if (produto.preco == 0.0) {
+            _precoErro = "Preço do produto é obrigatório"
+            houveErro = true
+        }
+
+        if (produto.quantidade == 0) {
+            _estoqueErro = "Quantidade em estoque é obrigatória"
+            houveErro = true
+        }
+
+        if (produto.ingredientes.any { it.quantidade == 0.0 }) {
+            _itensErro = "Informe a quantidade dos ingredientes selecionados"
+            houveErro = true
+        }
+
+        if (houveErro) return
+
+        viewModelScope.launch {
+            try {
+
+                val produtoFormatado = ProductEditData(
+                    nome = produto.nome,
+                    categoria = produto.categoria,
+                    preco = produto.preco,
+                    quantidade = produto.quantidade,
+                    imagem = produto.imagem,
+                    emProducao = produto.emProducao,
+                )
+
+                api.put(produto.id, produtoFormatado)
+
+                for (ingrediente in produto.ingredientes) {
+                    val receita = RecipeBody(
+                        quantidade = ingrediente.quantidade,
+                        idIngrediente = ingrediente.idIngrediente,
+                        idProduto = produto.id,
+                    )
+
+                    if(ingrediente.id == 0)
+                        api.postReceita(receita)
+                    else {
+                        api.putReceita(ingrediente.id, receita)
+                    }
+                }
+
+                Log.d("API", "Produto editado com sucesso")
+
+                onSucess()
+                getProdutos()
+
+                delay(1500)
+                onBack()
+
+            } catch (e: HttpException) {
+                if (e.code() == 400) {}
+                Log.e("API", "Erro ao editar produto: ${e.message}")
+                _cadastroErro = "Erro ao editar produto"
+
+            } catch (e: Exception) {
+                Log.e("API", "Erro ao conectar ao servidor: ${e.message}")
+                _cadastroErro = "Erro ao conectar ao servidor"
+            }
+        }
+    }
+
 }

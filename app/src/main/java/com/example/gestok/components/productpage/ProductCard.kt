@@ -88,7 +88,9 @@ fun ProductCard(
                     }
 
                     IconButton(
-                        onClick = {},
+                        onClick = {
+                            selectedProduct.value = produto
+                            currentPage.value = "editProduct"},
                         modifier = Modifier
                             .height(50.dp)
 

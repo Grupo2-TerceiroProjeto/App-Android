@@ -2,33 +2,43 @@ package com.example.gestok.screens.internalScreens.product
 
 import SelectOption
 import android.content.Context
+import android.net.Uri
+import android.webkit.MimeTypeMap
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowCircleUp
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -36,37 +46,35 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.gestok.components.InputLabel
+import com.example.gestok.components.productpage.IngredientAdd
+import com.example.gestok.components.productpage.IngredientBlock
+import com.example.gestok.screens.internalScreens.product.data.IngredientsBlock
+import com.example.gestok.screens.internalScreens.product.data.IngredientsRecipe
+import com.example.gestok.screens.internalScreens.product.data.ProductData
+import com.example.gestok.screens.internalScreens.product.data.ProductStepEditData
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.LightGray
+import com.example.gestok.ui.theme.MediumGray
 import com.example.gestok.ui.theme.White
 import com.example.gestok.viewModel.product.ProductApiViewModel
-import android.net.Uri
-import android.webkit.MimeTypeMap
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.material.icons.filled.ArrowCircleUp
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import coil.compose.AsyncImage
-import com.example.gestok.components.productpage.IngredientAdd
-import com.example.gestok.components.productpage.IngredientBlock
-import com.example.gestok.screens.internalScreens.product.data.IngredientsBlock
-import com.example.gestok.screens.internalScreens.product.data.IngredientsProduct
-import com.example.gestok.screens.internalScreens.product.data.ProductStepData
 import java.io.File
 
-
 @Composable
-fun ProductCreate(
+fun ProductEdit(
     modifier: Modifier = Modifier,
     onBack: () -> Unit,
+    product: ProductData,
     onSucess: () -> Unit,
     viewModel: ProductApiViewModel
 ) {
@@ -89,9 +97,10 @@ fun ProductCreate(
         return tempFile
     }
 
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        imagemUri = uri
-    }
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            imagemUri = uri
+        }
 
     LaunchedEffect(imagemUri) {
         imagemUri?.let {
@@ -103,15 +112,15 @@ fun ProductCreate(
         }
     }
 
-    var nome by remember { mutableStateOf("") }
-    var preco by remember { mutableStateOf(0.0) }
-    var estoque by remember { mutableStateOf(0) }
-    var categoria by remember { mutableStateOf(0) }
-    var subCategoria by remember { mutableStateOf(0) }
-    var ingredientes by remember { mutableStateOf(emptyList<IngredientsProduct>()) }
+    var nome by remember { mutableStateOf(product.nome) }
+    var preco by remember { mutableDoubleStateOf(product.preco) }
+    var estoque by remember { mutableIntStateOf(product.quantidade) }
+    var categoria by remember { mutableIntStateOf(product.categoria) }
+    var subCategoria by remember { mutableIntStateOf(product.categoria) }
+    var ingredientes by remember { mutableStateOf(emptyList<IngredientsRecipe>()) }
 
-    var precoTexto by remember { mutableStateOf("") }
-    var estoqueTexto by remember { mutableStateOf("") }
+    var precoTexto by remember { mutableStateOf(product.preco.toString()) }
+    var estoqueTexto by remember { mutableStateOf(product.quantidade.toString()) }
 
     val categorias = viewModel.categorias
 
@@ -121,22 +130,26 @@ fun ProductCreate(
         }
     }
 
-    val novoProduto = ProductStepData (
+    val produtoEditado = ProductStepEditData(
+        id = product.id,
         nome = nome,
-        categoria = categoria,
-        subCategoria = subCategoria,
+        categoria = subCategoria,
         preco = preco,
         quantidade = estoque,
         imagem = publicId ?: "",
-        emProducao = true,
+        emProducao = product.emProducao,
         ingredientes = ingredientes
     )
 
     var itensAdd by remember { mutableStateOf(false) }
+    val carregandoReceita = viewModel.carregouReceita
 
     LaunchedEffect(Unit) {
         viewModel.limparErrosFormulario()
         viewModel.getCategorias()
+        viewModel.getReceita(product) { listaIngredientes ->
+            ingredientes = listaIngredientes
+        }
     }
 
     LazyColumn(
@@ -171,7 +184,7 @@ fun ProductCreate(
                     }
 
                     Text(
-                        "Cadastrar Produto",
+                        "Editar Produto",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W600,
                         color = Black,
@@ -265,7 +278,8 @@ fun ProductCreate(
                             text = "Nome",
                             value = nome,
                             onValueChange = {
-                                val filtered = it.filter { char -> char.isLetter() || char.isWhitespace() }
+                                val filtered =
+                                    it.filter { char -> char.isLetter() || char.isWhitespace() }
                                 nome = filtered
                             },
                             keyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
@@ -303,12 +317,15 @@ fun ProductCreate(
                     }
 
                     Column {
+                        val categoriaAtual = categorias.find { it.id == categoria }
+
                         val categoriasUnicas = categorias.distinctBy { it.nome }
-                        val categoriaSelecionada = categoriasUnicas.find { it.id == categoria }?.nome ?: ""
+
+                        val categoriaSelecionada = categoriaAtual?.nome ?: ""
 
                         SelectOption(
                             text = "Categoria",
-                            value = if (categoriaSelecionada.isEmpty()) "Selecione uma opção" else categoriaSelecionada,
+                            value = categoriaSelecionada,
                             onValueChange = { selectedNome ->
                                 val idSelecionado = categoriasUnicas.find { it.nome == selectedNome }?.id
                                 categoria = idSelecionado ?: 0
@@ -319,14 +336,15 @@ fun ProductCreate(
                     }
 
                     Column {
-                        var subCategoriaSelecionada by remember { mutableStateOf("") }
+                        val subCategoriaSelecionada =
+                            categorias.find { it.id == subCategoria }?.subCategoria ?: ""
 
                         SelectOption(
                             text = "Sub Categoria",
-                            value = if (subCategoriaSelecionada.isEmpty()) "Selecione uma opção" else subCategoriaSelecionada,
+                            value = subCategoriaSelecionada,
                             onValueChange = { selectedNome ->
-                                subCategoriaSelecionada = selectedNome
-                                val idSelecionado = categorias.find { it.subCategoria == selectedNome }?.id
+                                val idSelecionado =
+                                    categorias.find { it.subCategoria == selectedNome }?.id
                                 subCategoria = idSelecionado ?: 0
                             },
                             list = categorias.map { it.subCategoria },
@@ -383,65 +401,98 @@ fun ProductCreate(
                     )
                 }
 
-
-                if (ingredientes.isEmpty()) {
-                    Text(
-                        "Para salvar o produto, é necessário adicionar pelo menos um ingrediente",
-                        fontSize = 14.sp,
-                        color = Black,
-                        modifier = Modifier.padding(
-                            start = 50.dp,
-                            end = 50.dp,
-                            top = 32.dp,
-                            bottom = 32.dp
-                        ),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                    )
-                } else {
-                    LazyColumn(
-                        modifier = Modifier
-                            .padding(start = 20.dp, end = 20.dp, top = 24.dp)
-                            .height(250.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items(ingredientes.size) { index ->
-                            val item = ingredientes[index]
-                            IngredientBlock(
-                                listOf(IngredientsBlock(nome = item.nome, quantidade = item.quantidade.toInt())),
-                                updateQuantidade = { _, newQtd -> updateQuantidade(index, newQtd) }
-                            )
+                when {
+                    !carregandoReceita -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                                .wrapContentSize(Alignment.Center)
+                        ) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                CircularProgressIndicator()
+                                Spacer(modifier = Modifier.height(10.dp))
+                                Text("Carregando Receita...", color = MediumGray)
+                            }
                         }
                     }
 
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(top = 10.dp, bottom = 10.dp),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Button(
-                                onClick = { viewModel.salvarProduto(novoProduto, onBack, onSucess) },
-                                colors = ButtonDefaults.buttonColors(Blue),
-                            ) {
-                                Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = White)
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text("Salvar", color = White, fontSize = 16.sp)
-                            }
+                    ingredientes.isEmpty() -> {
+                        Text(
+                            "Para salvar o produto, é necessário adicionar pelo menos um ingrediente",
+                            fontSize = 14.sp,
+                            color = Black,
+                            modifier = Modifier.padding(
+                                start = 50.dp,
+                                end = 50.dp,
+                                top = 32.dp,
+                                bottom = 32.dp
+                            ),
+                            textAlign = TextAlign.Center
+                        )
+                    }
 
-                            if (viewModel.cadastroErro != null) {
-                                Text(
-                                    viewModel.cadastroErro!!,
-                                    fontSize = 13.sp,
-                                    fontWeight = FontWeight.W600,
-                                    color = Color(0xFFD32F2F),
-                                    modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
+                    else -> {
+                        LazyColumn(
+                            modifier = Modifier
+                                .padding(start = 20.dp, end = 20.dp, top = 24.dp)
+                                .height(250.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(ingredientes.size) { index ->
+                                val item = ingredientes[index]
+                                IngredientBlock(
+                                    listOf(
+                                        IngredientsBlock(
+                                            nome = item.nome,
+                                            quantidade = item.quantidade.toInt()
+                                        )
+                                    ),
+                                    updateQuantidade = { _, newQtd ->
+                                        updateQuantidade(
+                                            index,
+                                            newQtd
+                                        )
+                                    }
                                 )
                             }
                         }
+
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(top = 10.dp, bottom = 10.dp),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Button(
+                                    onClick = { viewModel.editarProduto(produtoEditado, onBack, onSucess) },
+                                    colors = ButtonDefaults.buttonColors(Blue),
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Check,
+                                        contentDescription = null,
+                                        tint = White
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text("Salvar", color = White, fontSize = 16.sp)
+                                }
+
+                                if (viewModel.cadastroErro != null) {
+                                    Text(
+                                        viewModel.cadastroErro!!,
+                                        fontSize = 13.sp,
+                                        fontWeight = FontWeight.W600,
+                                        color = Color(0xFFD32F2F),
+                                        modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
+                                    )
+                                }
+                            }
+                        }
                     }
+
                 }
             }
         }
@@ -453,8 +504,9 @@ fun ProductCreate(
                     viewModel,
                     onConfirm = { selectedIngredients ->
                         ingredientes = ingredientes + selectedIngredients.map {
-                            IngredientsProduct(
-                                id = it.id,
+                            IngredientsRecipe(
+                                id = 0,
+                                idIngrediente = it.id,
                                 nome = it.nome,
                                 quantidade = 0.0
                             )
@@ -467,5 +519,4 @@ fun ProductCreate(
         }
 
     }
-
 }

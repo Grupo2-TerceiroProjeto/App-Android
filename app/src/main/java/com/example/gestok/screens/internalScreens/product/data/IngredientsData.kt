@@ -25,3 +25,11 @@ data class IngredientsBlock (
     val quantidade: Int
 )
 
+data class IngredientsRecipe (
+    val id: Int,
+    val idIngrediente: Int,
+    val nome: String,
+    val quantidade: Double
+)
+
+
