@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.KeyboardReturn
 import androidx.compose.material.icons.filled.Spa
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -36,6 +37,7 @@ import com.example.gestok.components.InputLabel
 import com.example.gestok.screens.internalScreens.product.data.IngredientsCreate
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
+import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.White
 
 @Composable
@@ -154,21 +156,33 @@ fun IngredientCreate(
                         .padding(top = 10.dp, bottom = 10.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+
+                    Button(
+                        onClick = { onSalvar() },
+                        colors = ButtonDefaults.buttonColors(LightBlue),
                     ) {
-                        Button(
-                            onClick = { onSalvar() },
-                            colors = ButtonDefaults.buttonColors(Blue),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Check,
-                                contentDescription = null,
-                                tint = White
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Criar Ingrediente", color = White, fontSize = 16.sp)
-                        }
+                        Icon(
+                            imageVector = Icons.Default.KeyboardReturn,
+                            contentDescription = null,
+                            tint = White
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Voltar", color = White, fontSize = 16.sp)
+                    }
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    Button(
+                        onClick = { onSalvar() },
+                        colors = ButtonDefaults.buttonColors(Blue),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = null,
+                            tint = White
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Criar Ingrediente", color = White, fontSize = 16.sp)
                     }
                 }
 

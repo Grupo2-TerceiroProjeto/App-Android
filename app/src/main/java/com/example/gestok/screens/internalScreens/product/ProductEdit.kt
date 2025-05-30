@@ -112,6 +112,12 @@ fun ProductEdit(
         }
     }
 
+    val imagemUrl by remember(product.imagem, publicId) {
+        mutableStateOf(
+            viewModel.getImagem(publicId ?: product.imagem)
+        )
+    }
+
     var nome by remember { mutableStateOf(product.nome) }
     var preco by remember { mutableDoubleStateOf(product.preco) }
     var estoque by remember { mutableIntStateOf(product.quantidade) }
@@ -222,51 +228,62 @@ fun ProductEdit(
                                     .background(LightGray),
                                 contentAlignment = Alignment.Center
                             ) {
-                                if (isUploading) {
-                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                        Text("Carregando...", color = Blue)
-                                    }
-                                } else if (publicId != null) {
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(280.dp)
-                                            .clip(RoundedCornerShape(10))
-                                    ) {
-                                        AsyncImage(
-                                            model = imagemUri,
-                                            contentDescription = null,
-                                            contentScale = ContentScale.Crop,
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .clip(RoundedCornerShape(10))
-                                        )
-                                        Button(
-                                            onClick = { launcher.launch("image/*") },
-                                            colors = ButtonDefaults.buttonColors(LightBlue),
-                                            modifier = Modifier
-                                                .align(Alignment.BottomCenter)
-                                                .padding(bottom = 12.dp)
-                                        ) {
-                                            Text("Trocar Imagem", color = White)
+                                Box(
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(10))
+                                        .fillMaxWidth()
+                                        .height(280.dp)
+                                        .background(LightGray),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    when {
+                                        isUploading -> {
+                                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                                Text("Carregando...", color = Blue)
+                                            }
                                         }
-                                    }
-                                } else {
-                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                        Icon(
-                                            imageVector = Icons.Default.ArrowCircleUp,
-                                            contentDescription = null,
-                                            modifier = Modifier.size(100.dp),
-                                            tint = Blue
-                                        )
-
-                                        Spacer(modifier = Modifier.height(50.dp))
-
-                                        Button(
-                                            onClick = { launcher.launch("image/*") },
-                                            colors = ButtonDefaults.buttonColors(Blue)
-                                        ) {
-                                            Text("Escolher Imagem", color = White)
+                                        imagemUrl != null -> {
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .height(280.dp)
+                                                    .clip(RoundedCornerShape(10))
+                                            ) {
+                                                AsyncImage(
+                                                    model = imagemUrl,
+                                                    contentDescription = null,
+                                                    contentScale = ContentScale.Crop,
+                                                    modifier = Modifier
+                                                        .fillMaxSize()
+                                                        .clip(RoundedCornerShape(10))
+                                                )
+                                                Button(
+                                                    onClick = { launcher.launch("image/*") },
+                                                    colors = ButtonDefaults.buttonColors(LightBlue),
+                                                    modifier = Modifier
+                                                        .align(Alignment.BottomCenter)
+                                                        .padding(bottom = 12.dp)
+                                                ) {
+                                                    Text("Trocar Imagem", color = White)
+                                                }
+                                            }
+                                        }
+                                        else -> {
+                                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                                Icon(
+                                                    imageVector = Icons.Default.ArrowCircleUp,
+                                                    contentDescription = null,
+                                                    modifier = Modifier.size(100.dp),
+                                                    tint = Blue
+                                                )
+                                                Spacer(modifier = Modifier.height(50.dp))
+                                                Button(
+                                                    onClick = { launcher.launch("image/*") },
+                                                    colors = ButtonDefaults.buttonColors(Blue)
+                                                ) {
+                                                    Text("Escolher Imagem", color = White)
+                                                }
+                                            }
                                         }
                                     }
                                 }

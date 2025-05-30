@@ -1,6 +1,7 @@
 package com.example.gestok.network.service
 
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -12,6 +13,6 @@ interface CloudinaryService {
     @POST("image/upload")
     fun uploadImage(
         @Part file: MultipartBody.Part,
-        @Part("upload_preset") uploadPreset: String
+        @Part("upload_preset") uploadPreset: RequestBody
     ): Call<CloudinaryUploadResponse>
 }

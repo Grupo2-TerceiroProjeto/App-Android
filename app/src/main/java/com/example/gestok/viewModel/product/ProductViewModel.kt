@@ -122,6 +122,8 @@ abstract class ProductViewModel(open val sessaoUsuario : UserSession) : ViewMode
 
     abstract suspend fun uploadImagem(file: File): String?
 
+    abstract fun getImagem(publicId: String?): String?
+
     open fun atualizarProducao(produto : ProductData) {}
 
     open fun atualizarEstoque(produtos : List<ProductData>, onBack: () -> Unit, onSucess: () -> Unit) {}

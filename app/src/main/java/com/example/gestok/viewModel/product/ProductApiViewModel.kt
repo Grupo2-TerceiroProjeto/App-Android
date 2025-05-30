@@ -23,6 +23,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.HttpException
 import retrofit2.awaitResponse
 import java.io.File
@@ -172,8 +173,10 @@ class ProductApiViewModel(private val api: ProductService, private val cloudinar
             val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
             val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
 
+            val uploadPresetBody = "ml_default".toRequestBody("text/plain".toMediaTypeOrNull())
+
             val response = withContext(Dispatchers.IO) {
-                cloudinary.uploadImage(body, "ml_default").awaitResponse()
+                cloudinary.uploadImage(body, uploadPresetBody).awaitResponse()
             }
 
             if (response.isSuccessful) {
@@ -188,6 +191,18 @@ class ProductApiViewModel(private val api: ProductService, private val cloudinar
             Log.e("Cloudinary", "Erro ao enviar imagem: ${e.message}")
             null
         }
+    }
+
+    override fun getImagem(publicId: String?): String? {
+        if (publicId.isNullOrBlank()) {
+            Log.e("Cloudinary", "Imagem não encontrada: $publicId")
+            return null
+        }
+
+        Log.d("Cloudinary", "Imagem obtida com sucesso: $publicId")
+
+        val cloudName = "ddmjnxjm7"
+        return "https://res.cloudinary.com/$cloudName/image/upload/$publicId"
     }
 
     override fun salvarProduto(
