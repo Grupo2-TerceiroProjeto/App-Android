@@ -42,4 +42,8 @@ interface ProductService {
 
     @PUT("produtos/{idProduto}")
     suspend fun put(@Path("idProduto") idProduto:Int, @Body produto: ProductEditData): ProductEditData
+
+    @DELETE("receitas/{id}")
+    suspend fun deleteReceita(@Path("id") id:Int)
+
 }

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -56,7 +55,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.gestok.components.InputLabel
 import com.example.gestok.components.productpage.IngredientAdd
-import com.example.gestok.components.productpage.IngredientBlock
+import com.example.gestok.components.productpage.IngredientBlockExclude
 import com.example.gestok.screens.internalScreens.product.data.IngredientsBlock
 import com.example.gestok.screens.internalScreens.product.data.IngredientsRecipe
 import com.example.gestok.screens.internalScreens.product.data.ProductData
@@ -436,12 +435,12 @@ fun ProductEdit(
                         LazyColumn(
                             modifier = Modifier
                                 .padding(start = 20.dp, end = 20.dp, top = 24.dp)
-                                .height(250.dp),
+                                .height(240.dp),
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             items(ingredientes.size) { index ->
                                 val item = ingredientes[index]
-                                IngredientBlock(
+                                IngredientBlockExclude(
                                     listOf(
                                         IngredientsBlock(
                                             nome = item.nome,
@@ -453,6 +452,23 @@ fun ProductEdit(
                                             index,
                                             newQtd
                                         )
+                                    },
+                                    onExcluirClick = {
+                                        if(item.id == 0) {
+                                            ingredientes = ingredientes.toMutableList().apply {
+                                                removeAt(index)
+                                            }
+                                        }else {
+                                            viewModel.deletarReceita(item.id) { sucesso ->
+                                                if (sucesso) {
+                                                    ingredientes =
+                                                        ingredientes.toMutableList().apply {
+                                                            removeAt(index)
+                                                        }
+                                                }
+
+                                            }
+                                        }
                                     }
                                 )
                             }

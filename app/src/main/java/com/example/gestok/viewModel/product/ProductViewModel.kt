@@ -130,4 +130,6 @@ abstract class ProductViewModel(open val sessaoUsuario : UserSession) : ViewMode
 
     open fun editarProduto(produto : ProductStepEditData, onBack: () -> Unit, onSucess: () -> Unit) {}
 
+    open fun deletarReceita(idReceita: Int, onResult: (Boolean) -> Unit) {}
+
 }

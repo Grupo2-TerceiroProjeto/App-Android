@@ -458,4 +458,24 @@ class ProductApiViewModel(private val api: ProductService, private val cloudinar
         }
     }
 
+    override fun deletarReceita(idReceita: Int, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            try {
+                api.deleteReceita(idReceita)
+
+                Log.d("API", "Receita excluída com sucesso")
+
+                onResult(true)
+
+            } catch (e: HttpException) {
+                if (e.code() == 500) {}
+                Log.e("API", "Erro ao excluir receita: ${e.message}")
+                onResult(false)
+
+            } catch (e: Exception) {
+                Log.e("API", "Erro ao conectar ao servidor: ${e.message}")
+            }
+        }
+    }
+
 }
