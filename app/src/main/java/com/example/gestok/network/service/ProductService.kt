@@ -3,6 +3,7 @@ package com.example.gestok.network.service
 import com.example.gestok.screens.internalScreens.order.data.RecipeBody
 import com.example.gestok.screens.internalScreens.order.data.RecipeData
 import com.example.gestok.screens.internalScreens.product.data.CategoryData
+import com.example.gestok.screens.internalScreens.product.data.IngredientsCreate
 import com.example.gestok.screens.internalScreens.product.data.IngredientsData
 import com.example.gestok.screens.internalScreens.product.data.ProductCreateData
 import com.example.gestok.screens.internalScreens.product.data.ProductData
@@ -30,6 +31,9 @@ interface ProductService {
 
     @GET("receitas/listar")
     suspend fun getReceitas(): List<RecipeData>
+
+    @POST("ingredientes/{idProduto}")
+    suspend fun postIngredientes(@Path("idProduto") idProduto:Int, @Body ingrediente: IngredientsCreate): IngredientsCreate
 
     @POST("receitas")
     suspend fun postReceita(@Body receita: RecipeBody): RecipeBody

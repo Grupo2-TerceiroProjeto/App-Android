@@ -56,6 +56,7 @@ import coil.compose.AsyncImage
 import com.example.gestok.components.InputLabel
 import com.example.gestok.components.productpage.IngredientAdd
 import com.example.gestok.components.productpage.IngredientBlockExclude
+import com.example.gestok.components.productpage.IngredientCreate
 import com.example.gestok.screens.internalScreens.product.data.IngredientsBlock
 import com.example.gestok.screens.internalScreens.product.data.IngredientsRecipe
 import com.example.gestok.screens.internalScreens.product.data.ProductData
@@ -141,6 +142,7 @@ fun ProductEdit(
     )
 
     var itensAdd by remember { mutableStateOf(false) }
+    var criandoIngrediente by remember { mutableStateOf(false) }
     val carregandoReceita = viewModel.carregouReceita
 
     LaunchedEffect(Unit) {
@@ -513,7 +515,16 @@ fun ProductEdit(
             }
         }
 
-        if (itensAdd) {
+        if (criandoIngrediente) {
+            item {
+                IngredientCreate(
+                    onSalvar = {
+                        criandoIngrediente = false
+                    }
+                )
+
+            }
+        } else if (itensAdd) {
             item {
 
                 IngredientAdd(
@@ -527,8 +538,12 @@ fun ProductEdit(
                                 quantidade = 0.0
                             )
                         }
+
                         itensAdd = false
 
+                    },
+                    onCriarNovoIngrediente = {
+                        criandoIngrediente = true
                     }
                 )
             }

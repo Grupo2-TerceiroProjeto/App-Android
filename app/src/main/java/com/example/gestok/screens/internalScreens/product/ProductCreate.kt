@@ -57,6 +57,7 @@ import androidx.compose.ui.platform.LocalContext
 import coil.compose.AsyncImage
 import com.example.gestok.components.productpage.IngredientAdd
 import com.example.gestok.components.productpage.IngredientBlock
+import com.example.gestok.components.productpage.IngredientCreate
 import com.example.gestok.screens.internalScreens.product.data.IngredientsBlock
 import com.example.gestok.screens.internalScreens.product.data.IngredientsProduct
 import com.example.gestok.screens.internalScreens.product.data.ProductStepData
@@ -133,6 +134,7 @@ fun ProductCreate(
     )
 
     var itensAdd by remember { mutableStateOf(false) }
+    var criandoIngrediente by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.limparErrosFormulario()
@@ -446,7 +448,16 @@ fun ProductCreate(
             }
         }
 
-        if (itensAdd) {
+        if (criandoIngrediente) {
+            item {
+                IngredientCreate(
+                    onSalvar = {
+                        criandoIngrediente = false
+                    }
+                )
+
+            }
+        } else if (itensAdd) {
             item {
 
                 IngredientAdd(
@@ -461,6 +472,9 @@ fun ProductCreate(
                         }
                         itensAdd = false
 
+                    },
+                    onCriarNovoIngrediente = {
+                        criandoIngrediente = true
                     }
                 )
             }

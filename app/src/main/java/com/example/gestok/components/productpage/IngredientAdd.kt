@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import com.example.gestok.screens.internalScreens.product.data.IngredientsData
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
+import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.MediumGray
 import com.example.gestok.ui.theme.White
@@ -48,7 +49,8 @@ import com.example.gestok.viewModel.product.ProductApiViewModel
 @Composable
 fun IngredientAdd(
     viewModel: ProductApiViewModel,
-    onConfirm: (List<IngredientsData>) -> Unit
+    onConfirm: (List<IngredientsData>) -> Unit,
+    onCriarNovoIngrediente: () -> Unit
 ) {
 
     var selectedIngredients by remember { mutableStateOf(setOf<IngredientsData>()) }
@@ -176,6 +178,16 @@ fun IngredientAdd(
                     .padding(top = 10.dp, bottom = 10.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
+                Button(
+                    onClick = { onCriarNovoIngrediente() },
+                    colors = ButtonDefaults.buttonColors(containerColor = LightBlue),
+                    modifier = Modifier.width(150.dp)
+                ) {
+                    Text("+ Ingrediente", color = White)
+                }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
                 Button(
                     onClick = { onConfirm(selectedIngredients.toList()) },
                     colors = ButtonDefaults.buttonColors(Blue),

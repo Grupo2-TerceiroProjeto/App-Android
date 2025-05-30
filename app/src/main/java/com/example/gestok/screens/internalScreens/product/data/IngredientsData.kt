@@ -32,4 +32,10 @@ data class IngredientsRecipe (
     val quantidade: Double
 )
 
+data class IngredientsCreate (
+    val nome: String,
+    val quantidade: Int,
+    val medida: Double,
+)
+
 
