@@ -46,7 +46,7 @@ fun EmailStep(navController: NavController, mainNavController: NavController) {
                     .padding(top = 5.dp))
 
             Input(
-                description = "Email",
+                text = "Email",
                 modifier = Modifier
                     .padding(top = 24.dp, bottom = 80.dp)
                     .align(Alignment.Start)

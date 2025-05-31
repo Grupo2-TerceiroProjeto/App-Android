@@ -6,8 +6,9 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.gestok.screens.internalScreens.dashboard.OrderData
-import com.example.gestok.screens.login.UserSession
+import com.example.gestok.screens.internalScreens.order.data.OrderData
+import com.example.gestok.screens.internalScreens.dashboard.data.OrderStatus
+import com.example.gestok.screens.login.data.UserSession
 
 abstract class DashboardViewModel(open val sessaoUsuario : UserSession) : ViewModel() {
 
@@ -31,15 +32,22 @@ abstract class DashboardViewModel(open val sessaoUsuario : UserSession) : ViewMo
     val mediaAvaliacao: Double
         get() = _mediaAvaliacao
 
-    fun limparErros() {
-        _dashboardErro = null
-    }
-
-    open fun getBuscarTodos() {}
+    open fun getPedidos() {}
 
     abstract fun getBuscarPedidosProximos7Dias(): List<OrderData>
 
     abstract fun getMediaAvaliacao()
 
+    abstract fun getValorMedioPedidos(): Double
+
+    abstract fun getFaturamentoMesAtual(): Double
+
+    abstract fun getFaturamentoMesAnterior(): Double
+
+    abstract fun getPedidosPorCategoria(): OrderStatus
+
+    abstract fun getFaturamentoUltimos6Meses(): Pair<List<Float>, List<String>>
+
+    abstract fun getPedidosPorMes(): Pair<List<Int>, List<String>>
 
 }
