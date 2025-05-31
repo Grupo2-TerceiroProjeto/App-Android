@@ -16,12 +16,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,13 +55,14 @@ import com.example.gestok.viewModel.product.ProductApiViewModel
 fun IngredientAdd(
     viewModel: ProductApiViewModel,
     onConfirm: (List<IngredientsData>) -> Unit,
-    onCriarNovoIngrediente: () -> Unit
+    onCriarNovoIngrediente: () -> Unit,
+    onEditarIngrediente: (IngredientsData) -> Unit
 ) {
 
     var selectedIngredients by remember { mutableStateOf(setOf<IngredientsData>()) }
 
     val errosIngrediente = viewModel.ingredientesErro
-    val ingredientes = viewModel.ingredientes
+    var ingredientes = viewModel.ingredientes
     val carregando = viewModel.carregouIngredientes
 
     LaunchedEffect(Unit) {
@@ -164,7 +170,36 @@ fun IngredientAdd(
                                 onCheckedChange = null
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(ingrediente.nome, color = Black)
+                            Text(
+                                ingrediente.nome,
+                                color = Black,
+                                modifier = Modifier.weight(1f)
+                            )
+                            IconButton(
+                                onClick = { onEditarIngrediente(ingrediente) }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Edit,
+                                    contentDescription = "Editar ingrediente",
+                                    tint = LightBlue
+                                )
+                            }
+
+                            IconButton(
+                                onClick = {
+                                    viewModel.deletarIngrediente(ingrediente.id) { sucesso ->
+                                        if (sucesso) {
+                                            viewModel.removerIngredienteLocal(ingrediente.id)
+                                        }
+                                    }
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = "Excluir ingrediente",
+                                    tint = Color.Red
+                                )
+                            }
                         }
                     }
                 }

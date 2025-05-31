@@ -23,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.components.InputLabel
 import com.example.gestok.screens.internalScreens.product.data.IngredientsBody
+import com.example.gestok.screens.internalScreens.product.data.IngredientsData
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
@@ -43,12 +43,11 @@ import com.example.gestok.ui.theme.White
 import com.example.gestok.viewModel.product.ProductApiViewModel
 
 @Composable
-fun IngredientCreate(
+fun IngredientsEdit(
     viewModel: ProductApiViewModel,
     onBack: () -> Unit,
-    idProduto : Int
+    ingrediente: IngredientsData,
 ) {
-
     val medidasMap = mapOf(
         1 to "g",
         2 to "ml",
@@ -56,16 +55,15 @@ fun IngredientCreate(
         4 to "unidade"
     )
 
-    var nome by remember { mutableStateOf("") }
-    var quantidade by remember { mutableIntStateOf(0) }
-    var medida by remember { mutableDoubleStateOf(0.0) }
-    var quantidadeTexto by remember { mutableStateOf("") }
-    var medidaSelecionada by remember { mutableStateOf("") }
+    var nome by remember { mutableStateOf(ingrediente.nome) }
+    var quantidade by remember { mutableIntStateOf(ingrediente.quantidade?.toInt() ?: 0) }
+    var medida by remember { mutableIntStateOf(ingrediente.medida.toInt()) }
+    var quantidadeTexto by remember { mutableStateOf(ingrediente.quantidade.toInt().toString()) }
 
-    val novoIngrediente = IngredientsBody(
+    val ingredienteEditado = IngredientsBody(
         nome = nome,
         quantidade = quantidade,
-        medida = medida
+        medida = medida.toDouble()
     )
 
     LaunchedEffect(Unit) {
@@ -99,7 +97,7 @@ fun IngredientCreate(
                 )
 
                 Text(
-                    "Novo Ingrediente",
+                    "Editar Ingrediente",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.W600,
                     color = Black,
@@ -147,14 +145,15 @@ fun IngredientCreate(
                 }
 
                 Column {
+                    var medidaSelecionada = medidasMap[medida.toInt()] ?: ""
+
                     SelectOption(
                         text = "Medida",
-                        value = if (medidaSelecionada.isEmpty()) "Selecione uma opção" else medidaSelecionada,
+                        value = medidaSelecionada,
                         onValueChange = { selectedMedida ->
                             medidaSelecionada = selectedMedida
-                            val idSelecionado =
-                                medidasMap.entries.find { it.value == selectedMedida }?.key
-                            medida = idSelecionado?.toDouble() ?: 0.0
+                            val idSelecionado = medidasMap.entries.find { it.value == selectedMedida }?.key
+                            medida = idSelecionado ?: 0
                         },
                         list = medidasMap.values.toList(),
                         erro = viewModel.medidaIngredienteErro
@@ -188,12 +187,7 @@ fun IngredientCreate(
                         Spacer(modifier = Modifier.width(12.dp))
 
                         Button(
-                            onClick = {
-                                viewModel.salvarIngrediente(
-                                idProduto,
-                                novoIngrediente,
-                                onBack
-                            ) },
+                            onClick = { viewModel.editarIngrediente(ingrediente.id, ingredienteEditado, onBack) },
                             colors = ButtonDefaults.buttonColors(Blue),
                         ) {
                             Icon(
@@ -202,18 +196,18 @@ fun IngredientCreate(
                                 tint = White
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Criar Ingrediente", color = White, fontSize = 16.sp)
+                            Text("Editar Ingrediente", color = White, fontSize = 16.sp)
                         }
 
 
                     }
 
-                    if (viewModel.cadastroIngredienteErro != null) {
+                    if (viewModel.edicaoIngredienteErro != null) {
                         Text(
-                            viewModel.cadastroIngredienteErro!!,
+                            viewModel.edicaoIngredienteErro!!,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.W600,
-                            color = Color(0xFFD32F2F)
+                            color = Color(0xFFD32F2F),
                         )
                     }
 

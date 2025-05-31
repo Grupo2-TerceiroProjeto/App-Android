@@ -310,9 +310,18 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
                     }
                 }
 
+                val ingredientesUnificados = ingredientesFiltrados
+                    .groupBy { it.id }
+                    .map { (_, itens) ->
+                        val primeiro = itens.first()
+                        primeiro.copy(
+                            quantidade = itens.sumOf { it.quantidade }
+                        )
+                    }
+
                 Log.d("API", "Receita obtida com sucesso")
 
-                onResult(ingredientesFiltrados)
+                onResult(ingredientesUnificados)
 
             } catch (e: Exception) {
                 Log.e("API", "Erro ao obter receita: ${e.message}")

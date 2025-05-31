@@ -57,7 +57,9 @@ import com.example.gestok.components.InputLabel
 import com.example.gestok.components.productpage.IngredientAdd
 import com.example.gestok.components.productpage.IngredientBlockExclude
 import com.example.gestok.components.productpage.IngredientCreate
+import com.example.gestok.components.productpage.IngredientsEdit
 import com.example.gestok.screens.internalScreens.product.data.IngredientsBlock
+import com.example.gestok.screens.internalScreens.product.data.IngredientsData
 import com.example.gestok.screens.internalScreens.product.data.IngredientsRecipe
 import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.screens.internalScreens.product.data.ProductStepEditData
@@ -149,6 +151,8 @@ fun ProductEdit(
 
     var itensAdd by remember { mutableStateOf(false) }
     var criandoIngrediente by remember { mutableStateOf(false) }
+    var editandoIngrediente by remember { mutableStateOf(false) }
+    var ingredienteEditado by remember { mutableStateOf<IngredientsData?>(null) }
     val carregandoReceita = viewModel.carregouReceita
 
     LaunchedEffect(Unit) {
@@ -543,8 +547,19 @@ fun ProductEdit(
                 )
 
             }
-        } else if (itensAdd) {
+        } else if (editandoIngrediente && ingredienteEditado != null) {
             item {
+                IngredientsEdit(
+                    viewModel = viewModel,
+                    onBack = {
+                        editandoIngrediente = false
+                        ingredienteEditado = null
+                    },
+                    ingrediente = ingredienteEditado!!
+                )
+            }
+        } else if (itensAdd) {
+                item {
 
                 IngredientAdd(
                     viewModel,
@@ -563,6 +578,10 @@ fun ProductEdit(
                     },
                     onCriarNovoIngrediente = {
                         criandoIngrediente = true
+                    },
+                    onEditarIngrediente = {
+                        ingredienteEditado = it
+                        editandoIngrediente = true
                     }
                 )
             }

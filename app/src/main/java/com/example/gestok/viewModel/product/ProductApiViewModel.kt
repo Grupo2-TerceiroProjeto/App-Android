@@ -8,7 +8,7 @@ import com.example.gestok.network.service.ProductService
 import com.example.gestok.screens.internalScreens.order.data.RecipeBody
 import com.example.gestok.screens.internalScreens.order.data.RecipeData
 import com.example.gestok.screens.internalScreens.product.data.CategoryData
-import com.example.gestok.screens.internalScreens.product.data.IngredientsCreate
+import com.example.gestok.screens.internalScreens.product.data.IngredientsBody
 import com.example.gestok.screens.internalScreens.product.data.IngredientsData
 import com.example.gestok.screens.internalScreens.product.data.IngredientsRecipe
 import com.example.gestok.screens.internalScreens.product.data.ProductCreateData
@@ -494,7 +494,7 @@ class ProductApiViewModel(private val api: ProductService, private val cloudinar
         }
     }
 
-    override fun salvarIngrediente(idProduto: Int, ingrediente: IngredientsCreate,  onBack: () -> Unit) {
+    override fun salvarIngrediente(idProduto: Int, ingrediente: IngredientsBody,  onBack: () -> Unit) {
         limparErrosFormularioIngrediente()
 
         var houveErro = false
@@ -507,7 +507,7 @@ class ProductApiViewModel(private val api: ProductService, private val cloudinar
             houveErro = true
         }
 
-        if (ingrediente.quantidade <= 0) {
+        if (ingrediente.quantidade == 0) {
             _quantidadeIngredienteErro = "Quantidade do ingrediente é obrigatória"
             houveErro = true
         }
@@ -537,6 +537,77 @@ class ProductApiViewModel(private val api: ProductService, private val cloudinar
             } catch (e: Exception) {
                 Log.e("API", "Erro ao conectar ao servidor: ${e.message}")
                 _cadastroIngredienteErro = "Erro ao conectar ao servidor"
+            }
+        }
+    }
+
+    override fun editarIngrediente(
+        idIngrediente: Int,
+        ingrediente: IngredientsBody,
+        onBack: () -> Unit
+    ) {
+        limparErrosFormularioIngrediente()
+
+        var houveErro = false
+
+        if (ingrediente.nome.isBlank()) {
+            _nomeIngredienteErro = "Nome do ingrediente é obrigatório"
+            houveErro = true
+        } else if (ingrediente.nome.length < 2) {
+            _nomeIngredienteErro = "Nome do ingrediente deve ter pelo menos 2 caracteres"
+            houveErro = true
+        }
+
+        if (ingrediente.quantidade == 0) {
+            _quantidadeIngredienteErro = "Quantidade do ingrediente é obrigatória"
+            houveErro = true
+        }
+
+        if (ingrediente.medida == 0.0) {
+            _medidaIngredienteErro = "Medida do ingrediente é obrigatória"
+            houveErro = true
+        }
+
+        if (houveErro) return
+
+        viewModelScope.launch {
+            try {
+
+                api.putIngrediente(ingrediente, idIngrediente)
+
+                Log.d("API", "Ingrediente editado com sucesso")
+
+                getIngredientes()
+                onBack()
+
+            } catch (e: HttpException) {
+                if (e.code() == 500) {}
+                Log.e("API", "Erro ao editar ingrediente: ${e.message}")
+                _edicaoIngredienteErro = "Erro ao editar ingrediente"
+
+            } catch (e: Exception) {
+                Log.e("API", "Erro ao conectar ao servidor: ${e.message}")
+                _edicaoIngredienteErro = "Erro ao conectar ao servidor"
+            }
+        }
+    }
+
+    override fun deletarIngrediente(idIngrediente: Int, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            try {
+                api.deleteIngrediente(idIngrediente)
+
+                Log.d("API", "Ingrediente excluído com sucesso")
+
+                onResult(true)
+
+            } catch (e: HttpException) {
+                if (e.code() == 500) {}
+                Log.e("API", "Erro ao excluir ingrediente: ${e.message}")
+                onResult(false)
+
+            } catch (e: Exception) {
+                Log.e("API", "Erro ao conectar ao servidor: ${e.message}")
             }
         }
     }

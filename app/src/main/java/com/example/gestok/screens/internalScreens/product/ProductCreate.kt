@@ -58,7 +58,9 @@ import coil.compose.AsyncImage
 import com.example.gestok.components.productpage.IngredientAdd
 import com.example.gestok.components.productpage.IngredientBlock
 import com.example.gestok.components.productpage.IngredientCreate
+import com.example.gestok.components.productpage.IngredientsEdit
 import com.example.gestok.screens.internalScreens.product.data.IngredientsBlock
+import com.example.gestok.screens.internalScreens.product.data.IngredientsData
 import com.example.gestok.screens.internalScreens.product.data.IngredientsProduct
 import com.example.gestok.screens.internalScreens.product.data.ProductStepData
 import java.io.File
@@ -135,6 +137,8 @@ fun ProductCreate(
 
     var itensAdd by remember { mutableStateOf(false) }
     var criandoIngrediente by remember { mutableStateOf(false) }
+    var editandoIngrediente by remember { mutableStateOf(false) }
+    var ingredienteEditado by remember { mutableStateOf<IngredientsData?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.limparErrosFormulario()
@@ -459,6 +463,17 @@ fun ProductCreate(
                 )
 
             }
+        } else if (editandoIngrediente && ingredienteEditado != null) {
+            item {
+                IngredientsEdit(
+                    viewModel = viewModel,
+                    onBack = {
+                        editandoIngrediente = false
+                        ingredienteEditado = null
+                    },
+                    ingrediente = ingredienteEditado!!
+                )
+            }
         } else if (itensAdd) {
             item {
 
@@ -477,6 +492,10 @@ fun ProductCreate(
                     },
                     onCriarNovoIngrediente = {
                         criandoIngrediente = true
+                    },
+                    onEditarIngrediente = {
+                        ingredienteEditado = it
+                        editandoIngrediente = true
                     }
                 )
             }
