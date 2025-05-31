@@ -1,15 +1,14 @@
 package com.example.gestok.viewModel.order
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.gestok.screens.internalScreens.order.data.IngredientsFormat
 import com.example.gestok.screens.internalScreens.order.data.OrderCreateData
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.screens.internalScreens.order.data.OrderEditData
-import com.example.gestok.screens.internalScreens.order.data.ProductData
+import com.example.gestok.screens.internalScreens.product.data.IngredientsFormat
+import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.screens.login.data.UserSession
 
 abstract class OrderViewModel(open val sessaoUsuario : UserSession) : ViewModel() {
@@ -36,7 +35,9 @@ abstract class OrderViewModel(open val sessaoUsuario : UserSession) : ViewModel(
 
     protected var _itensErro by mutableStateOf<String?>(null)
 
-    var _receita = mutableListOf<IngredientsFormat>()
+    protected var _cadastroErro by mutableStateOf<String?>(null)
+
+    protected var _edicaoErro by mutableStateOf<String?>(null)
 
     val pedidosErro: String?
         get() = _pedidosErro
@@ -71,17 +72,11 @@ abstract class OrderViewModel(open val sessaoUsuario : UserSession) : ViewModel(
     val itensErro : String?
         get() = _itensErro
 
-    val receita : List<IngredientsFormat>
-        get() = _receita.toList()
+    val cadastroErro : String?
+        get() = _cadastroErro
 
-
-    fun limparErros() {
-        _pedidosErro = null
-    }
-
-    fun limparErrosProdutos() {
-       _produtosErro = null
-    }
+    val edicaoErro : String?
+        get() = _edicaoErro
 
     fun limparErrosFormulario() {
         _nomeSolicitanteErro = null
@@ -89,6 +84,8 @@ abstract class OrderViewModel(open val sessaoUsuario : UserSession) : ViewModel(
         _statusErro = null
         _dataEntregaErro = null
         _itensErro = null
+        _cadastroErro = null
+        _edicaoErro = null
     }
 
     open fun getPedidos() {}

@@ -23,7 +23,7 @@ import java.util.Locale
 class DashboardApiViewModel(private val api: DashboardService, override val sessaoUsuario : UserSession) : DashboardViewModel(sessaoUsuario) {
 
     override fun getPedidos() {
-        limparErros()
+        _dashboardErro = null
 
         viewModelScope.launch {
             try {
@@ -86,7 +86,7 @@ class DashboardApiViewModel(private val api: DashboardService, override val sess
     }
 
     override fun getMediaAvaliacao() {
-        limparErros()
+        _dashboardErro = null
 
         var avaliacoes = mutableStateListOf<AssessmentData>()
 

@@ -4,14 +4,17 @@ import com.example.gestok.network.service.AdminService
 import com.example.gestok.network.service.AuthService
 import com.example.gestok.network.service.DashboardService
 import com.example.gestok.network.service.OrderService
+import com.example.gestok.network.service.ProductService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object ApiClient {
+object ApiBackend {
 
-    private const val BASE_URL = "http://192.168.2.104:8080/" //Mude para o IP da sua Máquina
+//    private const val BASE_URL = "http://13.216.144.118/api/"
+
+    private const val BASE_URL = "http://localhost:8080/"
 
     fun getApi(token: String? = null): Retrofit {
         val logInterceptor = HttpLoggingInterceptor()
@@ -49,4 +52,10 @@ object ApiClient {
     fun adminService(token: String): AdminService {
         return getApi(token).create(AdminService::class.java)
     }
+
+    fun productService(token: String): ProductService {
+        return getApi(token).create(ProductService::class.java)
+    }
+
+
 }

@@ -1,11 +1,13 @@
 package com.example.gestok.di
 
-import com.example.gestok.network.ApiClient
+import com.example.gestok.network.ApiBackend
+import com.example.gestok.network.ApiCloudinary
 import com.example.gestok.screens.login.data.UserSession
 import com.example.gestok.viewModel.admin.AdminApiViewModel
 import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
 import com.example.gestok.viewModel.login.LoginApiViewModel
 import com.example.gestok.viewModel.order.OrderApiViewModel
+import com.example.gestok.viewModel.product.ProductApiViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -20,25 +22,35 @@ val moduloApi = module {
 
 
     factory {
-        ApiClient.authService()
+        ApiBackend.authService()
     }
 
     factory {
-        ApiClient.dashboardService(
+        ApiBackend.dashboardService(
             get<UserSession>().token
         )
     }
 
     factory {
-        ApiClient.orderService(
+        ApiBackend.orderService(
             get<UserSession>().token
         )
     }
 
     factory {
-        ApiClient.adminService(
+        ApiBackend.adminService(
             get<UserSession>().token
         )
+    }
+
+    factory {
+        ApiBackend.productService(
+            get<UserSession>().token
+        )
+    }
+
+    factory {
+        ApiCloudinary.cloudinaryService()
     }
 
     viewModel {
@@ -55,6 +67,10 @@ val moduloApi = module {
 
     viewModel {
         AdminApiViewModel(get(), get())
+    }
+
+    viewModel {
+        ProductApiViewModel(get(), get(), get())
     }
 
 

@@ -1,4 +1,4 @@
-package com.example.gestok.components.orderpage
+package com.example.gestok.components.productpage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -24,7 +24,6 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,11 +42,11 @@ import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.MediumGray
 import com.example.gestok.ui.theme.White
-import com.example.gestok.viewModel.order.OrderApiViewModel
+import com.example.gestok.viewModel.product.ProductApiViewModel
 
 @Composable
-fun ItensAdd(
-    viewModel: OrderApiViewModel,
+fun ProductAdd(
+    viewModel: ProductApiViewModel,
     onConfirm: (List<ProductData>) -> Unit
 ) {
 
@@ -57,17 +56,13 @@ fun ItensAdd(
     val produtos = viewModel.produtos
     val carregando = viewModel.carregouProdutos
 
-    LaunchedEffect(Unit) {
-        viewModel.getProdutos()
-    }
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .then(
-                if (!carregando) Modifier.height(200.dp)
-                else if (produtos.isEmpty()) Modifier.height(200.dp)
-                else Modifier.height(320.dp)
+                if (!carregando) Modifier.height(400.dp)
+                else if (produtos.isEmpty()) Modifier.height(400.dp)
+                else Modifier.height(550.dp)
             ),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
     ) {
@@ -108,7 +103,7 @@ fun ItensAdd(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
+                        .height(400.dp)
                         .wrapContentSize(Alignment.Center)
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -162,7 +157,7 @@ fun ItensAdd(
                                 onCheckedChange = null
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(produto.nome + " " + "R$ " + produto.preco, color = Black)
+                            Text(produto.nome, color = Black)
                         }
                     }
                 }
@@ -173,7 +168,7 @@ fun ItensAdd(
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .padding(top = 10.dp, bottom = 10.dp),
+                    .padding(top = 25.dp, bottom = 10.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(

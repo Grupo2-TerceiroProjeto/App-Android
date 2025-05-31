@@ -6,6 +6,7 @@ data class LoginUser(
 )
 
 data class UserSession(
+    var id: Int = 0,
     var nome: String = "",
     var login: String = "",
     var cargo: String = "",

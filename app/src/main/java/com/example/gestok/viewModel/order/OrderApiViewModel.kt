@@ -1,16 +1,15 @@
 package com.example.gestok.viewModel.order
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.viewModelScope
 import com.example.gestok.network.service.OrderService
-import com.example.gestok.screens.internalScreens.order.data.IngredientsData
-import com.example.gestok.screens.internalScreens.order.data.IngredientsFormat
 import com.example.gestok.screens.internalScreens.order.data.OrderCreateData
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.screens.internalScreens.order.data.OrderEditData
-import com.example.gestok.screens.internalScreens.order.data.ProductData
 import com.example.gestok.screens.internalScreens.order.data.RecipeData
+import com.example.gestok.screens.internalScreens.product.data.IngredientsData
+import com.example.gestok.screens.internalScreens.product.data.IngredientsFormat
+import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.screens.login.data.UserSession
 import com.example.gestok.utils.formatDateApi
 import kotlinx.coroutines.delay
@@ -25,7 +24,7 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
     OrderViewModel(sessaoUsuario) {
 
     override fun getPedidos() {
-        limparErros()
+        _pedidosErro = null
 
         viewModelScope.launch {
             try {
@@ -75,7 +74,7 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
     }
 
     override fun getProdutos() {
-        limparErrosProdutos()
+        _produtosErro = null
 
         viewModelScope.launch {
             try {
@@ -182,10 +181,12 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
 
             } catch (e: HttpException) {
                 if (e.code() == 400) {}
-                Log.d("API", "Erro ao cadastrar pedido: ${e.message}")
+                Log.e("API", "Erro ao cadastrar pedido: ${e.message}")
+                _cadastroErro = "Erro ao cadastrar pedido"
 
             } catch (e: Exception) {
-                Log.d("API", "Erro ao conectar ao servidor: ${e.message}")
+                Log.e("API", "Erro ao conectar ao servidor: ${e.message}")
+                _cadastroErro = "Erro ao conectar ao servidor"
             }
         }
     }
@@ -257,10 +258,12 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
 
             } catch (e: HttpException) {
                 if (e.code() == 400 || e.code() == 401) {}
-                Log.d("API", "Erro ao editar pedido: ${e.message}")
+                Log.e("API", "Erro ao editar pedido: ${e.message}")
+                _edicaoErro = "Erro ao editar pedido"
 
             } catch (e: Exception) {
-                Log.d("API", "Erro ao conectar ao servidor: ${e.message}")
+                Log.e("API", "Erro ao conectar ao servidor: ${e.message}")
+                _edicaoErro = "Erro ao conectar ao servidor"
             }
         }
     }
@@ -312,7 +315,7 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
                 onResult(ingredientesFiltrados)
 
             } catch (e: Exception) {
-                Log.d("API", "Erro ao obter receita: ${e.message}")
+                Log.e("API", "Erro ao obter receita: ${e.message}")
                 onResult(emptyList())
             }
         }

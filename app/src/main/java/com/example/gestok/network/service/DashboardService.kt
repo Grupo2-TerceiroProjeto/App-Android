@@ -11,7 +11,7 @@ interface DashboardService {
     @GET("pedidos/buscar-todos")
     suspend fun getPedidos(): List<OrderData>
 
-    @GET("/avaliacoes/listar-todos/{idEmpresa}")
+    @GET("avaliacoes/listar-todos/{idEmpresa}")
     suspend fun getAvaliacoes(@Path("idEmpresa") idEmpresa:Int): Response<ResponseBody>
 
 }

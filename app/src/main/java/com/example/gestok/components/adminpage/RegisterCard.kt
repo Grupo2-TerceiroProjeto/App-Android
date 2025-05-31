@@ -38,7 +38,8 @@ fun RegisterCard(
     funcionario: RegisterData,
     currentPage: MutableState<String>,
     selectedRegister: MutableState<RegisterData?>,
-    viewModel: AdminApiViewModel
+    viewModel: AdminApiViewModel,
+    excluirHabilitado: Boolean
 ) {
 
     var showExcludeConfirmDialog by remember { mutableStateOf(false) }
@@ -84,15 +85,24 @@ fun RegisterCard(
 
                     IconButton(
                         onClick = {showExcludeConfirmDialog = true},
+                        enabled = excluirHabilitado,
                         modifier = Modifier
                             .height(50.dp)
 
 
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.trashcan_f),
-                            contentDescription = "Excluir",
-                        )
+                        if(!excluirHabilitado) {
+                            Image(
+                                painter = painterResource(id = R.drawable.trashcan_disable),
+                                contentDescription = "Excluir",
+                            )
+                        }else {
+
+                            Image(
+                                painter = painterResource(id = R.drawable.trashcan_f),
+                                contentDescription = "Excluir",
+                            )
+                        }
                     }
 
                 }
@@ -140,8 +150,9 @@ fun RegisterCard(
         ExcludeConfirmationDialog(
             onDismiss = { showExcludeConfirmDialog = false },
             onConfirm = {
-                viewModel.deletarFuncionario(funcionario.id)
-                showExcludeConfirmDialog = false
+                viewModel.deletarFuncionario(funcionario.id, onBack = {
+                    showExcludeConfirmDialog = false
+                })
             }
         )
     }

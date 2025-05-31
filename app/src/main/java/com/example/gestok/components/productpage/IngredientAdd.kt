@@ -1,4 +1,4 @@
-package com.example.gestok.components.orderpage
+package com.example.gestok.components.productpage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -37,28 +37,30 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.gestok.screens.internalScreens.product.data.ProductData
+import com.example.gestok.screens.internalScreens.product.data.IngredientsData
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
+import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.MediumGray
 import com.example.gestok.ui.theme.White
-import com.example.gestok.viewModel.order.OrderApiViewModel
+import com.example.gestok.viewModel.product.ProductApiViewModel
 
 @Composable
-fun ItensAdd(
-    viewModel: OrderApiViewModel,
-    onConfirm: (List<ProductData>) -> Unit
+fun IngredientAdd(
+    viewModel: ProductApiViewModel,
+    onConfirm: (List<IngredientsData>) -> Unit,
+    onCriarNovoIngrediente: () -> Unit
 ) {
 
-    var selectedProducts by remember { mutableStateOf(setOf<ProductData>()) }
+    var selectedIngredients by remember { mutableStateOf(setOf<IngredientsData>()) }
 
-    val errosProduto = viewModel.produtosErro
-    val produtos = viewModel.produtos
-    val carregando = viewModel.carregouProdutos
+    val errosIngrediente = viewModel.ingredientesErro
+    val ingredientes = viewModel.ingredientes
+    val carregando = viewModel.carregouIngredientes
 
     LaunchedEffect(Unit) {
-        viewModel.getProdutos()
+        viewModel.getIngredientes()
     }
 
     Card(
@@ -66,7 +68,7 @@ fun ItensAdd(
             .fillMaxWidth()
             .then(
                 if (!carregando) Modifier.height(200.dp)
-                else if (produtos.isEmpty()) Modifier.height(200.dp)
+                else if (ingredientes.isEmpty()) Modifier.height(200.dp)
                 else Modifier.height(320.dp)
             ),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
@@ -78,14 +80,14 @@ fun ItensAdd(
         ) {
 
             Text(
-                "Produtos",
+                "Todos os ingredientes",
                 Modifier.padding(start = 20.dp),
                 color = Blue,
                 fontWeight = W600,
                 fontSize = 16.sp
             )
 
-            if (errosProduto != null)
+            if (errosIngrediente != null)
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -93,7 +95,7 @@ fun ItensAdd(
                         .wrapContentSize(Alignment.Center)
                 ) {
                     Text(
-                        text = errosProduto,
+                        text = errosIngrediente,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.W600,
                         color = Color.Red,
@@ -114,19 +116,19 @@ fun ItensAdd(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         CircularProgressIndicator()
                         Spacer(modifier = Modifier.height(10.dp))
-                        Text("Carregando Produtos...", color = MediumGray)
+                        Text("Carregando Ingredientes...", color = MediumGray)
                     }
                 }
             }
 
-            produtos.isEmpty() -> {
+            ingredientes.isEmpty() -> {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight()
                         .wrapContentSize(Alignment.Center)
                 ) {
-                    Text("Nenhum produto cadastrado", color = MediumGray)
+                    Text("Nenhum ingrediente cadastrado", color = MediumGray)
                 }
             }
 
@@ -137,7 +139,7 @@ fun ItensAdd(
                         .weight(1f)
                         .padding(horizontal = 20.dp)
                 ) {
-                    items(produtos) { produto ->
+                    items(ingredientes) { ingrediente ->
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
@@ -146,23 +148,23 @@ fun ItensAdd(
                                 .clip(RoundedCornerShape(12.dp))
                                 .background(LightGray)
                                 .toggleable(
-                                    value = selectedProducts.contains(produto),
+                                    value = selectedIngredients.contains(ingrediente),
                                     onValueChange = {
-                                        selectedProducts = if (it) {
-                                            selectedProducts + produto
+                                        selectedIngredients = if (it) {
+                                            selectedIngredients + ingrediente
                                         } else {
-                                            selectedProducts - produto
+                                            selectedIngredients - ingrediente
                                         }
                                     }
                                 )
                                 .padding(horizontal = 12.dp, vertical = 10.dp)
                         ) {
                             Checkbox(
-                                checked = selectedProducts.contains(produto),
+                                checked = selectedIngredients.contains(ingrediente),
                                 onCheckedChange = null
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(produto.nome + " " + "R$ " + produto.preco, color = Black)
+                            Text(ingrediente.nome, color = Black)
                         }
                     }
                 }
@@ -177,7 +179,17 @@ fun ItensAdd(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(
-                    onClick = { onConfirm(selectedProducts.toList()) },
+                    onClick = { onCriarNovoIngrediente() },
+                    colors = ButtonDefaults.buttonColors(containerColor = LightBlue),
+                    modifier = Modifier.width(150.dp)
+                ) {
+                    Text("+ Ingrediente", color = White)
+                }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Button(
+                    onClick = { onConfirm(selectedIngredients.toList()) },
                     colors = ButtonDefaults.buttonColors(Blue),
                     modifier = Modifier.width(150.dp)
                 ) {
@@ -188,3 +200,8 @@ fun ItensAdd(
     }
 
 }
+
+
+
+
+

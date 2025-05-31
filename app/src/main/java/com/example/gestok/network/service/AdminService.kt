@@ -19,9 +19,9 @@ interface AdminService {
     @POST("funcionarios/register")
     suspend fun post(@Body funcionario: RegisterCreateData): RegisterCreateData
 
-    @PUT("/funcionarios")
+    @PUT("funcionarios")
     suspend fun put(@Body funcionario: RegisterEditData) : RegisterEditData
 
-    @DELETE("/funcionarios/{idFuncionario}")
+    @DELETE("funcionarios/{idFuncionario}")
     suspend fun delete(@Path("idFuncionario") idFuncionario:Int)
 }

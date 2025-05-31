@@ -6,3 +6,9 @@ class RecipeData (
     val ingrediente: Int,
     val produto: Int
 )
+
+class RecipeBody (
+    val quantidade: Double,
+    val idIngrediente: Int,
+    val idProduto: Int
+)
