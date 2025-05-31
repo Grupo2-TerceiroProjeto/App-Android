@@ -515,9 +515,9 @@ fun ProductEdit(
                                     Text("Salvar", color = White, fontSize = 16.sp)
                                 }
 
-                                if (viewModel.cadastroErro != null) {
+                                if (viewModel.edicaoErro != null) {
                                     Text(
-                                        viewModel.cadastroErro!!,
+                                        viewModel.edicaoErro!!,
                                         fontSize = 13.sp,
                                         fontWeight = FontWeight.W600,
                                         color = Color(0xFFD32F2F),
@@ -535,9 +535,11 @@ fun ProductEdit(
         if (criandoIngrediente) {
             item {
                 IngredientCreate(
-                    onSalvar = {
+                    viewModel,
+                    onBack = {
                         criandoIngrediente = false
-                    }
+                    },
+                    product.id
                 )
 
             }

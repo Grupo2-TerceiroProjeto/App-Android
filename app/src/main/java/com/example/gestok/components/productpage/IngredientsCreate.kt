@@ -39,10 +39,13 @@ import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.White
+import com.example.gestok.viewModel.product.ProductApiViewModel
 
 @Composable
 fun IngredientCreate(
-    onSalvar: () -> Unit
+    viewModel: ProductApiViewModel,
+    onBack: () -> Unit,
+    idProduto : Int
 ) {
 
     val medidasMap = mapOf(
@@ -67,7 +70,7 @@ fun IngredientCreate(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(480.dp),
+            .height(500.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
     ) {
         Column(
@@ -119,6 +122,7 @@ fun IngredientCreate(
                             nome = filtered
                         },
                         keyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
+                        erro = viewModel.nomeIngredienteErro,
                         maxLength = 45,
                     )
                 }
@@ -132,6 +136,7 @@ fun IngredientCreate(
                             quantidade = it.toIntOrNull() ?: 0
                         },
                         keyboardType = androidx.compose.ui.text.input.KeyboardType.Number,
+                        erro = viewModel.quantidadeIngredienteErro,
                         maxLength = 15
                     )
                 }
@@ -146,47 +151,71 @@ fun IngredientCreate(
                                 medidasMap.entries.find { it.value == selectedMedida }?.key
                             medida = idSelecionado?.toDouble() ?: 0.0
                         },
-                        list = medidasMap.values.toList()
+                        list = medidasMap.values.toList(),
+                        erro = viewModel.medidaIngredienteErro
                     )
                 }
 
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(top = 10.dp, bottom = 10.dp),
-                    horizontalArrangement = Arrangement.Center
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    Button(
-                        onClick = { onSalvar() },
-                        colors = ButtonDefaults.buttonColors(LightBlue),
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(top = 10.dp, bottom = 10.dp),
+                        horizontalArrangement = Arrangement.Center
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardReturn,
-                            contentDescription = null,
-                            tint = White
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Voltar", color = White, fontSize = 16.sp)
+
+                        Button(
+                            onClick = {onBack()},
+                            colors = ButtonDefaults.buttonColors(LightBlue),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.KeyboardReturn,
+                                contentDescription = null,
+                                tint = White
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Voltar", color = White, fontSize = 16.sp)
+                        }
+
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        Button(
+                            onClick = {
+                                viewModel.salvarIngrediente(
+                                idProduto,
+                                novoIngrediente,
+                                onBack
+                            ) },
+                            colors = ButtonDefaults.buttonColors(Blue),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Check,
+                                contentDescription = null,
+                                tint = White
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Criar Ingrediente", color = White, fontSize = 16.sp)
+                        }
+
+
                     }
 
-                    Spacer(modifier = Modifier.width(12.dp))
-
-                    Button(
-                        onClick = { onSalvar() },
-                        colors = ButtonDefaults.buttonColors(Blue),
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Check,
-                            contentDescription = null,
-                            tint = White
+                    if (viewModel.cadastroIngredienteErro != null) {
+                        Text(
+                            viewModel.cadastroIngredienteErro!!,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.W600,
+                            color = Color(0xFFD32F2F),
+                            modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Criar Ingrediente", color = White, fontSize = 16.sp)
                     }
+
                 }
-
             }
+
         }
 
     }

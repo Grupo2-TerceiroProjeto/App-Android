@@ -33,7 +33,7 @@ interface ProductService {
     suspend fun getReceitas(): List<RecipeData>
 
     @POST("ingredientes/{idProduto}")
-    suspend fun postIngredientes(@Path("idProduto") idProduto:Int, @Body ingrediente: IngredientsCreate): IngredientsCreate
+    suspend fun postIngrediente(@Path("idProduto") idProduto:Int, @Body ingrediente: IngredientsCreate): IngredientsCreate
 
     @POST("receitas")
     suspend fun postReceita(@Body receita: RecipeBody): RecipeBody

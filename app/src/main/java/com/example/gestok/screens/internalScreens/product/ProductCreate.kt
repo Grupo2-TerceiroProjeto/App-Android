@@ -451,9 +451,11 @@ fun ProductCreate(
         if (criandoIngrediente) {
             item {
                 IngredientCreate(
-                    onSalvar = {
+                    viewModel,
+                    onBack = {
                         criandoIngrediente = false
-                    }
+                    },
+                    viewModel.produtos[0].id
                 )
 
             }
