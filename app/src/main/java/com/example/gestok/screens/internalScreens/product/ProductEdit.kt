@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -458,7 +459,7 @@ fun ProductEdit(
                         LazyColumn(
                             modifier = Modifier
                                 .padding(start = 20.dp, end = 20.dp, top = 24.dp)
-                                .height(240.dp),
+                                .heightIn(max = 240.dp),
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             items(ingredientes.size) { index ->
@@ -564,7 +565,9 @@ fun ProductEdit(
                 IngredientAdd(
                     viewModel,
                     onConfirm = { selectedIngredients ->
-                        ingredientes = ingredientes + selectedIngredients.map {
+                        val novosIngredientes = selectedIngredients.filter { selected ->
+                            ingredientes.none { existing -> existing.idIngrediente == selected.id }
+                        }.map {
                             IngredientsRecipe(
                                 id = 0,
                                 idIngrediente = it.id,
@@ -573,8 +576,9 @@ fun ProductEdit(
                             )
                         }
 
-                        itensAdd = false
+                        ingredientes = ingredientes + novosIngredientes
 
+                        itensAdd = false
                     },
                     onCriarNovoIngrediente = {
                         criandoIngrediente = true

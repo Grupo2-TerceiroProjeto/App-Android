@@ -6,6 +6,8 @@ import com.example.gestok.network.service.OrderService
 import com.example.gestok.screens.internalScreens.order.data.OrderCreateData
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.screens.internalScreens.order.data.OrderEditData
+import com.example.gestok.screens.internalScreens.order.data.OrderItens
+import com.example.gestok.screens.internalScreens.order.data.OrderItensBlock
 import com.example.gestok.screens.internalScreens.order.data.RecipeData
 import com.example.gestok.screens.internalScreens.product.data.IngredientsData
 import com.example.gestok.screens.internalScreens.product.data.IngredientsFormat
@@ -191,7 +193,7 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
         }
     }
 
-    override fun editarPedido(pedido: OrderEditData, idPedido: Int, onBack: () -> Unit, onSucess: () -> Unit) {
+    override fun editarPedido(pedido: OrderEditData, excluidosFiltrados: List<OrderItens>, idPedido: Int, onBack: () -> Unit, onSucess: () -> Unit) {
         limparErrosFormulario()
 
         var houveErro = false
@@ -242,9 +244,17 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
 
         viewModelScope.launch {
             try {
+                val todosProdutos = pedido.produtos + excluidosFiltrados.map {
+                    OrderItensBlock(nome = it.nome, quantidade = 0)
+                }
 
                 val dataConvertida = formatDateApi(pedido.dataEntrega)
-                val pedidoFormatado = pedido.copy(dataEntrega = dataConvertida)
+
+                val pedidoFormatado = pedido.copy(
+                    dataEntrega = dataConvertida,
+                    produtos = todosProdutos
+                )
+
 
                 api.put(pedidoFormatado, idPedido)
 

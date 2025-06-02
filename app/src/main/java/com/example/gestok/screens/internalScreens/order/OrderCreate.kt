@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -274,14 +275,19 @@ fun OrderCreate(
                     LazyColumn(
                         modifier = Modifier
                             .padding(start = 20.dp, end = 20.dp, top = 24.dp)
-                            .height(250.dp),
+                            .heightIn(max = 250.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         items(produtos.size) { index ->
                             val item = produtos[index]
                             ItensBlock(
                                 listOf(OrderItensBlock(nome = item.nome, quantidade = item.quantidade)),
-                                updateQuantidade = { _, newQtd -> updateQuantidade(index, newQtd) }
+                                updateQuantidade = { _, newQtd -> updateQuantidade(index, newQtd) },
+                                onExcluirClick = {
+                                    produtos = produtos.toMutableList().apply {
+                                        removeAt(index)
+                                    }
+                                },
                             )
                         }
                     }
@@ -325,18 +331,21 @@ fun OrderCreate(
                 ItensAdd(
                     viewModel,
                     onConfirm = { selectedProducts ->
-                        produtos = produtos + selectedProducts.map {
-                            OrderItensCreate(
-                                nome = it.nome,
-                                categoria = it.categoria,
-                                preco = it.preco,
-                                quantidade = 0,
-                                emProducao = it.emProducao,
-                                imagem = it.imagem ?: "",
-                            )
-                        }
+                        produtos = produtos + selectedProducts
+                            .filter { selected ->
+                                produtos.none { it.nome == selected.nome }
+                            }
+                            .map {
+                                OrderItensCreate(
+                                    nome = it.nome,
+                                    categoria = it.categoria,
+                                    preco = it.preco,
+                                    quantidade = 0,
+                                    emProducao = it.emProducao,
+                                    imagem = it.imagem ?: "",
+                                )
+                            }
                         itensAdd = false
-
                     }
                 )
             }

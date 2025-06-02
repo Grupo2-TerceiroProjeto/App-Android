@@ -51,12 +51,13 @@ import android.net.Uri
 import android.webkit.MimeTypeMap
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material.icons.filled.ArrowCircleUp
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.AsyncImage
 import com.example.gestok.components.productpage.IngredientAdd
-import com.example.gestok.components.productpage.IngredientBlock
+import com.example.gestok.components.productpage.IngredientBlockExclude
 import com.example.gestok.components.productpage.IngredientCreate
 import com.example.gestok.components.productpage.IngredientsEdit
 import com.example.gestok.screens.internalScreens.product.data.IngredientsBlock
@@ -407,14 +408,19 @@ fun ProductCreate(
                     LazyColumn(
                         modifier = Modifier
                             .padding(start = 20.dp, end = 20.dp, top = 24.dp)
-                            .height(250.dp),
+                            .heightIn(max  = 250.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         items(ingredientes.size) { index ->
                             val item = ingredientes[index]
-                            IngredientBlock(
+                            IngredientBlockExclude (
                                 listOf(IngredientsBlock(nome = item.nome, quantidade = item.quantidade.toInt())),
-                                updateQuantidade = { _, newQtd -> updateQuantidade(index, newQtd) }
+                                updateQuantidade = { _, newQtd -> updateQuantidade(index, newQtd) },
+                                onExcluirClick = {
+                                    ingredientes = ingredientes.toMutableList().apply {
+                                        removeAt(index)
+                                    }
+                                }
                             )
                         }
                     }
@@ -480,15 +486,19 @@ fun ProductCreate(
                 IngredientAdd(
                     viewModel,
                     onConfirm = { selectedIngredients ->
-                        ingredientes = ingredientes + selectedIngredients.map {
+                        val novosIngredientes = selectedIngredients.filter { selected ->
+                            ingredientes.none { existing -> existing.id == selected.id }
+                        }.map {
                             IngredientsProduct(
                                 id = it.id,
                                 nome = it.nome,
                                 quantidade = 0.0
                             )
                         }
-                        itensAdd = false
 
+                        ingredientes = ingredientes + novosIngredientes
+
+                        itensAdd = false
                     },
                     onCriarNovoIngrediente = {
                         criandoIngrediente = true
