@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.AuthActivity
 import com.example.gestok.R
-import com.example.gestok.screens.login.UserSession
+import com.example.gestok.screens.login.data.UserSession
 import org.koin.compose.koinInject
 
 @Composable
@@ -42,13 +43,14 @@ fun Topbar(
                 end = 23.dp
             ),
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
 
 
     ){
         Text (text = "Olá, ${sessaoUsuario.nome}",
             color = Color.White,
             fontSize = 20.sp,
-            modifier = Modifier.padding(end = 210.dp)
+
         )
 
         IconButton(onClick = {

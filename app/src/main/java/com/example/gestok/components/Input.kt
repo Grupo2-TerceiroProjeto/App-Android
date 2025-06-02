@@ -13,7 +13,7 @@ import com.example.gestok.ui.theme.Black
 
 @Composable
 fun Input(
-    description: String,
+    text: String,
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
@@ -29,7 +29,7 @@ fun Input(
         modifier = modifier,
         value = value,
         onValueChange = onValueChange,
-        label = { Text(description, color = Black, fontWeight = FontWeight.Bold) },
+        label = { Text(text, color = Black, fontWeight = FontWeight.Bold) },
         textStyle = textStyle?.copy(color = Black) ?: TextStyle(color = Black),
         singleLine = singleLine,
         visualTransformation = visualTransformation,

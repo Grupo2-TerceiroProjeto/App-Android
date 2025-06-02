@@ -1,6 +1,6 @@
 package com.example.gestok.screens.internalScreens.dashboard
 
-import android.util.Log
+import SkeletonLoader
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -35,13 +36,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gestok.components.LineChartScreen
 import com.example.gestok.components.PieChartScreen
+import com.example.gestok.screens.internalScreens.dashboard.data.OrderStatus
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.LightGray
 import com.example.gestok.ui.theme.White
 import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
-import org.koin.compose.koinInject
+import java.util.Locale;
 
 @Composable
 fun Dashboard(
@@ -56,25 +58,37 @@ fun Dashboard(
     var kpiFaturamentoMesAtual by remember { mutableDoubleStateOf(0.0) }
     var kpiFaturamentoMesAnterior by remember { mutableDoubleStateOf(0.0) }
 
+    var pedidosPorStatus by remember {
+        mutableStateOf(OrderStatus(0f, 0f, 0f, 0f))
+    }
+
+    val (faturamentos, meses) = viewModel.getFaturamentoUltimos6Meses()
+    val (quantidadesPedidos, mesesPedidos) = viewModel.getPedidosPorMes()
+
     val erroDashboard = viewModel.dashboardErro
 
     LaunchedEffect(Unit) {
-        viewModel.getBuscarTodos()
-        viewModel.getMediaAvaliacao()
+        viewModel.getPedidos()
     }
 
     LaunchedEffect(viewModel.carregouPedidos) {
         if (viewModel.carregouPedidos) {
 
-            kpiPedidosAbertos =  viewModel.getBuscarPedidosProximos7Dias().size
-        }
+            kpiPedidosAbertos = viewModel.getBuscarPedidosProximos7Dias().size
+            kpiValorMedioPedidos = viewModel.getValorMedioPedidos()
+            kpiFaturamentoMesAtual = viewModel.getFaturamentoMesAtual()
+            kpiFaturamentoMesAnterior = viewModel.getFaturamentoMesAnterior()
+            pedidosPorStatus = viewModel.getPedidosPorCategoria()
 
-        kpiMediaAvaliacao = viewModel.mediaAvaliacao
+            viewModel.getMediaAvaliacao()
+
+        }
     }
+
+    kpiMediaAvaliacao = viewModel.mediaAvaliacao
 
     LazyColumn(
         modifier = modifier
-            .fillMaxSize()
             .background(LightGray)
 
     ) {
@@ -102,7 +116,7 @@ fun Dashboard(
                     )
                 }
 
-                if(erroDashboard != null) {
+                if (erroDashboard != null) {
                     Text(
                         erroDashboard ?: "",
                         fontSize = 12.sp,
@@ -148,17 +162,22 @@ fun Dashboard(
 
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.End,
+                                horizontalArrangement = Arrangement.Center,
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text(
-                                    text = kpiPedidosAbertos.toString(),
-                                    fontSize = 30.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = LightBlue,
-                                    modifier = Modifier
+                                if (!viewModel.carregouPedidos) {
+                                    SkeletonLoader(
+                                        modifier = Modifier
+                                    )
+                                } else {
+                                    Text(
+                                        text = kpiPedidosAbertos.toString(),
+                                        fontSize = 30.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = LightBlue
+                                    )
+                                }
 
-                                )
                             }
                         }
 
@@ -190,24 +209,34 @@ fun Dashboard(
 
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.End,
+                                horizontalArrangement = Arrangement.Center,
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.Star,
-                                    contentDescription = "Estrela de avaliação",
-                                    tint = Color.White,
-                                    modifier = Modifier
-                                        .size(35.dp)
-                                        .clip(RoundedCornerShape(6.dp))
-                                )
 
-                                Text(
-                                    text = kpiMediaAvaliacao.toString(),
-                                    fontSize = 30.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = White
-                                )
+                                if (!viewModel.carregouPedidos) {
+                                    SkeletonLoader(
+                                        modifier = Modifier
+                                    )
+                                } else {
+
+                                    Icon(
+                                        imageVector = Icons.Default.Star,
+                                        contentDescription = "Estrela de avaliação",
+                                        tint = Color.White,
+                                        modifier = Modifier
+                                            .size(35.dp)
+                                            .clip(RoundedCornerShape(6.dp))
+                                    )
+
+                                    Text(
+                                        text = String.format(Locale.US, "%.1f", kpiMediaAvaliacao),
+                                        fontSize = 30.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = White
+                                    )
+
+                                }
+
                             }
                         }
                     }
@@ -242,21 +271,42 @@ fun Dashboard(
                                 .fillMaxSize(),
                             verticalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text(
-                                "Valor médio dos pedidos (R$)",
 
-                                fontWeight = FontWeight.Bold,
-                                color = Black
-                            )
+                            Row {
+
+                                Text(
+                                    "Valor médio dos pedidos (R$)",
+
+                                    fontWeight = FontWeight.Bold,
+                                    color = Black
+                                )
+
+                            }
+
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+
+                                if(!viewModel.carregouPedidos) {
+                                    SkeletonLoader(
+                                        modifier = Modifier
+                                    )
+                                } else {
 
 
-                            Text(
-                                text = kpiValorMedioPedidos.toString(),
-                                fontSize = 30.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = LightBlue
+                                    Text(
+                                        text = kpiValorMedioPedidos.toString(),
+                                        fontSize = 30.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = LightBlue
 
-                            )
+                                    )
+
+                                }
+
+                            }
                         }
                     }
 
@@ -278,29 +328,47 @@ fun Dashboard(
                                 .fillMaxSize(),
                             verticalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text(
-                                "Faturamento do mês atual (R$)",
 
-                                fontWeight = FontWeight.Bold,
-                                color = Black
-                            )
+                            Row {
 
+                                Text(
+                                    "Faturamento do mês atual (R$)",
 
-                            Text(
-                                text = "R$ $kpiFaturamentoMesAtual",
-                                fontSize = 30.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = LightBlue
+                                    fontWeight = FontWeight.Bold,
+                                    color = Black
+                                )
+                            }
 
-                            )
+                            Column (
+                               verticalArrangement = Arrangement.Center,
+                               horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
 
-                            Text(
-                                text = "Ultimo mês: R$$kpiFaturamentoMesAnterior",
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Black
+                                if(!viewModel.carregouPedidos) {
+                                    SkeletonLoader(
+                                        modifier = Modifier
+                                    )
+                                } else {
 
-                            )
+                                    Text(
+                                        text = "R$ $kpiFaturamentoMesAtual",
+                                        fontSize = 30.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = LightBlue
+
+                                    )
+
+                                    Text(
+                                        text = "Ultimo mês: R$$kpiFaturamentoMesAnterior",
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Black
+
+                                    )
+                                }
+
+                            }
                         }
                     }
 
@@ -329,13 +397,36 @@ fun Dashboard(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 15.dp, end = 15.dp, top = 15.dp)
+                            .padding(start = 15.dp, end = 15.dp, top = 15.dp, bottom = 15.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
 
-                        PieChartScreen(
-                            title = "Quantidade de Pedidos por Status",
-                            data = listOf(30f, 25f, 20f, 15f),
+                        Text(
+                            "Quantidade de Pedidos por Status",
+                            color = Black,
+                            fontWeight = FontWeight.Bold
                         )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        if (!viewModel.carregouPedidos) {
+
+                            SkeletonLoader(modifier = Modifier
+                                .fillMaxWidth()
+                                .height(300.dp))
+                        } else {
+
+
+                            PieChartScreen(
+                                data = listOf(
+                                    pedidosPorStatus.pendente,
+                                    pedidosPorStatus.emProducao,
+                                    pedidosPorStatus.concluido,
+                                    pedidosPorStatus.cancelado
+                                )
+                            )
+                        }
+
                     }
                 }
             }
@@ -359,13 +450,29 @@ fun Dashboard(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 15.dp, end = 15.dp, top = 15.dp)
+                            .padding(start = 15.dp, end = 15.dp, top = 15.dp, bottom = 15.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        LineChartScreen(
-                            title = "Valor Arrecadado por Mês (R$)",
-                            data = listOf(20f, 250f, 300f),
-                            xLabels = listOf("Jan 2025", "Fev 2025", "Mar 2025")
+                        Text(
+                            "Valor faturado por Mês (R$)",
+                            color = Black,
+                            fontWeight = FontWeight.Bold
                         )
+
+
+                        if (!viewModel.carregouPedidos) {
+
+                            SkeletonLoader(modifier = Modifier
+                                .fillMaxWidth()
+                                .height(300.dp))
+                        } else {
+
+                            LineChartScreen(
+                                data = faturamentos,
+                                xLabels = meses
+                            )
+
+                        }
                     }
                 }
             }
@@ -376,7 +483,8 @@ fun Dashboard(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 15.dp, end = 15.dp, top = 15.dp)
+                    .padding(start = 15.dp, end = 15.dp, top = 15.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Card(
 
@@ -389,13 +497,31 @@ fun Dashboard(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 15.dp, end = 15.dp, top = 15.dp)
+                            .padding(start = 15.dp, end = 15.dp, top = 15.dp, bottom = 15.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+
                     ) {
-                        LineChartScreen(
-                            title = "Quantidade de pedidos por mês",
-                            data = listOf(5, 25, 50),
-                            xLabels = listOf("Jan 2025", "Fev 2025", "Mar 2025")
+
+                        Text(
+                            "Quantidade de pedidos por mês",
+                            color = Black,
+                            fontWeight = FontWeight.Bold
                         )
+
+
+                        if (!viewModel.carregouPedidos) {
+
+                            SkeletonLoader(modifier = Modifier
+                                .fillMaxWidth()
+                                .height(300.dp))
+                        } else {
+
+                            LineChartScreen(
+                                data = quantidadesPedidos,
+                                xLabels = mesesPedidos
+                            )
+
+                        }
                     }
 
                 }

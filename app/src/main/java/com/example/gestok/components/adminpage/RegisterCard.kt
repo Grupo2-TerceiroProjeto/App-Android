@@ -16,6 +16,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,14 +28,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.gestok.R
-import com.example.gestok.components.adminpage.dialogs.RegisterEdit
+import com.example.gestok.components.ExcludeConfirmationDialog
+import com.example.gestok.screens.internalScreens.admin.data.RegisterData
 import com.example.gestok.ui.theme.Blue
+import com.example.gestok.viewModel.admin.AdminApiViewModel
 
 @Composable
-fun RegisterCard(registerData: RegisterData, funcionariosLista: List<RegisterData>) {
+fun RegisterCard(
+    funcionario: RegisterData,
+    currentPage: MutableState<String>,
+    selectedRegister: MutableState<RegisterData?>,
+    viewModel: AdminApiViewModel,
+    excluirHabilitado: Boolean
+) {
 
-
-    var showEditRegisterDialog by remember { mutableStateOf(false) }
+    var showExcludeConfirmDialog by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
@@ -50,16 +58,20 @@ fun RegisterCard(registerData: RegisterData, funcionariosLista: List<RegisterDat
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column (modifier = Modifier
-                    .align(Alignment.CenterVertically)){
+                    .align(Alignment.CenterVertically)
+                    .weight(1F)){
                     Text(
-                        text = registerData.nome,
+                        text = funcionario.nome,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF196BAD)
                     )
                 }
                 Row () {
                     IconButton(
-                        onClick = {showEditRegisterDialog = true},
+                        onClick = {
+                            selectedRegister.value = funcionario
+                            currentPage.value = "editRegister"
+                        },
                         modifier = Modifier
                             .size(50.dp)
 
@@ -72,16 +84,25 @@ fun RegisterCard(registerData: RegisterData, funcionariosLista: List<RegisterDat
                     }
 
                     IconButton(
-                        onClick = {},
+                        onClick = {showExcludeConfirmDialog = true},
+                        enabled = excluirHabilitado,
                         modifier = Modifier
                             .height(50.dp)
 
 
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.trashcan_f),
-                            contentDescription = "Excluir",
-                        )
+                        if(!excluirHabilitado) {
+                            Image(
+                                painter = painterResource(id = R.drawable.trashcan_disable),
+                                contentDescription = "Excluir",
+                            )
+                        }else {
+
+                            Image(
+                                painter = painterResource(id = R.drawable.trashcan_f),
+                                contentDescription = "Excluir",
+                            )
+                        }
                     }
 
                 }
@@ -100,10 +121,10 @@ fun RegisterCard(registerData: RegisterData, funcionariosLista: List<RegisterDat
                         color = Blue
                     )
 
-                    Text(text = registerData.cargo,
+                    Text(text = funcionario.cargo,
                         fontWeight = FontWeight.W300,
                         color = Blue,
-                        modifier = Modifier.width(100.dp))
+                        modifier = Modifier.width(150.dp))
 
                     Spacer(modifier = Modifier.height(4.dp))
 
@@ -111,12 +132,13 @@ fun RegisterCard(registerData: RegisterData, funcionariosLista: List<RegisterDat
 
                 }
 
-                Column {  Text("Email",
+                Column(Modifier.weight(0.6F)) {
+                    Text("Email",
                     fontWeight = FontWeight.Bold,
                     color = Blue
                 )
 
-                    Text(text = registerData.email,
+                    Text(text = funcionario.login,
                         fontWeight = FontWeight.W300,
                         color = Blue)}
             }
@@ -124,10 +146,15 @@ fun RegisterCard(registerData: RegisterData, funcionariosLista: List<RegisterDat
         }
     }
 
-    if(showEditRegisterDialog){
-        RegisterEdit(funcionario = registerData,
-            onDismiss = { showEditRegisterDialog = false },
-            onConfirm = { nome, cargo, email -> showEditRegisterDialog = false })
+    if(showExcludeConfirmDialog){
+        ExcludeConfirmationDialog(
+            onDismiss = { showExcludeConfirmDialog = false },
+            onConfirm = {
+                viewModel.deletarFuncionario(funcionario.id, onBack = {
+                    showExcludeConfirmDialog = false
+                })
+            }
+        )
     }
 
 }

@@ -13,11 +13,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,18 +31,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import com.example.gestok.R
-import com.example.gestok.components.NutritionalDataDialog
-import com.example.gestok.components.productpage.dialogs.ExcludeConfirmationDialog
-import com.example.gestok.components.productpage.dialogs.ProductEdit
+import com.example.gestok.components.ExcludeConfirmationDialog
+import com.example.gestok.components.productpage.popups.NutritionalDataDialog
+import com.example.gestok.screens.internalScreens.product.data.CategoryData
+import com.example.gestok.screens.internalScreens.product.data.IngredientsRecipe
+import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.ui.theme.Blue
-import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.LightGray
+import com.example.gestok.viewModel.product.ProductApiViewModel
 
 @Composable
-fun ProductData(productData: ProductData){
+fun ProductCard(
+    produto: ProductData,
+    categorias: List<CategoryData>,
+    currentPage: MutableState<String>,
+    selectedProduct: MutableState<ProductData?>,
+    viewModel: ProductApiViewModel
+){
 
-    var checked by remember { mutableStateOf(true) }
-    var showEditDialog by remember { mutableStateOf(false) }
     var showNutritionalDialog by remember { mutableStateOf(false) }
     var showExcludeConfirmDialog by remember { mutableStateOf(false) }
 
@@ -56,13 +63,14 @@ fun ProductData(productData: ProductData){
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)) {
         Column(modifier = Modifier.padding(16.dp)){
             Row(
-               modifier =  Modifier.fillMaxWidth(),
+                modifier =  Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(modifier = Modifier
-                    .align(Alignment.CenterVertically)){
+                    .align(Alignment.CenterVertically)
+                    .weight(1F)){
                     Text(
-                        text = productData.produto,
+                        text = produto.nome,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF196BAD)
                     )
@@ -82,7 +90,9 @@ fun ProductData(productData: ProductData){
                     }
 
                     IconButton(
-                        onClick = {showEditDialog = true},
+                        onClick = {
+                            selectedProduct.value = produto
+                            currentPage.value = "editProduct"},
                         modifier = Modifier
                             .height(50.dp)
 
@@ -123,7 +133,7 @@ fun ProductData(productData: ProductData){
                         fontWeight = FontWeight.Bold,
                         color = Blue)
 
-                    Text(text = productData.estoque.toString(),
+                    Text(text = produto.quantidade.toString(),
                         fontWeight = FontWeight.W300,
                         color = Blue)
                 }
@@ -133,7 +143,9 @@ fun ProductData(productData: ProductData){
                         fontWeight = FontWeight.Bold,
                         color = Blue)
 
-                    Text(text = productData.categoria,
+                    val nomeCategoria = categorias.find { it.id == produto.categoria }?.nome ?: "Categoria desconhecida"
+
+                    Text(text = nomeCategoria,
                         fontWeight = FontWeight.W300,
                         color = Blue)
                 }
@@ -146,10 +158,9 @@ fun ProductData(productData: ProductData){
             ){
 
                 Switch(
-                    checked = checked,
-                    onCheckedChange = {
-                        checked = it
-                    },
+                    checked = produto.emProducao,
+                    onCheckedChange = {viewModel.atualizarProducao(produto)},
+                    enabled = !(viewModel.isUpdatingMap[produto.id] ?: false),
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = LightGray,
                         checkedTrackColor = Blue,
@@ -158,7 +169,7 @@ fun ProductData(productData: ProductData){
                     )
                 )
 
-                Text(when(checked){
+                Text(when(produto.emProducao){
                     true -> "Disponível"
                     else -> "Não disponível"},
                     color = Blue,
@@ -174,21 +185,9 @@ fun ProductData(productData: ProductData){
 
     if (showNutritionalDialog) {
         NutritionalDataDialog(
-            product = productData.produto,
-            ingredients = listOf("Chcolate", "Farinha", "Leite"),
-            nutrients = listOf(Triple("Gordura", "10.0", "4.0"), Triple("Proteína", "13.4", "4.3"), Triple("Caloria","90","2.1")),
+            product = produto,
+            viewModel = viewModel,
             onDismissRequest = { showNutritionalDialog = false }
-        )
-    }
-
-
-    if(showEditDialog){
-        ProductEdit(
-            product = productData,
-            onDismiss = { showEditDialog = false },
-            onConfirm = { newProduto, newEstoque, newCategoria, newValor, newIngredientes ->
-                showEditDialog = false
-            }
         )
     }
 
@@ -196,11 +195,11 @@ fun ProductData(productData: ProductData){
         ExcludeConfirmationDialog(
             onDismiss = { showExcludeConfirmDialog = false },
             onConfirm = {
-                showExcludeConfirmDialog = false
+                viewModel.deletarProduto(produto.id, onBack = {
+                    showExcludeConfirmDialog = false
+                })
             }
         )
     }
-
-    productData.disponbilidade = checked
 
 }
