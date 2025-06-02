@@ -36,7 +36,9 @@ fun InputLabelDisable(
         color = Blue
     )
 
-    Spacer(modifier = Modifier.height(8.dp))
+    if(text !== "") {
+        Spacer(modifier = Modifier.height(8.dp))
+    }
 
     TextField(
         value = value,

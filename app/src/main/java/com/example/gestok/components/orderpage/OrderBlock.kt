@@ -10,6 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -29,60 +33,84 @@ import com.example.gestok.ui.theme.LightGray
 @Composable
 fun ItensBlock(
     itens: List<OrderItensBlock>,
-    updateQuantidade: (Int, Int) -> Unit
+    updateQuantidade: (Int, Int) -> Unit,
+    onExcluirClick: () -> Unit
 ) {
 
     itens.forEachIndexed { index, item ->
 
         Row(
-            Modifier
-                .clip(shape = RoundedCornerShape(15))
-                .background(LightGray)
-                .padding(10.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                text = item.nome,
-                color = Black,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 8.dp)
-            )
-            TextField(
-                value = item.quantidade.toString(),
-                onValueChange = {
-                    val newQuantidade = it.toIntOrNull() ?: 0
-                    updateQuantidade(index, newQuantidade)
-                },
-                textStyle = androidx.compose.ui.text.TextStyle(
-                    color = Black,
-                    textAlign = TextAlign.Center
-                ),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number
-                ),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.LightGray,
-                    unfocusedContainerColor = Color.LightGray,
-                    focusedTextColor = Black,
-                    unfocusedTextColor = Black,
-                    focusedIndicatorColor = Color.LightGray,
-                    unfocusedIndicatorColor = Color.LightGray,
 
-                    ), maxLines = 1,
-                modifier = Modifier
-                    .width(74.dp)
+            Row(
+                Modifier
                     .clip(shape = RoundedCornerShape(15))
+                    .background(LightGray)
+                    .padding(10.dp)
+                    .fillMaxWidth()
+                    .weight(1f),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = item.nome,
+                    color = Black,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp)
+                )
+                TextField(
+                    value = item.quantidade.toString(),
+                    onValueChange = {
+                        val newQuantidade = it.toIntOrNull() ?: 0
+                        updateQuantidade(index, newQuantidade)
+                    },
+                    textStyle = androidx.compose.ui.text.TextStyle(
+                        color = Black,
+                        textAlign = TextAlign.Center
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    ),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.LightGray,
+                        unfocusedContainerColor = Color.LightGray,
+                        focusedTextColor = Black,
+                        unfocusedTextColor = Black,
+                        focusedIndicatorColor = Color.LightGray,
+                        unfocusedIndicatorColor = Color.LightGray,
 
-            )
+                        ), maxLines = 1,
+                    modifier = Modifier
+                        .width(73.dp)
+                        .clip(shape = RoundedCornerShape(15))
+
+                )
+            }
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            IconButton(onClick = { onExcluirClick() }) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Excluir",
+                    tint = Color.Red
+                )
+            }
+
+            Spacer(modifier = Modifier.height(15.dp))
+
         }
-        Spacer(modifier = Modifier.height(15.dp))
 
     }
 
-
 }
+
+
+
+
+
 
 

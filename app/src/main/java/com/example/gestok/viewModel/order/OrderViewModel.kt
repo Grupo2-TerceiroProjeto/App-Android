@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.example.gestok.screens.internalScreens.order.data.OrderCreateData
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.screens.internalScreens.order.data.OrderEditData
+import com.example.gestok.screens.internalScreens.order.data.OrderItens
 import com.example.gestok.screens.internalScreens.product.data.IngredientsFormat
 import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.screens.login.data.UserSession
@@ -94,7 +95,7 @@ abstract class OrderViewModel(open val sessaoUsuario : UserSession) : ViewModel(
 
     open fun salvarPedido(pedido : OrderCreateData, onBack: () -> Unit, onSucess: () -> Unit) {}
 
-    open fun editarPedido(pedido : OrderEditData, idPedido: Int, onBack: () -> Unit, onSucess: () -> Unit) {}
+    open fun editarPedido(pedido : OrderEditData, excluidosFiltrados: List<OrderItens>, idPedido: Int, onBack: () -> Unit, onSucess: () -> Unit) {}
 
     open fun getReceita(pedido: OrderData, onResult: (List<IngredientsFormat>) -> Unit) {}
 }

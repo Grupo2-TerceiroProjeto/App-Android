@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,7 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -27,9 +30,13 @@ import com.example.gestok.components.Input
 import com.example.gestok.components.PrimaryButton
 import com.example.gestok.components.SecundaryButton
 import com.example.gestok.ui.theme.Black
+import com.example.gestok.viewModel.login.LoginApiViewModel
 
 @Composable
-fun CodeStep(navController: NavController) {
+fun CodeStep(
+    navController: NavController,
+    viewModel: LoginApiViewModel
+) {
     var codigo1 by remember { mutableStateOf("") }
     var codigo2 by remember { mutableStateOf("") }
     var codigo3 by remember { mutableStateOf("") }
@@ -43,6 +50,10 @@ fun CodeStep(navController: NavController) {
     val focusCodigo3 = remember { FocusRequester() }
     val focusCodigo4 = remember { FocusRequester() }
     val focusCodigo5 = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        viewModel.limparErros()
+    }
 
     Column(
         modifier = Modifier
@@ -71,9 +82,11 @@ fun CodeStep(navController: NavController) {
                     .focusRequester(focusCodigo1),
                 value = codigo1,
                 onValueChange = {
-                    if (it.length == 1) {
+                    if (it.length <= 1) {
                         codigo1 = it
-                        focusCodigo2.requestFocus()
+                        if (it.length == 1) {
+                            focusCodigo2.requestFocus()
+                        }
                     }
                 },
                 textStyle = TextStyle(textAlign = TextAlign.Center, fontSize = 18.sp),
@@ -87,9 +100,11 @@ fun CodeStep(navController: NavController) {
                     .focusRequester(focusCodigo2),
                 value = codigo2,
                 onValueChange = {
-                    if (it.length == 1) {
+                    if (it.length <= 1) {
                         codigo2 = it
-                        focusCodigo3.requestFocus()
+                        if (it.length == 1) {
+                            focusCodigo3.requestFocus()
+                        }
                     }
                 },
                 textStyle = TextStyle(textAlign = TextAlign.Center, fontSize = 18.sp),
@@ -103,9 +118,11 @@ fun CodeStep(navController: NavController) {
                     .focusRequester(focusCodigo3),
                 value = codigo3,
                 onValueChange = {
-                    if (it.length == 1) {
+                    if (it.length <= 1) {
                         codigo3 = it
-                        focusCodigo4.requestFocus()
+                        if (it.length == 1) {
+                            focusCodigo4.requestFocus()
+                        }
                     }
                 },
                 textStyle = TextStyle(textAlign = TextAlign.Center, fontSize = 18.sp),
@@ -119,9 +136,11 @@ fun CodeStep(navController: NavController) {
                     .focusRequester(focusCodigo4),
                 value = codigo4,
                 onValueChange = {
-                    if (it.length == 1) {
+                    if (it.length <= 1) {
                         codigo4 = it
-                        focusCodigo5.requestFocus()
+                        if (it.length == 1) {
+                            focusCodigo5.requestFocus()
+                        }
                     }
                 },
                 textStyle = TextStyle(textAlign = TextAlign.Center, fontSize = 18.sp),
@@ -135,12 +154,23 @@ fun CodeStep(navController: NavController) {
                     .focusRequester(focusCodigo5),
                 value = codigo5,
                 onValueChange = {
-                    if (it.length == 1) {
+                    if (it.length <= 1) {
                         codigo5 = it
                     }
                 },
                 textStyle = TextStyle(textAlign = TextAlign.Center, fontSize = 18.sp),
                 keyboardType = KeyboardType.Number
+            )
+        }
+
+        if (viewModel.codigoErro != null) {
+            Text(
+                viewModel.codigoErro!!,
+                fontSize = 12.sp,
+                color = Color(0xFFD32F2F),
+                modifier = Modifier
+                .padding(top = 16.dp)
+                .fillMaxWidth()
             )
         }
 
@@ -165,11 +195,23 @@ fun CodeStep(navController: NavController) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 78.dp),
+                .padding(top = if (viewModel.codigoErro == null) 90.dp else 50.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            SecundaryButton("Reenviar código") { }
-            PrimaryButton("Validar") { navController.navigate("newPasswordStep") }
+            SecundaryButton("Reenviar código") {
+                val email = viewModel.emailResponse.value?.email
+                if (email != null) {
+                    viewModel.enviarEmail(email) {}
+                }
+            }
+            PrimaryButton("Validar") {
+                val recebido = viewModel.emailResponse.value?.codigo
+                if (codigoCompleto == recebido) {
+                    navController.navigate("newPasswordStep")
+                } else {
+                    viewModel._codigoErro = "Código inválido"
+                }
+            }
         }
     }
 }

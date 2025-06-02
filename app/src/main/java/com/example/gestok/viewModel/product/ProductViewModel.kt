@@ -8,9 +8,10 @@ import androidx.lifecycle.ViewModel
 import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.screens.login.data.UserSession
 import com.example.gestok.screens.internalScreens.product.data.CategoryData
-import com.example.gestok.screens.internalScreens.product.data.IngredientsCreate
+import com.example.gestok.screens.internalScreens.product.data.IngredientsBody
 import com.example.gestok.screens.internalScreens.product.data.IngredientsData
 import com.example.gestok.screens.internalScreens.product.data.IngredientsRecipe
+import com.example.gestok.screens.internalScreens.product.data.NutrientesResponse
 import com.example.gestok.screens.internalScreens.product.data.ProductStepData
 import com.example.gestok.screens.internalScreens.product.data.ProductStepEditData
 import java.io.File
@@ -26,6 +27,8 @@ abstract class ProductViewModel(open val sessaoUsuario : UserSession) : ViewMode
     protected var _produtos = mutableStateListOf<ProductData>()
 
     protected var _ingredientes = mutableStateListOf<IngredientsData>()
+
+    protected var _nutrientes = mutableStateListOf<NutrientesResponse>()
 
     protected var _categorias = mutableStateListOf<CategoryData>()
 
@@ -58,6 +61,8 @@ abstract class ProductViewModel(open val sessaoUsuario : UserSession) : ViewMode
     protected var _medidaIngredienteErro by mutableStateOf<String?>(null)
 
     protected var _cadastroIngredienteErro by mutableStateOf<String?>(null)
+
+    protected var _edicaoIngredienteErro by mutableStateOf<String?>(null)
 
     val produtosErro: String?
         get() = _produtosErro
@@ -122,6 +127,12 @@ abstract class ProductViewModel(open val sessaoUsuario : UserSession) : ViewMode
     val cadastroIngredienteErro: String?
         get() = _cadastroIngredienteErro
 
+    val edicaoIngredienteErro: String?
+        get() = _edicaoIngredienteErro
+
+    val nutrientes: List<NutrientesResponse>
+        get() = _nutrientes.toList()
+
     fun limparErrosFormulario() {
         _nomeErro = null
         _precoErro = null
@@ -161,6 +172,16 @@ abstract class ProductViewModel(open val sessaoUsuario : UserSession) : ViewMode
 
     open fun deletarReceita(idReceita: Int, onResult: (Boolean) -> Unit) {}
 
-    open fun salvarIngrediente(idProduto: Int, ingrediente : IngredientsCreate,  onBack: () -> Unit) {}
+    open fun salvarIngrediente(idProduto: Int, ingrediente : IngredientsBody,  onBack: () -> Unit) {}
+
+    open fun editarIngrediente(idIngrediente: Int, ingrediente : IngredientsBody,  onBack: () -> Unit) {}
+
+    open fun deletarIngrediente(idIngrediente: Int, onResult: (Boolean) -> Unit) {}
+
+    fun removerIngredienteLocal(id: Int) {
+        _ingredientes.removeIf { it.id == id }
+    }
+
+    open fun getNutrientes(ingredientes : List<IngredientsRecipe>, onFinished: () -> Unit) {}
 
 }

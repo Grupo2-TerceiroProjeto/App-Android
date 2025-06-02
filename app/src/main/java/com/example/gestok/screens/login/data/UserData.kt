@@ -13,3 +13,23 @@ data class UserSession(
     var token: String = "",
     var idEmpresa: Int = 0
 )
+
+data class UserReset(
+    val email: String,
+    val senha: String
+)
+
+data class UserStepReset(
+    val email: String,
+    val senha: String,
+    val confirmarSenha: String
+)
+
+data class SendEmail(
+    val email: String
+)
+
+data class SendEmailResponse(
+    val email: String,
+    val codigo: String
+)

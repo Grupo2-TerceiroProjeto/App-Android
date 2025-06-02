@@ -1,5 +1,7 @@
-package com.example.gestok.components.productpage
+package com.example.gestok.screens.internalScreens.product.data
 
-data class NutritionalData(
-    val nutrientes: List<Triple<String, String, String>>
+data class NutrientesResponse(
+    val id: Int,
+    val tipo: String,
+    val pcComposicao: String
 )

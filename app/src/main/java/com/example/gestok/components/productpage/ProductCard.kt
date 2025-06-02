@@ -17,6 +17,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,8 +32,9 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import com.example.gestok.R
 import com.example.gestok.components.ExcludeConfirmationDialog
-import com.example.gestok.components.productpage.dialogs.NutritionalDataDialog
+import com.example.gestok.components.productpage.popups.NutritionalDataDialog
 import com.example.gestok.screens.internalScreens.product.data.CategoryData
+import com.example.gestok.screens.internalScreens.product.data.IngredientsRecipe
 import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightGray
@@ -183,9 +185,8 @@ fun ProductCard(
 
     if (showNutritionalDialog) {
         NutritionalDataDialog(
-            product = produto.nome,
-            ingredients = listOf("Chocolate", "Farinha", "Leite"),
-            nutrients = listOf(Triple("Gordura", "10.0", "4.0"), Triple("Proteína", "13.4", "4.3"), Triple("Caloria","90","2.1")),
+            product = produto,
+            viewModel = viewModel,
             onDismissRequest = { showNutritionalDialog = false }
         )
     }

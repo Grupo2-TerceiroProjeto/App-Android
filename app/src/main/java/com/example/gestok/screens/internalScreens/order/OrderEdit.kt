@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -61,14 +62,26 @@ fun OrderEdit(
     viewModel: OrderApiViewModel
 ) {
 
+    val originalItens = remember {
+        order.produtos.map { it.copy(imagem = it.imagem ?: "") }
+    }
+
+    var excluidosItens by remember {
+        mutableStateOf<List<OrderItens>>(emptyList())
+    }
+
     var editedNomeSolicitante by remember { mutableStateOf(order.nomeSolicitante) }
     var editedContato by remember { mutableStateOf(order.telefone) }
     var editedStatusPedido by remember { mutableStateOf(order.status) }
     var editedDataEntrega by remember { mutableStateOf(order.dataEntrega ?: "") }
     var editedItens by remember {
-        mutableStateOf(order.produtos.map {
-            it.copy(imagem = it.imagem ?: "")
-        })
+        mutableStateOf(
+            order.produtos
+                .filter { it.quantidade > 0 }
+                .map {
+                    it.copy(imagem = it.imagem ?: "")
+                }
+        )
     }
     val editedValorPedido by remember(editedItens) {
         mutableStateOf(
@@ -81,6 +94,10 @@ fun OrderEdit(
         editedItens = editedItens.toMutableList().apply {
             this[index] = this[index].copy(quantidade = newQuantidade)
         }
+    }
+
+    val excluidosFiltrados = excluidosItens.filter { excluido ->
+        editedItens.none { it.id == excluido.id }
     }
 
     val pedidoEditado = OrderEditData(
@@ -281,7 +298,7 @@ fun OrderEdit(
                     LazyColumn(
                         modifier = Modifier
                             .padding(start = 20.dp, end = 20.dp, top = 24.dp)
-                            .height(250.dp),
+                            .heightIn(max  = 250.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         items(editedItens.size) { index ->
@@ -293,7 +310,17 @@ fun OrderEdit(
                                         quantidade = item.quantidade
                                     )
                                 ),
-                                updateQuantidade = { _, newQtd -> updateQuantidade(index, newQtd) }
+                                updateQuantidade = { _, newQtd -> updateQuantidade(index, newQtd) },
+                                onExcluirClick = {
+                                    val itemRemovido = editedItens[index]
+                                    editedItens = editedItens.toMutableList().apply {
+                                        removeAt(index)
+                                    }
+
+                                    if (originalItens.any { it.id == itemRemovido.id }) {
+                                        excluidosItens = excluidosItens + itemRemovido.copy(quantidade = 0)
+                                    }
+                                }
                             )
                         }
                     }
@@ -311,6 +338,7 @@ fun OrderEdit(
                                 onClick = {
                                     viewModel.editarPedido(
                                         pedidoEditado,
+                                        excluidosFiltrados,
                                         order.id,
                                         onBack,
                                         onSucess
@@ -349,19 +377,22 @@ fun OrderEdit(
                 ItensAdd(
                     viewModel,
                     onConfirm = { selectedProducts ->
-                        editedItens = editedItens + selectedProducts.map {
-                            OrderItens(
-                                id = it.id,
-                                nome = it.nome,
-                                categoria = it.categoria,
-                                preco = it.preco,
-                                quantidade = 0,
-                                emProducao = it.emProducao,
-                                imagem = it.imagem ?: "",
-                            )
-                        }
+                        editedItens = editedItens + selectedProducts
+                            .filter { selected ->
+                                editedItens.none { it.id == selected.id }
+                            }
+                            .map {
+                                OrderItens(
+                                    id = it.id,
+                                    nome = it.nome,
+                                    categoria = it.categoria,
+                                    preco = it.preco,
+                                    quantidade = 0,
+                                    emProducao = it.emProducao,
+                                    imagem = it.imagem ?: "",
+                                )
+                            }
                         itensAdd = false
-
                     }
                 )
             }

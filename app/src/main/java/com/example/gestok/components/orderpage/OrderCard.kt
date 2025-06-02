@@ -108,14 +108,16 @@ fun OrderCard(
             Column(Modifier.padding(top = 16.dp)) {
                 Row{
                     Column {
-                        pedido.produtos.forEach { item ->
-                            Text(
-                                text = "• ${item.nome} ${item.quantidade}un",
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.W500,
-                                color = Blue
-                            )
-                        }
+                        pedido.produtos
+                            .filter { it.quantidade > 0 }
+                            .forEach { item ->
+                                Text(
+                                    text = "• ${item.nome} ${item.quantidade}un",
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.W500,
+                                    color = Blue
+                                )
+                            }
                     }
                     Column(
                         Modifier

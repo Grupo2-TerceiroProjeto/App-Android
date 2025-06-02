@@ -8,15 +8,18 @@ import com.example.gestok.network.service.ProductService
 import com.example.gestok.screens.internalScreens.order.data.RecipeBody
 import com.example.gestok.screens.internalScreens.order.data.RecipeData
 import com.example.gestok.screens.internalScreens.product.data.CategoryData
-import com.example.gestok.screens.internalScreens.product.data.IngredientsCreate
+import com.example.gestok.screens.internalScreens.product.data.IngredientsBody
 import com.example.gestok.screens.internalScreens.product.data.IngredientsData
 import com.example.gestok.screens.internalScreens.product.data.IngredientsRecipe
+import com.example.gestok.screens.internalScreens.product.data.NutrientesResponse
 import com.example.gestok.screens.internalScreens.product.data.ProductCreateData
 import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.screens.internalScreens.product.data.ProductEditData
 import com.example.gestok.screens.internalScreens.product.data.ProductStepData
 import com.example.gestok.screens.internalScreens.product.data.ProductStepEditData
 import com.example.gestok.screens.login.data.UserSession
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -25,7 +28,9 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.ResponseBody
 import retrofit2.HttpException
+import retrofit2.Response
 import retrofit2.awaitResponse
 import java.io.File
 
@@ -494,7 +499,7 @@ class ProductApiViewModel(private val api: ProductService, private val cloudinar
         }
     }
 
-    override fun salvarIngrediente(idProduto: Int, ingrediente: IngredientsCreate,  onBack: () -> Unit) {
+    override fun salvarIngrediente(idProduto: Int, ingrediente: IngredientsBody,  onBack: () -> Unit) {
         limparErrosFormularioIngrediente()
 
         var houveErro = false
@@ -507,7 +512,7 @@ class ProductApiViewModel(private val api: ProductService, private val cloudinar
             houveErro = true
         }
 
-        if (ingrediente.quantidade <= 0) {
+        if (ingrediente.quantidade == 0) {
             _quantidadeIngredienteErro = "Quantidade do ingrediente é obrigatória"
             houveErro = true
         }
@@ -537,6 +542,113 @@ class ProductApiViewModel(private val api: ProductService, private val cloudinar
             } catch (e: Exception) {
                 Log.e("API", "Erro ao conectar ao servidor: ${e.message}")
                 _cadastroIngredienteErro = "Erro ao conectar ao servidor"
+            }
+        }
+    }
+
+    override fun editarIngrediente(
+        idIngrediente: Int,
+        ingrediente: IngredientsBody,
+        onBack: () -> Unit
+    ) {
+        limparErrosFormularioIngrediente()
+
+        var houveErro = false
+
+        if (ingrediente.nome.isBlank()) {
+            _nomeIngredienteErro = "Nome do ingrediente é obrigatório"
+            houveErro = true
+        } else if (ingrediente.nome.length < 2) {
+            _nomeIngredienteErro = "Nome do ingrediente deve ter pelo menos 2 caracteres"
+            houveErro = true
+        }
+
+        if (ingrediente.quantidade == 0) {
+            _quantidadeIngredienteErro = "Quantidade do ingrediente é obrigatória"
+            houveErro = true
+        }
+
+        if (ingrediente.medida == 0.0) {
+            _medidaIngredienteErro = "Medida do ingrediente é obrigatória"
+            houveErro = true
+        }
+
+        if (houveErro) return
+
+        viewModelScope.launch {
+            try {
+
+                api.putIngrediente(ingrediente, idIngrediente)
+
+                Log.d("API", "Ingrediente editado com sucesso")
+
+                getIngredientes()
+                onBack()
+
+            } catch (e: HttpException) {
+                if (e.code() == 500) {}
+                Log.e("API", "Erro ao editar ingrediente: ${e.message}")
+                _edicaoIngredienteErro = "Erro ao editar ingrediente"
+
+            } catch (e: Exception) {
+                Log.e("API", "Erro ao conectar ao servidor: ${e.message}")
+                _edicaoIngredienteErro = "Erro ao conectar ao servidor"
+            }
+        }
+    }
+
+    override fun deletarIngrediente(idIngrediente: Int, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            try {
+                api.deleteIngrediente(idIngrediente)
+
+                Log.d("API", "Ingrediente excluído com sucesso")
+
+                onResult(true)
+
+            } catch (e: HttpException) {
+                if (e.code() == 500) {}
+                Log.e("API", "Erro ao excluir ingrediente: ${e.message}")
+                onResult(false)
+
+            } catch (e: Exception) {
+                Log.e("API", "Erro ao conectar ao servidor: ${e.message}")
+            }
+        }
+    }
+
+    override fun getNutrientes(ingredientes: List<IngredientsRecipe>, onFinished: () -> Unit) {
+        _nutrientes.clear()
+
+        viewModelScope.launch {
+            try {
+                val gson = Gson()
+
+                for (ingrediente in ingredientes) {
+                    val resposta: Response<ResponseBody> = api.getNutrientes(ingrediente.idIngrediente)
+
+                    if (resposta.isSuccessful) {
+                        val bodyString = resposta.body()?.string()
+
+                        if (!bodyString.isNullOrBlank()) {
+                            val tipo = object : TypeToken<List<NutrientesResponse>>() {}.type
+                            val lista: List<NutrientesResponse> = gson.fromJson(bodyString, tipo)
+
+                            if (lista.isNotEmpty()) {
+                                _nutrientes.addAll(lista)
+                            }
+                        } else {
+                            Log.w("API", "Corpo vazio para ${ingrediente.idIngrediente}")
+                        }
+                    } else {
+                        Log.w("API", "Erro na resposta para ${ingrediente.idIngrediente}")
+                    }
+                }
+
+            } catch (e: Exception) {
+                Log.e("API", "Erro ao obter nutrientes: ${e.message}")
+            } finally {
+                onFinished()
             }
         }
     }
