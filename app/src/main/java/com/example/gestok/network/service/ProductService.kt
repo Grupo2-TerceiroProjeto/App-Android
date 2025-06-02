@@ -8,6 +8,8 @@ import com.example.gestok.screens.internalScreens.product.data.IngredientsData
 import com.example.gestok.screens.internalScreens.product.data.ProductCreateData
 import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.screens.internalScreens.product.data.ProductEditData
+import okhttp3.ResponseBody
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -52,6 +54,9 @@ interface ProductService {
 
     @DELETE("receitas/{id}")
     suspend fun deleteReceita(@Path("id") id:Int)
+
+    @GET("nutrientes/pegar-todos/{idIngrediente}")
+    suspend fun getNutrientes(@Path("idIngrediente") idIngrediente: Int): Response<ResponseBody>
 
     @GET("categorias/all")
     suspend fun getCategorias(): List<CategoryData>

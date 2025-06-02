@@ -291,7 +291,7 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
                     1 to "g",
                     2 to "ml",
                     3 to "kg",
-                    4 to "unidade"
+                    4 to "un"
                 )
 
                 val ingredientesFiltrados = receitasFiltradas.mapNotNull { receita ->

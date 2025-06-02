@@ -11,6 +11,7 @@ import com.example.gestok.screens.internalScreens.product.data.CategoryData
 import com.example.gestok.screens.internalScreens.product.data.IngredientsBody
 import com.example.gestok.screens.internalScreens.product.data.IngredientsData
 import com.example.gestok.screens.internalScreens.product.data.IngredientsRecipe
+import com.example.gestok.screens.internalScreens.product.data.NutrientesResponse
 import com.example.gestok.screens.internalScreens.product.data.ProductStepData
 import com.example.gestok.screens.internalScreens.product.data.ProductStepEditData
 import java.io.File
@@ -26,6 +27,8 @@ abstract class ProductViewModel(open val sessaoUsuario : UserSession) : ViewMode
     protected var _produtos = mutableStateListOf<ProductData>()
 
     protected var _ingredientes = mutableStateListOf<IngredientsData>()
+
+    protected var _nutrientes = mutableStateListOf<NutrientesResponse>()
 
     protected var _categorias = mutableStateListOf<CategoryData>()
 
@@ -127,6 +130,9 @@ abstract class ProductViewModel(open val sessaoUsuario : UserSession) : ViewMode
     val edicaoIngredienteErro: String?
         get() = _edicaoIngredienteErro
 
+    val nutrientes: List<NutrientesResponse>
+        get() = _nutrientes.toList()
+
     fun limparErrosFormulario() {
         _nomeErro = null
         _precoErro = null
@@ -175,5 +181,7 @@ abstract class ProductViewModel(open val sessaoUsuario : UserSession) : ViewMode
     fun removerIngredienteLocal(id: Int) {
         _ingredientes.removeIf { it.id == id }
     }
+
+    open fun getNutrientes(ingredientes : List<IngredientsRecipe>, onFinished: () -> Unit) {}
 
 }

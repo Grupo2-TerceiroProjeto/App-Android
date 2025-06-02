@@ -11,12 +11,15 @@ import com.example.gestok.screens.internalScreens.product.data.CategoryData
 import com.example.gestok.screens.internalScreens.product.data.IngredientsBody
 import com.example.gestok.screens.internalScreens.product.data.IngredientsData
 import com.example.gestok.screens.internalScreens.product.data.IngredientsRecipe
+import com.example.gestok.screens.internalScreens.product.data.NutrientesResponse
 import com.example.gestok.screens.internalScreens.product.data.ProductCreateData
 import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.screens.internalScreens.product.data.ProductEditData
 import com.example.gestok.screens.internalScreens.product.data.ProductStepData
 import com.example.gestok.screens.internalScreens.product.data.ProductStepEditData
 import com.example.gestok.screens.login.data.UserSession
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -25,7 +28,9 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.ResponseBody
 import retrofit2.HttpException
+import retrofit2.Response
 import retrofit2.awaitResponse
 import java.io.File
 
@@ -608,6 +613,42 @@ class ProductApiViewModel(private val api: ProductService, private val cloudinar
 
             } catch (e: Exception) {
                 Log.e("API", "Erro ao conectar ao servidor: ${e.message}")
+            }
+        }
+    }
+
+    override fun getNutrientes(ingredientes: List<IngredientsRecipe>, onFinished: () -> Unit) {
+        _nutrientes.clear()
+
+        viewModelScope.launch {
+            try {
+                val gson = Gson()
+
+                for (ingrediente in ingredientes) {
+                    val resposta: Response<ResponseBody> = api.getNutrientes(ingrediente.idIngrediente)
+
+                    if (resposta.isSuccessful) {
+                        val bodyString = resposta.body()?.string()
+
+                        if (!bodyString.isNullOrBlank()) {
+                            val tipo = object : TypeToken<List<NutrientesResponse>>() {}.type
+                            val lista: List<NutrientesResponse> = gson.fromJson(bodyString, tipo)
+
+                            if (lista.isNotEmpty()) {
+                                _nutrientes.addAll(lista)
+                            }
+                        } else {
+                            Log.w("API", "Corpo vazio para ${ingrediente.idIngrediente}")
+                        }
+                    } else {
+                        Log.w("API", "Erro na resposta para ${ingrediente.idIngrediente}")
+                    }
+                }
+
+            } catch (e: Exception) {
+                Log.e("API", "Erro ao obter nutrientes: ${e.message}")
+            } finally {
+                onFinished()
             }
         }
     }
