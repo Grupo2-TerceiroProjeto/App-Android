@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -161,7 +162,7 @@ fun StockAdd(
 
                 if (produtos.isEmpty()) {
                     Text(
-                        "Selecione produtos para adicionar sua quantidade em estoque",
+                        "Selecione produtos para atualizar sua quantidade em estoque",
                         fontSize = 14.sp,
                         color = Black,
                         modifier = Modifier.padding(
@@ -176,14 +177,19 @@ fun StockAdd(
                     LazyColumn(
                         modifier = Modifier
                             .padding(start = 20.dp, end = 20.dp, top = 24.dp)
-                            .height(350.dp),
+                            .height(410.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         items(produtos.size) { index ->
                             val item = produtos[index]
                             ItensBlock(
                                 listOf(OrderItensBlock(nome = item.nome, quantidade = item.quantidade)),
-                                updateQuantidade = { _, newQtd -> updateQuantidade(index, newQtd) }
+                                updateQuantidade = { _, newQtd -> updateQuantidade(index, newQtd) },
+                                onExcluirClick = {
+                                    produtos = produtos.toMutableList().apply {
+                                        removeAt(index)
+                                    }
+                                }
                             )
                         }
                     }
@@ -191,7 +197,7 @@ fun StockAdd(
                     Row(
                         Modifier
                             .fillMaxWidth()
-                            .padding(top = 10.dp, bottom = 10.dp),
+                            .padding(top = 16.dp, bottom = 10.dp),
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Column(
@@ -226,19 +232,22 @@ fun StockAdd(
                 ProductAdd(
                     viewModel,
                     onConfirm = { selectedProducts ->
-                        produtos = produtos + selectedProducts.map {
-                            ProductData(
-                                id = it.id,
-                                nome = it.nome,
-                                categoria = it.categoria,
-                                preco = it.preco,
-                                quantidade = 0,
-                                emProducao = it.emProducao,
-                                imagem = it.imagem,
-                            )
-                        }
+                        produtos = produtos + selectedProducts
+                            .filter { selected ->
+                                produtos.none { it.id == selected.id }
+                            }
+                            .map {
+                                ProductData(
+                                    id = it.id,
+                                    nome = it.nome,
+                                    categoria = it.categoria,
+                                    preco = it.preco,
+                                    quantidade = 0,
+                                    emProducao = it.emProducao,
+                                    imagem = it.imagem,
+                                )
+                            }
                         productAdd = false
-
                     }
                 )
             }

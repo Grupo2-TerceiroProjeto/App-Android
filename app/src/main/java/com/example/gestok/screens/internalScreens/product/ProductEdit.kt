@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -57,7 +58,9 @@ import com.example.gestok.components.InputLabel
 import com.example.gestok.components.productpage.IngredientAdd
 import com.example.gestok.components.productpage.IngredientBlockExclude
 import com.example.gestok.components.productpage.IngredientCreate
+import com.example.gestok.components.productpage.IngredientsEdit
 import com.example.gestok.screens.internalScreens.product.data.IngredientsBlock
+import com.example.gestok.screens.internalScreens.product.data.IngredientsData
 import com.example.gestok.screens.internalScreens.product.data.IngredientsRecipe
 import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.screens.internalScreens.product.data.ProductStepEditData
@@ -149,6 +152,8 @@ fun ProductEdit(
 
     var itensAdd by remember { mutableStateOf(false) }
     var criandoIngrediente by remember { mutableStateOf(false) }
+    var editandoIngrediente by remember { mutableStateOf(false) }
+    var ingredienteEditado by remember { mutableStateOf<IngredientsData?>(null) }
     val carregandoReceita = viewModel.carregouReceita
 
     LaunchedEffect(Unit) {
@@ -454,7 +459,7 @@ fun ProductEdit(
                         LazyColumn(
                             modifier = Modifier
                                 .padding(start = 20.dp, end = 20.dp, top = 24.dp)
-                                .height(240.dp),
+                                .heightIn(max = 240.dp),
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             items(ingredientes.size) { index ->
@@ -543,13 +548,26 @@ fun ProductEdit(
                 )
 
             }
-        } else if (itensAdd) {
+        } else if (editandoIngrediente && ingredienteEditado != null) {
             item {
+                IngredientsEdit(
+                    viewModel = viewModel,
+                    onBack = {
+                        editandoIngrediente = false
+                        ingredienteEditado = null
+                    },
+                    ingrediente = ingredienteEditado!!
+                )
+            }
+        } else if (itensAdd) {
+                item {
 
                 IngredientAdd(
                     viewModel,
                     onConfirm = { selectedIngredients ->
-                        ingredientes = ingredientes + selectedIngredients.map {
+                        val novosIngredientes = selectedIngredients.filter { selected ->
+                            ingredientes.none { existing -> existing.idIngrediente == selected.id }
+                        }.map {
                             IngredientsRecipe(
                                 id = 0,
                                 idIngrediente = it.id,
@@ -558,11 +576,16 @@ fun ProductEdit(
                             )
                         }
 
-                        itensAdd = false
+                        ingredientes = ingredientes + novosIngredientes
 
+                        itensAdd = false
                     },
                     onCriarNovoIngrediente = {
                         criandoIngrediente = true
+                    },
+                    onEditarIngrediente = {
+                        ingredienteEditado = it
+                        editandoIngrediente = true
                     }
                 )
             }
