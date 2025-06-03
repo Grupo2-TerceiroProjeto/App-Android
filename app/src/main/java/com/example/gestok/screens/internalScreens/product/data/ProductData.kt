@@ -48,5 +48,5 @@ data class ProductStepData(
     val quantidade: Int,
     val imagem: String?,
     val emProducao: Boolean,
-    val ingredientes: List<IngredientsProduct>
+    val ingredientes: List<Ingrediente>
 )

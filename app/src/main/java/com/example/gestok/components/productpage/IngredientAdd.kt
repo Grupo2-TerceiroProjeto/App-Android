@@ -74,7 +74,7 @@ fun IngredientAdd(
             .fillMaxWidth()
             .then(
                 if (!carregando) Modifier.height(200.dp)
-                else if (ingredientes.isEmpty()) Modifier.height(200.dp)
+                else if (ingredientes.isEmpty()) Modifier.height(220.dp)
                 else Modifier.height(320.dp)
             ),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
@@ -128,13 +128,40 @@ fun IngredientAdd(
             }
 
             ingredientes.isEmpty() -> {
-                Box(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight()
-                        .wrapContentSize(Alignment.Center)
+                        .padding(top = 30.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text("Nenhum ingrediente cadastrado", color = MediumGray)
+
+                    Spacer(modifier = Modifier.height(40.dp))
+
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 10.dp, bottom = 10.dp)
+                    ) {
+                        Button(
+                            onClick = { onCriarNovoIngrediente() },
+                            colors = ButtonDefaults.buttonColors(containerColor = LightBlue),
+                            modifier = Modifier.width(150.dp)
+                        ) {
+                            Text("+ Ingrediente", color = White)
+                        }
+
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        Button(
+                            onClick = { onConfirm(emptyList()) },
+                            colors = ButtonDefaults.buttonColors(Blue),
+                            modifier = Modifier.width(150.dp)
+                        ) {
+                            Text("Adicionar", color = White)
+                        }
+                    }
                 }
             }
 

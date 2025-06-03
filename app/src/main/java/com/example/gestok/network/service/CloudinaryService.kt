@@ -1,5 +1,6 @@
 package com.example.gestok.network.service
 
+import com.example.gestok.screens.internalScreens.product.data.CloudinaryUploadResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call

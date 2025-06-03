@@ -4,13 +4,22 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.viewModelScope
 import com.example.gestok.network.service.CloudinaryService
+import com.example.gestok.network.service.LingvaService
 import com.example.gestok.network.service.ProductService
+import com.example.gestok.network.service.SpoonacularService
 import com.example.gestok.screens.internalScreens.order.data.RecipeBody
 import com.example.gestok.screens.internalScreens.order.data.RecipeData
 import com.example.gestok.screens.internalScreens.product.data.CategoryData
+import com.example.gestok.screens.internalScreens.product.data.Ingrediente
+import com.example.gestok.screens.internalScreens.product.data.IngredienteComIdSpoonacular
+import com.example.gestok.screens.internalScreens.product.data.IngredienteComNutrientes
+import com.example.gestok.screens.internalScreens.product.data.IngredienteTraduzido
 import com.example.gestok.screens.internalScreens.product.data.IngredientsBody
 import com.example.gestok.screens.internalScreens.product.data.IngredientsData
+import com.example.gestok.screens.internalScreens.product.data.IngredientsProduct
 import com.example.gestok.screens.internalScreens.product.data.IngredientsRecipe
+import com.example.gestok.screens.internalScreens.product.data.Nutriente
+import com.example.gestok.screens.internalScreens.product.data.NutrientesBody
 import com.example.gestok.screens.internalScreens.product.data.NutrientesResponse
 import com.example.gestok.screens.internalScreens.product.data.ProductCreateData
 import com.example.gestok.screens.internalScreens.product.data.ProductData
@@ -21,8 +30,11 @@ import com.example.gestok.screens.login.data.UserSession
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -34,7 +46,12 @@ import retrofit2.Response
 import retrofit2.awaitResponse
 import java.io.File
 
-class ProductApiViewModel(private val api: ProductService, private val cloudinary: CloudinaryService, override val sessaoUsuario: UserSession) :
+class ProductApiViewModel(
+    private val api: ProductService,
+    private val cloudinary: CloudinaryService,
+    private val lingva: LingvaService,
+    private val spoonacular: SpoonacularService,
+    override val sessaoUsuario: UserSession) :
     ProductViewModel(sessaoUsuario) {
 
     override fun getProdutos() {
@@ -211,6 +228,122 @@ class ProductApiViewModel(private val api: ProductService, private val cloudinar
         return "https://res.cloudinary.com/$cloudName/image/upload/$publicId"
     }
 
+    private suspend fun traduzirIngredientes(ingredientes: List<Ingrediente>): List<IngredienteTraduzido> = coroutineScope {
+
+        ingredientes.mapNotNull { ing ->
+            try {
+                Log.e("TRADUÇÃO", "Traduzindo ingrediente: ${ing.nome}")
+                val response = lingva.traduzirPtParaEn(ing.nome)
+                IngredienteTraduzido(response.translation, ing)
+            } catch (e: Exception) {
+                Log.e("TRADUÇÃO", "Erro ao traduzir ingrediente ${ing.nome}: ${e.message}")
+                null
+            }
+        }
+    }
+
+    private suspend fun buscarIdsSpoonacular(ingredientesTraduzidos: List<IngredienteTraduzido>): List<IngredienteComIdSpoonacular> = coroutineScope {
+
+        ingredientesTraduzidos.mapNotNull { (nomeTraduzido, ingOriginal) ->
+            try {
+                Log.e("SPOONACULAR", "Buscando IDSPOONACULAR : ${nomeTraduzido}")
+                val response = spoonacular.searchIngrediente(
+                    query = nomeTraduzido,
+                    apiKey = "51fc07ec2bd1411a99bd84cf92dc1646"
+                )
+
+                if (response.results.isNotEmpty()) {
+                    val idSpoonacular = response.results.first().id
+                    IngredienteComIdSpoonacular(
+                        idOriginal = ingOriginal.id,
+                        idSpoonacular = idSpoonacular,
+                        medida = ingOriginal.medida,
+                        quantidade = ingOriginal.quantidade
+                    )
+                } else null
+            } catch (e: Exception) {
+                Log.e("SPOONACULAR", "Erro ao buscar ingrediente $nomeTraduzido: ${e.message}")
+                null
+            }
+        }
+    }
+
+    private suspend fun traduzirNutriente(nome: String): String {
+        delay(2000)
+
+        return try {
+            Log.e("TRADUÇÃO", "Traduzindo nutrientes para PT: ${nome}")
+            val response = lingva.traduzirEnParaPt(nome)
+            response.translation
+        } catch (e: Exception) {
+            Log.e("TRADUÇÃO", "Erro ao traduzir nutriente $nome: ${e.message}")
+            nome
+        }
+    }
+
+    private suspend fun buscarInformacoesNutricionais(ingredientes: List<IngredienteComIdSpoonacular>): List<IngredienteComNutrientes> = coroutineScope {
+
+        ingredientes.mapNotNull { ing ->
+            try {
+                Log.e("NUTRIENTES", "Buscando informações do IDSPOONACULAR: ${ing.idSpoonacular}")
+                val response = spoonacular.getInformacaoIngrediente(
+                    id = ing.idSpoonacular,
+                    amount = ing.quantidade.toString(),
+                    unit = ing.medida,
+                    apiKey = "51fc07ec2bd1411a99bd84cf92dc1646"
+                )
+
+                val nutrientes = response.nutrition.nutrients.map {
+                    Nutriente(
+                        name = traduzirNutriente(it.name),
+                        amount = it.amount,
+                        unit = it.unit
+                    )
+                }.filter { it.amount > 0 }
+
+                IngredienteComNutrientes(ing.idOriginal, nutrientes)
+            } catch (e: Exception) {
+                Log.e("NUTRIENTES", "Erro ao buscar nutrientes do ingrediente ID ${ing.idSpoonacular}: ${e.message}")
+                null
+            }
+        }
+    }
+
+    private suspend fun enviarNutrientes(nutrientesPorIngrediente: List<IngredienteComNutrientes>) {
+        nutrientesPorIngrediente.forEach { ingrediente ->
+            ingrediente.nutrientes.forEach { nutriente ->
+                try {
+                    val payload = NutrientesBody(
+                        tipo = nutriente.name,
+                        pcComposicao = nutriente.amount.toString()
+                    )
+                    withContext(Dispatchers.IO) {
+                        api.postNutrientes(
+                            idIngrediente = ingrediente.idOriginal,
+                            nutriente = payload
+                        )
+                    }
+                    Log.d("NUTRIENTE", "Enviado nutriente ${nutriente.name} para ingrediente ${ingrediente.idOriginal}")
+                } catch (e: Exception) {
+                    Log.e("ENVIAR", "Erro ao enviar nutriente ${nutriente.name}: ${e.message}")
+                }
+            }
+        }
+    }
+
+    private suspend fun processarIngredientes(ingredientes: List<Ingrediente>) {
+        try {
+            val traduzidos = traduzirIngredientes(ingredientes)
+            val ids = buscarIdsSpoonacular(traduzidos)
+            val nutrientes = buscarInformacoesNutricionais(ids)
+            enviarNutrientes(nutrientes)
+        } catch (e: Exception) {
+            Log.e("PROCESSO", "Erro ao processar ingredientes: ${e.message}")
+        }
+    }
+
+    private val mutex = Mutex()
+
     override fun salvarProduto(
         produto: ProductStepData,
         onBack: () -> Unit,
@@ -226,6 +359,9 @@ class ProductApiViewModel(private val api: ProductService, private val cloudinar
             houveErro = true
         } else if (produto.nome.length < 2) {
             _nomeErro = "Nome do produto deve ter pelo menos 2 caracteres"
+            houveErro = true
+        } else if (produtos.any { it.nome.equals(produto.nome, ignoreCase = true) }) {
+            _nomeErro = "Já existe um produto com este nome"
             houveErro = true
         }
 
@@ -266,18 +402,57 @@ class ProductApiViewModel(private val api: ProductService, private val cloudinar
                     quantidade = produto.quantidade,
                     imagem = produto.imagem,
                     emProducao = produto.emProducao,
-                    ingredientes = produto.ingredientes
+                    ingredientes = produto.ingredientes.map {
+                        IngredientsProduct(
+                            id = it.id,
+                            nome = it.nome,
+                            quantidade = it.quantidade
+                        )
+                    }
                 )
 
                 api.post(produtoFormatado, sessaoUsuario.idEmpresa)
 
                 Log.d("API", "Produto cadastrado com sucesso")
 
+
+                val ingredientesCopia = produto.ingredientes.map { it.copy() }
+
+
+                val ingredientesFiltrados = ingredientesCopia.filter { ingrediente ->
+                    val response = try {
+                        api.getNutrientes(ingrediente.id)
+                    } catch (e: Exception) {
+                        Log.e("VALIDACAO", "Erro ao verificar nutrientes do ingrediente ${ingrediente.id}", e)
+                        null
+                    }
+
+                    val possuiNutrientes = response?.isSuccessful == true && response.body()?.string()?.isNotBlank() == true
+
+                    if (possuiNutrientes) {
+                        Log.d("VALIDACAO", "Ingrediente ${ingrediente.id} já possui nutrientes vinculados")
+                    }
+
+                    !possuiNutrientes
+                }
+
+                launch {
+                    mutex.withLock {
+                        if (ingredientesFiltrados.isNotEmpty()) {
+                            Log.d("PROCESSO", "Iniciando processamento de ingredientes em segundo plano")
+                            processarIngredientes(ingredientesFiltrados)
+                        } else {
+                            Log.d("PROCESSO", "Nenhum ingrediente novo para processar")
+                        }
+                    }
+                }
+
                 onSucess()
                 getProdutos()
 
                 delay(1500)
                 onBack()
+
 
             } catch (e: HttpException) {
                 if (e.code() == 400) {}
@@ -381,6 +556,7 @@ class ProductApiViewModel(private val api: ProductService, private val cloudinar
                             id = receita.idReceita,
                             idIngrediente = it.id,
                             nome = it.nome,
+                            medida = it.medida,
                             quantidade = receita.quantidade
                         )
                     }
@@ -411,6 +587,11 @@ class ProductApiViewModel(private val api: ProductService, private val cloudinar
             houveErro = true
         } else if (produto.nome.length < 2) {
             _nomeErro = "Nome do produto deve ter pelo menos 2 caracteres"
+            houveErro = true
+        } else if (produtos.any {
+                it.nome.equals(produto.nome, ignoreCase = true) && it.id != produto.id
+            }) {
+            _nomeErro = "Já existe um produto com este nome"
             houveErro = true
         }
 
@@ -460,6 +641,45 @@ class ProductApiViewModel(private val api: ProductService, private val cloudinar
                 }
 
                 Log.d("API", "Produto editado com sucesso")
+
+                val ingredientesCopia = produto.ingredientes.map { it.copy() }
+
+                val ingredientesFiltrados = ingredientesCopia.filter { ingrediente ->
+                    val response = try {
+                        api.getNutrientes(ingrediente.idIngrediente)
+                    } catch (e: Exception) {
+                        Log.e("VALIDACAO", "Erro ao verificar nutrientes do ingrediente ${ingrediente.idIngrediente}", e)
+                        null
+                    }
+
+                    val possuiNutrientes = response?.isSuccessful == true && response.body()?.string()?.isNotBlank() == true
+
+                    if (possuiNutrientes) {
+                        Log.d("VALIDACAO", "Ingrediente ${ingrediente.idIngrediente} já possui nutrientes vinculados")
+                    }
+
+                    !possuiNutrientes
+                }
+
+                launch {
+                    mutex.withLock {
+                        if (ingredientesFiltrados.isNotEmpty()) {
+                            Log.d("PROCESSO", "Iniciando processamento de ingredientes em segundo plano")
+                            processarIngredientes(
+                                ingredientesFiltrados.map{
+                                    Ingrediente(
+                                        id = it.idIngrediente,
+                                        nome = it.nome,
+                                        medida = it.medida.toString(),
+                                        quantidade = it.quantidade
+                                    )
+                                }
+                            )
+                        } else {
+                            Log.d("PROCESSO", "Nenhum ingrediente novo para processar")
+                        }
+                    }
+                }
 
                 onSucess()
                 getProdutos()

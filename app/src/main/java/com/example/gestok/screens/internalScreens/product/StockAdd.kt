@@ -100,7 +100,7 @@ fun StockAdd(
                     }
 
                     Text(
-                        "Adicionar ao Estoque",
+                        "Atualizar Estoque",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W600,
                         color = Black,
@@ -242,7 +242,7 @@ fun StockAdd(
                                     nome = it.nome,
                                     categoria = it.categoria,
                                     preco = it.preco,
-                                    quantidade = 0,
+                                    quantidade = it.quantidade,
                                     emProducao = it.emProducao,
                                     imagem = it.imagem,
                                 )
