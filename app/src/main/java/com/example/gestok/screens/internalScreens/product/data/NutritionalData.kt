@@ -5,3 +5,14 @@ data class NutrientesResponse(
     val tipo: String,
     val pcComposicao: String
 )
+
+data class NutrientesBody(
+    val tipo: String,
+    val pcComposicao: String
+)
+
+data class Nutriente(
+    val name: String,
+    val amount: Double,
+    val unit: String
+)

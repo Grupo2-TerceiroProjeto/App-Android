@@ -148,7 +148,8 @@ fun RegisterCreate(
                             onValueChange = { cargo = it },
                             list = listOf(
                                 "ADMIN",
-                                "SUPERVISOR"
+                                "SUPERVISOR",
+                                "COLABORADOR"
                             ),
                             erro = viewModel.cargoErro
                         )

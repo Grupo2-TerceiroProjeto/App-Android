@@ -25,6 +25,7 @@ import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.LightGray
+import com.example.gestok.ui.theme.LightGrayPieChart
 import com.example.gestok.ui.theme.MediumGray
 import com.example.gestok.ui.theme.White
 
@@ -37,8 +38,8 @@ fun PieChartScreen(
     val slices = listOf(
         PieChartData.Slice("Pendente", data.getOrElse(0) { 0f }, LightBlue),
         PieChartData.Slice("Em Produção", data.getOrElse(1) { 0f }, Blue),
-        PieChartData.Slice("Concluído", data.getOrElse(2) { 0f }, MediumGray),
-        PieChartData.Slice("Cancelado", data.getOrElse(3) { 0f }, LightGray)
+        PieChartData.Slice("Concluído", data.getOrElse(2) { 0f }, LightGrayPieChart),
+        PieChartData.Slice("Cancelado", data.getOrElse(3) { 0f }, MediumGray)
     )
 
     val pieChartData = PieChartData(

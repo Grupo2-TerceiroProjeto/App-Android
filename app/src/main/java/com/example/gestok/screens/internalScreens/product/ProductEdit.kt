@@ -164,6 +164,12 @@ fun ProductEdit(
         }
     }
 
+    LaunchedEffect(viewModel.ingredientes) {
+        viewModel.getReceita(product) { listaAtualizada ->
+            ingredientes = listaAtualizada
+        }
+    }
+
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -572,6 +578,7 @@ fun ProductEdit(
                                 id = 0,
                                 idIngrediente = it.id,
                                 nome = it.nome,
+                                medida = it.medida,
                                 quantidade = 0.0
                             )
                         }

@@ -69,7 +69,10 @@ fun AdminContent(
                         color = Black)
                     Button(
                         onClick = {currentPage.value = "createRegister"},
-                        colors = ButtonDefaults.buttonColors(containerColor = Blue)
+                        enabled =  viewModel.sessaoUsuario.cargo == "ADMIN",
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Blue
+                        )
                     ) {
                         Text("Cadastrar Colaborador", color = White)
                     }
@@ -138,7 +141,10 @@ fun AdminContent(
                             currentPage = currentPage,
                             selectedRegister = selectedRegister,
                             viewModel = viewModel,
-                            excluirHabilitado = funcionario.id != viewModel.sessaoUsuario.id
+                            excluirHabilitado = viewModel.sessaoUsuario.cargo in listOf("ADMIN") &&
+                                    funcionario.id != viewModel.sessaoUsuario.id,
+                            editarHabilitado = viewModel.sessaoUsuario.cargo == "ADMIN" ||
+                                (viewModel.sessaoUsuario.cargo == "SUPERVISOR" && funcionario.cargo == "COLABORADOR")
                         )
                     }
 

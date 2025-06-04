@@ -39,7 +39,8 @@ fun RegisterCard(
     currentPage: MutableState<String>,
     selectedRegister: MutableState<RegisterData?>,
     viewModel: AdminApiViewModel,
-    excluirHabilitado: Boolean
+    excluirHabilitado: Boolean,
+    editarHabilitado: Boolean
 ) {
 
     var showExcludeConfirmDialog by remember { mutableStateOf(false) }
@@ -72,14 +73,22 @@ fun RegisterCard(
                             selectedRegister.value = funcionario
                             currentPage.value = "editRegister"
                         },
+                        enabled = editarHabilitado,
                         modifier = Modifier
                             .size(50.dp)
 
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.edicao_f),
-                            contentDescription = "Editar"
-                        )
+                        if(!editarHabilitado) {
+                            Image(
+                                painter = painterResource(id = R.drawable.edicao_disable),
+                                contentDescription = "Editar",
+                            )
+                        }else {
+                            Image(
+                                painter = painterResource(id = R.drawable.edicao_f),
+                                contentDescription = "Editar"
+                            )
+                        }
 
                     }
 
