@@ -15,7 +15,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.example.gestok.R
+import com.example.gestok.screens.login.data.UserSession
 import com.example.gestok.ui.theme.LightBlue
+import org.koin.compose.koinInject
 
 data class NavItem(
     val label: String,
@@ -36,7 +38,16 @@ fun BottomNavBar(
     modifier: Modifier = Modifier,
     onItemClick: (NavItem) -> Unit
 ) {
-    var selectedNavItem by remember { mutableStateOf(navItemList.first()) }
+    val sessaoUsuario = koinInject<UserSession>()
+    val isAdminOrSupervisor = sessaoUsuario.cargo == "ADMIN" || sessaoUsuario.cargo == "SUPERVISOR"
+
+    val filteredNavItems = navItemList.filterNot {
+        it.label == "Config" && !isAdminOrSupervisor
+    }
+
+    if (filteredNavItems.isEmpty()) return
+
+    var selectedNavItem by remember { mutableStateOf(filteredNavItems.first()) }
 
     BottomAppBar(
         modifier = modifier
@@ -52,7 +63,7 @@ fun BottomNavBar(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
 
-            navItemList.forEachIndexed { index, navItem ->
+            filteredNavItems.forEachIndexed { index, navItem ->
                 IconButton(
                     onClick = {
                         selectedNavItem = navItem

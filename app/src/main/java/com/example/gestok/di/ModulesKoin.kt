@@ -2,6 +2,8 @@ package com.example.gestok.di
 
 import com.example.gestok.network.ApiBackend
 import com.example.gestok.network.ApiCloudinary
+import com.example.gestok.network.ApiLingva
+import com.example.gestok.network.ApiSpoonacular
 import com.example.gestok.screens.login.data.UserSession
 import com.example.gestok.viewModel.admin.AdminApiViewModel
 import com.example.gestok.viewModel.dashboard.DashboardApiViewModel
@@ -53,6 +55,14 @@ val moduloApi = module {
         ApiCloudinary.cloudinaryService()
     }
 
+    factory {
+        ApiLingva.lingvaService()
+    }
+
+    factory {
+        ApiSpoonacular.spoonacularService()
+    }
+
     viewModel {
         LoginApiViewModel(get(), get())
     }
@@ -70,7 +80,7 @@ val moduloApi = module {
     }
 
     viewModel {
-        ProductApiViewModel(get(), get(), get())
+        ProductApiViewModel(get(), get(), get(), get(), get())
     }
 
 

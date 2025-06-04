@@ -73,6 +73,7 @@ fun OrderContent(
                     )
                     Button(
                         onClick = { currentPage.value = "createOrder" },
+                        enabled =  viewModel.sessaoUsuario.cargo == "ADMIN",
                         colors = ButtonDefaults.buttonColors(containerColor = Blue)
                     ) {
                         Text("Cadastrar pedido", color = White)
@@ -145,7 +146,8 @@ fun OrderContent(
                                 pedido = pedido,
                                 currentPage = currentPage,
                                 selectedOrder = selectedOrder,
-                                viewModel = viewModel
+                                viewModel = viewModel,
+                                editarHabilitado = viewModel.sessaoUsuario.cargo in listOf("ADMIN", "SUPERVISOR")
                             )
                         }
                 }
