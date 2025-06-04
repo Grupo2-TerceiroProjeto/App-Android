@@ -42,7 +42,8 @@ fun OrderCard(
     pedido: OrderData,
     currentPage: MutableState<String>,
     selectedOrder: MutableState<OrderData?>,
-    viewModel: OrderApiViewModel
+    viewModel: OrderApiViewModel,
+    editarHabilitado: Boolean
 ) {
 
     val enabled = pedido.status == "Cancelado" || pedido.status == "Concluído"
@@ -127,22 +128,28 @@ fun OrderCard(
                     ) {
                         Row() {
                             if (!enabled) {
+
                                 IconButton(
                                     onClick = {
                                         selectedOrder.value = pedido
                                         currentPage.value = "editOrder"
                                     },
+                                    enabled = editarHabilitado,
                                     modifier = Modifier
                                         .size(50.dp)
 
                                 ) {
-                                    Image(
-                                        painter = painterResource(id = R.drawable.edicao_f),
-                                        contentDescription = "Editar",
-
-
+                                    if(!editarHabilitado) {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.edicao_disable),
+                                            contentDescription = "Editar",
                                         )
-
+                                    }else {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.edicao_f),
+                                            contentDescription = "Editar",
+                                        )
+                                    }
 
                                 }
                             }

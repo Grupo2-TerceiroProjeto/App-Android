@@ -75,6 +75,7 @@ fun ProductContent(
 
                     Button(
                         onClick = {currentPage.value = "stockAdd"},
+                        enabled =  viewModel.sessaoUsuario.cargo in listOf("ADMIN", "SUPERVISOR"),
                         colors = ButtonDefaults.buttonColors(containerColor = Blue)
                     ) {
                         Text("Estoque", color = White)
@@ -82,6 +83,7 @@ fun ProductContent(
 
                     Button(
                         onClick = {currentPage.value = "createProduct"},
+                        enabled =  viewModel.sessaoUsuario.cargo in listOf("ADMIN", "SUPERVISOR"),
                         colors = ButtonDefaults.buttonColors(containerColor = Blue)
                     ) {
                         Text("Novo produto", color = White)
@@ -161,7 +163,10 @@ fun ProductContent(
                             categorias = categorias,
                             currentPage = currentPage,
                             selectedProduct = selectedProduct,
-                            viewModel = viewModel
+                            viewModel = viewModel,
+                            excluirHabilitado = viewModel.sessaoUsuario.cargo in listOf("ADMIN", "SUPERVISOR"),
+                            editarHabilitado = viewModel.sessaoUsuario.cargo in listOf("ADMIN", "SUPERVISOR"),
+                            producaoHabilitado = viewModel.sessaoUsuario.cargo in listOf("ADMIN", "SUPERVISOR")
                         )
                     }
 
