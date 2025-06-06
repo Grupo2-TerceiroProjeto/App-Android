@@ -25,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,10 +33,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gestok.R
 import com.example.gestok.components.InputLabel
 import com.example.gestok.components.orderpage.ItensAdd
 import com.example.gestok.components.orderpage.ItensBlock
@@ -115,6 +118,10 @@ fun OrderEdit(
 
     var itensAdd by remember { mutableStateOf(false) }
 
+    LaunchedEffect(Unit) {
+        viewModel.limparErrosFormulario()
+    }
+
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -147,7 +154,7 @@ fun OrderEdit(
                     }
 
                     Text(
-                        "Editar Pedido",
+                        stringResource(R.string.order_edit_text),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W600,
                         color = Black,
@@ -167,7 +174,7 @@ fun OrderEdit(
 
                     Column {
                         InputLabel(
-                            text = "Solicitante",
+                            text = stringResource(R.string.label_order_applicant),
                             value = editedNomeSolicitante,
                             onValueChange = {
                                 val filtered =
@@ -182,7 +189,7 @@ fun OrderEdit(
 
                     Column {
                         InputLabel(
-                            text = "Contato",
+                            text = stringResource(R.string.label_order_contact),
                             value = formatPhoneNumber(editedContato),
                             onValueChange = {
                                 val cleaned = it.replace(Regex("[^\\d]"), "").take(11)
@@ -196,7 +203,7 @@ fun OrderEdit(
 
                     Column {
                         SelectOption(
-                            text = "Status do Pedido",
+                            text = stringResource(R.string.label_order_status),
                             value = editedStatusPedido,
                             onValueChange = { editedStatusPedido = it },
                             list = listOf(
@@ -211,7 +218,7 @@ fun OrderEdit(
 
                     Column {
                         InputLabel(
-                            text = "Data de Entrega",
+                            text = stringResource(R.string.label_order_delivery_date),
                             value = editedDataEntrega,
                             onValueChange = {
                                 editedDataEntrega = formatDate(it)
@@ -224,7 +231,7 @@ fun OrderEdit(
 
                     Column {
                         InputLabel(
-                            text = "Valor",
+                            text =  stringResource(R.string.label_order_value),
                             value = editedValorPedido,
                             onValueChange = { },
                             keyboardType = androidx.compose.ui.text.input.KeyboardType.Decimal,
@@ -249,7 +256,7 @@ fun OrderEdit(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        "Itens",
+                        stringResource(R.string.order_items_text),
                         fontWeight = W600,
                         color = Blue,
                         fontSize = 18.sp
@@ -264,7 +271,7 @@ fun OrderEdit(
                             tint = White,
 
                             )
-                        Text("  Adicionar", color = White)
+                        Text("  " + stringResource(R.string.to_add_text), color = White)
                     }
                 }
 
@@ -283,7 +290,7 @@ fun OrderEdit(
 
                 if (editedItens.isEmpty()) {
                     Text(
-                        "Para salvar o pedido, é necessário adicionar pelo menos um produto",
+                        stringResource(R.string.order_empty_products_text),
                         fontSize = 14.sp,
                         color = Black,
                         modifier = Modifier.padding(
@@ -352,7 +359,7 @@ fun OrderEdit(
                                     tint = White
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Salvar", color = White, fontSize = 16.sp)
+                                Text(stringResource(R.string.button_save_text), color = White, fontSize = 16.sp)
                             }
 
                             if (viewModel.edicaoErro != null) {

@@ -48,12 +48,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.gestok.R
 import com.example.gestok.components.InputLabel
 import com.example.gestok.components.productpage.IngredientAdd
 import com.example.gestok.components.productpage.IngredientBlockExclude
@@ -202,7 +204,7 @@ fun ProductEdit(
                     }
 
                     Text(
-                        "Editar Produto",
+                        stringResource(R.string.title_edit_product),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W600,
                         color = Black,
@@ -222,7 +224,7 @@ fun ProductEdit(
 
                     Column {
                         Text(
-                            "Foto do produto",
+                            stringResource(R.string.label_product_photo),
                             Modifier.padding(bottom = 15.dp),
                             fontWeight = W600,
                             color = Blue
@@ -250,7 +252,7 @@ fun ProductEdit(
                                     when {
                                         isUploading -> {
                                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                                Text("Carregando...", color = Blue)
+                                                Text(stringResource(R.string.loading_product_photo), color = Blue)
                                             }
                                         }
                                         imagemUrl != null -> {
@@ -275,7 +277,7 @@ fun ProductEdit(
                                                         .align(Alignment.BottomCenter)
                                                         .padding(bottom = 12.dp)
                                                 ) {
-                                                    Text("Trocar Imagem", color = White)
+                                                    Text(stringResource(R.string.button_product_change_image), color = White)
                                                 }
                                             }
                                         }
@@ -292,7 +294,7 @@ fun ProductEdit(
                                                     onClick = { launcher.launch("image/*") },
                                                     colors = ButtonDefaults.buttonColors(Blue)
                                                 ) {
-                                                    Text("Escolher Imagem", color = White)
+                                                    Text(stringResource(R.string.button_product_choose_image), color = White)
                                                 }
                                             }
                                         }
@@ -304,7 +306,7 @@ fun ProductEdit(
 
                     Column {
                         InputLabel(
-                            text = "Nome",
+                            text = stringResource(R.string.label_name),
                             value = nome,
                             onValueChange = {
                                 val filtered =
@@ -319,7 +321,7 @@ fun ProductEdit(
 
                     Column {
                         InputLabel(
-                            text = "Preço",
+                            text = stringResource(R.string.label_product_price),
                             value = precoTexto,
                             onValueChange = {
                                 precoTexto = it
@@ -333,7 +335,7 @@ fun ProductEdit(
 
                     Column {
                         InputLabel(
-                            text = "Estoque",
+                            text = stringResource(R.string.label_product_stock),
                             value = estoqueTexto,
                             onValueChange = {
                                 estoqueTexto = it
@@ -353,7 +355,7 @@ fun ProductEdit(
                         val categoriaSelecionada = categoriaAtual?.nome ?: ""
 
                         SelectOption(
-                            text = "Categoria",
+                            text = stringResource(R.string.label_product_categories),
                             value = categoriaSelecionada,
                             onValueChange = { selectedNome ->
                                 val idSelecionado = categoriasUnicas.find { it.nome == selectedNome }?.id
@@ -369,7 +371,7 @@ fun ProductEdit(
                             categorias.find { it.id == subCategoria }?.subCategoria ?: ""
 
                         SelectOption(
-                            text = "Sub Categoria",
+                            text = stringResource(R.string.label_product_sub_categories),
                             value = subCategoriaSelecionada,
                             onValueChange = { selectedNome ->
                                 val idSelecionado =
@@ -397,7 +399,7 @@ fun ProductEdit(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        "Ingredientes",
+                        stringResource(R.string.product_ingredients_text),
                         fontWeight = W600,
                         color = Blue,
                         fontSize = 18.sp
@@ -412,7 +414,7 @@ fun ProductEdit(
                             tint = White,
 
                             )
-                        Text("  Adicionar", color = White)
+                        Text("  " + stringResource(R.string.to_add_text), color = White)
                     }
                 }
 
@@ -441,14 +443,14 @@ fun ProductEdit(
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 CircularProgressIndicator()
                                 Spacer(modifier = Modifier.height(10.dp))
-                                Text("Carregando Receita...", color = MediumGray)
+                                Text(stringResource(R.string.loading_product_recipe), color = MediumGray)
                             }
                         }
                     }
 
                     ingredientes.isEmpty() -> {
                         Text(
-                            "Para salvar o produto, é necessário adicionar pelo menos um ingrediente",
+                            stringResource(R.string.empty_products_msg),
                             fontSize = 14.sp,
                             color = Black,
                             modifier = Modifier.padding(
@@ -523,7 +525,7 @@ fun ProductEdit(
                                         tint = White
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Text("Salvar", color = White, fontSize = 16.sp)
+                                    Text(stringResource(R.string.button_save_text), color = White, fontSize = 16.sp)
                                 }
 
                                 if (viewModel.edicaoErro != null) {

@@ -56,7 +56,10 @@ import androidx.compose.material.icons.filled.ArrowCircleUp
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import coil.compose.AsyncImage
+import com.example.gestok.R
 import com.example.gestok.components.productpage.IngredientAdd
 import com.example.gestok.components.productpage.IngredientBlockExclude
 import com.example.gestok.components.productpage.IngredientCreate
@@ -186,7 +189,7 @@ fun ProductCreate(
                     }
 
                     Text(
-                        "Cadastrar Produto",
+                        stringResource(R.string.title_register_product),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W600,
                         color = Black,
@@ -206,7 +209,7 @@ fun ProductCreate(
 
                     Column {
                         Text(
-                            "Foto do produto",
+                            stringResource(R.string.label_product_photo),
                             Modifier.padding(bottom = 15.dp),
                             fontWeight = W600,
                             color = Blue
@@ -225,7 +228,7 @@ fun ProductCreate(
                             ) {
                                 if (isUploading) {
                                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                        Text("Carregando...", color = Blue)
+                                        Text(stringResource(R.string.loading_product_photo), color = Blue)
                                     }
                                 } else if (publicId != null) {
                                     Box(
@@ -249,7 +252,7 @@ fun ProductCreate(
                                                 .align(Alignment.BottomCenter)
                                                 .padding(bottom = 12.dp)
                                         ) {
-                                            Text("Trocar Imagem", color = White)
+                                            Text(stringResource(R.string.button_product_change_image), color = White)
                                         }
                                     }
                                 } else {
@@ -267,7 +270,7 @@ fun ProductCreate(
                                             onClick = { launcher.launch("image/*") },
                                             colors = ButtonDefaults.buttonColors(Blue)
                                         ) {
-                                            Text("Escolher Imagem", color = White)
+                                            Text(stringResource(R.string.button_product_choose_image), color = White)
                                         }
                                     }
                                 }
@@ -277,7 +280,7 @@ fun ProductCreate(
 
                     Column {
                         InputLabel(
-                            text = "Nome",
+                            text = stringResource(R.string.label_name),
                             value = nome,
                             onValueChange = {
                                 val filtered = it.filter { char -> char.isLetter() || char.isWhitespace() }
@@ -291,7 +294,7 @@ fun ProductCreate(
 
                     Column {
                         InputLabel(
-                            text = "Preço",
+                            text = stringResource(R.string.label_product_price),
                             value = precoTexto,
                             onValueChange = {
                                 precoTexto = it
@@ -305,7 +308,7 @@ fun ProductCreate(
 
                     Column {
                         InputLabel(
-                            text = "Estoque",
+                            text = stringResource(R.string.label_product_stock),
                             value = estoqueTexto,
                             onValueChange = {
                                 estoqueTexto = it
@@ -322,8 +325,8 @@ fun ProductCreate(
                         val categoriaSelecionada = categoriasUnicas.find { it.id == categoria }?.nome ?: ""
 
                         SelectOption(
-                            text = "Categoria",
-                            value = if (categoriaSelecionada.isEmpty()) "Selecione uma opção" else categoriaSelecionada,
+                            text = stringResource(R.string.label_product_categories),
+                            value = if (categoriaSelecionada.isEmpty()) stringResource(R.string.label_select_option) else categoriaSelecionada,
                             onValueChange = { selectedNome ->
                                 val idSelecionado = categoriasUnicas.find { it.nome == selectedNome }?.id
                                 categoria = idSelecionado ?: 0
@@ -337,8 +340,8 @@ fun ProductCreate(
                         var subCategoriaSelecionada by remember { mutableStateOf("") }
 
                         SelectOption(
-                            text = "Sub Categoria",
-                            value = if (subCategoriaSelecionada.isEmpty()) "Selecione uma opção" else subCategoriaSelecionada,
+                            text = stringResource(R.string.label_product_sub_categories),
+                            value = if (subCategoriaSelecionada.isEmpty()) stringResource(R.string.label_select_option) else subCategoriaSelecionada,
                             onValueChange = { selectedNome ->
                                 subCategoriaSelecionada = selectedNome
                                 val idSelecionado = categorias.find { it.subCategoria == selectedNome }?.id
@@ -365,7 +368,7 @@ fun ProductCreate(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        "Ingredientes",
+                        stringResource(R.string.product_ingredients_text),
                         fontWeight = W600,
                         color = Blue,
                         fontSize = 18.sp
@@ -380,7 +383,7 @@ fun ProductCreate(
                             tint = White,
 
                             )
-                        Text("  Adicionar", color = White)
+                        Text("  " + stringResource(R.string.to_add_text), color = White)
                     }
                 }
 
@@ -400,28 +403,59 @@ fun ProductCreate(
 
 
                 if (ingredientes.isEmpty()) {
-                    Text(
-                        "Para salvar o produto, é necessário adicionar pelo menos um ingrediente",
-                        fontSize = 14.sp,
-                        color = Black,
-                        modifier = Modifier.padding(
-                            start = 50.dp,
-                            end = 50.dp,
-                            top = 32.dp,
-                            bottom = 32.dp
-                        ),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                    )
+                    if (viewModel.produtos.isNotEmpty()) {
+                        Text(
+                            stringResource(R.string.empty_products_msg),
+                            fontSize = 14.sp,
+                            color = Black,
+                            modifier = Modifier.padding(
+                                start = 50.dp,
+                                end = 50.dp,
+                                top = 32.dp,
+                                bottom = 32.dp
+                            ),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                    if (viewModel.produtos.isEmpty()) {
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(top = 50.dp, bottom = 10.dp),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Button(
+                                    onClick = { viewModel.salvarProduto(novoProduto, onBack, onSucess) },
+                                    colors = ButtonDefaults.buttonColors(Blue),
+                                ) {
+                                    Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = White)
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(stringResource(R.string.button_save_text), color = White, fontSize = 16.sp)
+                                }
+
+                                if (viewModel.cadastroErro != null) {
+                                    Text(
+                                        viewModel.cadastroErro!!,
+                                        fontSize = 13.sp,
+                                        fontWeight = FontWeight.W600,
+                                        color = Color(0xFFD32F2F),
+                                        modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
                 } else {
                     LazyColumn(
                         modifier = Modifier
                             .padding(start = 20.dp, end = 20.dp, top = 24.dp)
-                            .heightIn(max  = 250.dp),
+                            .heightIn(max = 250.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         items(ingredientes.size) { index ->
                             val item = ingredientes[index]
-                            IngredientBlockExclude (
+                            IngredientBlockExclude(
                                 listOf(IngredientsBlock(nome = item.nome, quantidade = item.quantidade.toInt())),
                                 updateQuantidade = { _, newQtd -> updateQuantidade(index, newQtd) },
                                 onExcluirClick = {
@@ -439,16 +473,14 @@ fun ProductCreate(
                             .padding(top = 10.dp, bottom = 10.dp),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Button(
                                 onClick = { viewModel.salvarProduto(novoProduto, onBack, onSucess) },
                                 colors = ButtonDefaults.buttonColors(Blue),
                             ) {
                                 Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = White)
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Salvar", color = White, fontSize = 16.sp)
+                                Text(stringResource(R.string.button_save_text), color = White, fontSize = 16.sp)
                             }
 
                             if (viewModel.cadastroErro != null) {

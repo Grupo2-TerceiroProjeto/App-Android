@@ -38,10 +38,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gestok.R
 import com.example.gestok.screens.internalScreens.product.data.IngredientsData
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
@@ -86,7 +88,7 @@ fun IngredientAdd(
         ) {
 
             Text(
-                "Todos os ingredientes",
+                stringResource(R.string.product_ingredients_text),
                 Modifier.padding(start = 20.dp),
                 color = Blue,
                 fontWeight = W600,
@@ -122,7 +124,7 @@ fun IngredientAdd(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         CircularProgressIndicator()
                         Spacer(modifier = Modifier.height(10.dp))
-                        Text("Carregando Ingredientes...", color = MediumGray)
+                        Text( stringResource(R.string.loading_product_ingredients), color = MediumGray)
                     }
                 }
             }
@@ -134,9 +136,18 @@ fun IngredientAdd(
                         .padding(top = 30.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("Nenhum ingrediente cadastrado", color = MediumGray)
 
-                    Spacer(modifier = Modifier.height(40.dp))
+                    val listaProdutosVazia = viewModel.produtos.isEmpty()
+
+                    Text(
+                        if (listaProdutosVazia)
+                            "Cadastre pelo menos um produto \n para poder cadastrar ingredientes"
+                        else
+                            "Nenhum ingrediente cadastrado",
+                        color = MediumGray
+                    )
+
+                    Spacer(modifier = Modifier.height(35.dp))
 
                     Row(
                         horizontalArrangement = Arrangement.Center,
@@ -146,10 +157,11 @@ fun IngredientAdd(
                     ) {
                         Button(
                             onClick = { onCriarNovoIngrediente() },
+                            enabled = viewModel.produtos.isNotEmpty(),
                             colors = ButtonDefaults.buttonColors(containerColor = LightBlue),
                             modifier = Modifier.width(150.dp)
                         ) {
-                            Text("+ Ingrediente", color = White)
+                            Text(stringResource(R.string.button_product_register_ingredient), color = White)
                         }
 
                         Spacer(modifier = Modifier.width(12.dp))
@@ -159,7 +171,7 @@ fun IngredientAdd(
                             colors = ButtonDefaults.buttonColors(Blue),
                             modifier = Modifier.width(150.dp)
                         ) {
-                            Text("Adicionar", color = White)
+                            Text(stringResource(R.string.to_add_text), color = White)
                         }
                     }
                 }
@@ -245,7 +257,7 @@ fun IngredientAdd(
                     colors = ButtonDefaults.buttonColors(containerColor = LightBlue),
                     modifier = Modifier.width(150.dp)
                 ) {
-                    Text("+ Ingrediente", color = White)
+                    Text(stringResource(R.string.button_product_register_ingredient), color = White)
                 }
 
                 Spacer(modifier = Modifier.width(12.dp))
@@ -255,7 +267,7 @@ fun IngredientAdd(
                     colors = ButtonDefaults.buttonColors(Blue),
                     modifier = Modifier.width(150.dp)
                 ) {
-                    Text("Adicionar", color = White)
+                    Text(stringResource(R.string.to_add_text), color = White)
                 }
             }
         }

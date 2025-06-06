@@ -33,10 +33,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gestok.R
 import com.example.gestok.components.InputLabel
 import com.example.gestok.components.orderpage.ItensAdd
 import com.example.gestok.components.orderpage.ItensBlock
@@ -126,7 +128,7 @@ fun OrderCreate(
                     }
 
                     Text(
-                        "Cadastrar Pedido",
+                        stringResource(R.string.order_register_text),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W600,
                         color = Black,
@@ -146,7 +148,7 @@ fun OrderCreate(
 
                     Column {
                         InputLabel(
-                            text = "Solicitante",
+                            text = stringResource(R.string.label_order_applicant),
                             value = nomeSolicitante,
                             onValueChange = {
                                 val filtered = it.filter { char -> char.isLetter() || char.isWhitespace() }
@@ -160,7 +162,7 @@ fun OrderCreate(
 
                     Column {
                         InputLabel(
-                            text = "Contato",
+                            text = stringResource(R.string.label_order_contact),
                             value = telefone,
                             onValueChange = { telefone = formatPhoneNumber(it) },
                             keyboardType = androidx.compose.ui.text.input.KeyboardType.Phone,
@@ -171,7 +173,7 @@ fun OrderCreate(
 
                     Column {
                         SelectOption(
-                            text = "Status do Pedido",
+                            text = stringResource(R.string.label_order_status),
                             value = status,
                             onValueChange = { status = it },
                             list = listOf(
@@ -186,7 +188,7 @@ fun OrderCreate(
 
                     Column {
                         InputLabel(
-                            text = "Data de Entrega",
+                            text = stringResource(R.string.label_order_delivery_date),
                             value = dataEntrega,
                             onValueChange = {
                                 dataEntrega = formatDate(it)
@@ -199,7 +201,7 @@ fun OrderCreate(
 
                     Column {
                         InputLabel(
-                            text = "Valor",
+                            text =  stringResource(R.string.label_order_value),
                             value = totalCompra,
                             onValueChange = { },
                             keyboardType = androidx.compose.ui.text.input.KeyboardType.Decimal,
@@ -224,7 +226,7 @@ fun OrderCreate(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        "Itens",
+                        stringResource(R.string.order_items_text),
                         fontWeight = W600,
                         color = Blue,
                         fontSize = 18.sp
@@ -239,7 +241,7 @@ fun OrderCreate(
                             tint = White,
 
                             )
-                        Text("  Adicionar", color = White)
+                        Text("  " + stringResource(R.string.to_add_text), color = White)
                     }
                 }
 
@@ -260,7 +262,7 @@ fun OrderCreate(
 
                 if (produtos.isEmpty()) {
                     Text(
-                        "Para salvar o pedido, é necessário adicionar pelo menos um produto",
+                        stringResource(R.string.order_empty_products_text),
                         fontSize = 14.sp,
                         color = Black,
                         modifier = Modifier.padding(
@@ -307,7 +309,7 @@ fun OrderCreate(
                             ) {
                                 Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = White)
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Salvar", color = White, fontSize = 16.sp)
+                                Text(stringResource(R.string.button_save_text), color = White, fontSize = 16.sp)
                             }
 
                             if (viewModel.cadastroErro != null) {

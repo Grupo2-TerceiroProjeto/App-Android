@@ -16,11 +16,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.gestok.R
 import com.example.gestok.components.Input
 import com.example.gestok.components.PrimaryButton
 import com.example.gestok.screens.login.data.UserStepReset
@@ -48,7 +50,7 @@ fun NewPasswordStep(
     ) {
 
         Input(
-            "Nova senha",
+            stringResource(R.string.label_new_password),
             Modifier
                 .padding(top = 18.dp)
                 .align(Alignment.Start)
@@ -66,7 +68,7 @@ fun NewPasswordStep(
             }
         )
         Input(
-            "Confirmar senha",
+            stringResource(R.string.label_confirm_password),
             Modifier
                 .padding(top = 18.dp, bottom = 55.dp)
                 .align(Alignment.Start)
@@ -84,7 +86,7 @@ fun NewPasswordStep(
             }
         )
 
-        PrimaryButton("Concluir") {
+        PrimaryButton(stringResource(R.string.button_new_password_step_conclude_text)) {
             val email = viewModel.emailResponse.value?.email ?: return@PrimaryButton
 
             viewModel.redefinirSenha(

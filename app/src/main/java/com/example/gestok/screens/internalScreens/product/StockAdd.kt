@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -32,10 +31,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gestok.R
 import com.example.gestok.components.orderpage.ItensBlock
 import com.example.gestok.components.productpage.ProductAdd
 import com.example.gestok.screens.internalScreens.order.data.OrderItensBlock
@@ -100,7 +101,7 @@ fun StockAdd(
                     }
 
                     Text(
-                        "Atualizar Estoque",
+                        stringResource(R.string.title_update_stock),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W600,
                         color = Black,
@@ -126,7 +127,7 @@ fun StockAdd(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        "Produtos",
+                        stringResource(R.string.title_product),
                         fontWeight = W600,
                         color = Blue,
                         fontSize = 18.sp
@@ -141,7 +142,7 @@ fun StockAdd(
                             tint = White,
 
                             )
-                        Text("  Adicionar", color = White)
+                        Text("  " + stringResource(R.string.to_add_text), color = White)
                     }
                 }
 
@@ -162,7 +163,7 @@ fun StockAdd(
 
                 if (produtos.isEmpty()) {
                     Text(
-                        "Selecione produtos para atualizar sua quantidade em estoque",
+                        stringResource(R.string.stock_add_empty_products_msg),
                         fontSize = 14.sp,
                         color = Black,
                         modifier = Modifier.padding(
@@ -209,7 +210,7 @@ fun StockAdd(
                             ) {
                                 Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = White)
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Salvar", color = White, fontSize = 16.sp)
+                                Text(stringResource(R.string.button_save_text), color = White, fontSize = 16.sp)
                             }
 
                             if (viewModel.estoqueErro != null) {

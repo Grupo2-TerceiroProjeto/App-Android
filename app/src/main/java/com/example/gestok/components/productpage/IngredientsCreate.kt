@@ -31,9 +31,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gestok.R
 import com.example.gestok.components.InputLabel
 import com.example.gestok.screens.internalScreens.product.data.IngredientsBody
 import com.example.gestok.ui.theme.Black
@@ -99,7 +101,7 @@ fun IngredientCreate(
                 )
 
                 Text(
-                    "Novo Ingrediente",
+                    stringResource(R.string.title_ingredient),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.W600,
                     color = Black,
@@ -119,7 +121,7 @@ fun IngredientCreate(
 
                 Column {
                     InputLabel(
-                        text = "Nome",
+                        text = stringResource(R.string.label_name),
                         value = nome,
                         onValueChange = {
                             val filtered =
@@ -134,7 +136,7 @@ fun IngredientCreate(
 
                 Column {
                     InputLabel(
-                        text = "Quantidade",
+                        text = stringResource(R.string.label_ingredient_amount),
                         value = quantidadeTexto,
                         onValueChange = {
                             quantidadeTexto = it
@@ -148,8 +150,8 @@ fun IngredientCreate(
 
                 Column {
                     SelectOption(
-                        text = "Medida",
-                        value = if (medidaSelecionada.isEmpty()) "Selecione uma opção" else medidaSelecionada,
+                        text = stringResource(R.string.label_ingredient_measure),
+                        value = if (medidaSelecionada.isEmpty()) stringResource(R.string.label_select_option) else medidaSelecionada,
                         onValueChange = { selectedMedida ->
                             medidaSelecionada = selectedMedida
                             val idSelecionado =
@@ -182,7 +184,7 @@ fun IngredientCreate(
                                 tint = White
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Voltar", color = White, fontSize = 16.sp)
+                            Text(stringResource(R.string.button_back_text), color = White, fontSize = 16.sp)
                         }
 
                         Spacer(modifier = Modifier.width(12.dp))
@@ -202,7 +204,7 @@ fun IngredientCreate(
                                 tint = White
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Criar Ingrediente", color = White, fontSize = 16.sp)
+                            Text(stringResource(R.string.button_ingredient_register_txt), color = White, fontSize = 16.sp)
                         }
 
 
