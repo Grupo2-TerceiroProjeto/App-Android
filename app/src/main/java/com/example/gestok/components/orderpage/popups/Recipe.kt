@@ -21,10 +21,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.gestok.R
 import com.example.gestok.screens.internalScreens.product.data.IngredientsFormat
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.White
@@ -53,7 +55,7 @@ fun Recipe(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        "Lista de Ingredientes",
+                        stringResource(R.string.order_recipe_text),
                         fontWeight = W600,
                         color = Blue,
                         fontSize = 18.sp
@@ -79,7 +81,7 @@ fun Recipe(
                                 .weight(1f),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("Nenhuma receita encontrada", color = Color.Gray)
+                            Text(stringResource(R.string.order_recipe_no_ingredients), color = Color.Gray)
                         }
                     }
 

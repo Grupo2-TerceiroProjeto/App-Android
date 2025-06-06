@@ -21,9 +21,11 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gestok.R
 import com.example.gestok.components.adminpage.RegisterCard
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
@@ -63,7 +65,7 @@ fun AdminContent(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Administração",
+                    Text(stringResource(R.string.title_administration),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W600,
                         color = Black)
@@ -74,7 +76,7 @@ fun AdminContent(
                             containerColor = Blue
                         )
                     ) {
-                        Text("Cadastrar Colaborador", color = White)
+                        Text(stringResource(R.string.administration_register_employee_text), color = White)
                     }
                 }
 
@@ -126,7 +128,7 @@ fun AdminContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            "Nenhum funcionário cadastrado",
+                            stringResource(R.string.administration_no_employees_msg),
                             fontSize = 16.sp,
                             color = Black
                         )

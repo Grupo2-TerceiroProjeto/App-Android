@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -72,12 +73,12 @@ fun OrderCard(
         Column(modifier = Modifier.padding(16.dp)) {
             Row(Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("Solicitante", fontWeight = FontWeight.Bold, color = Blue)
+                    Text(stringResource(R.string.label_order_applicant), fontWeight = FontWeight.Bold, color = Blue)
                     Text(pedido.nomeSolicitante, fontWeight = FontWeight.W300, color = Blue)
                 }
                 Spacer(modifier = Modifier.width(16.dp))
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("Contato", fontWeight = FontWeight.Bold, color = Blue)
+                    Text(stringResource(R.string.label_order_contact), fontWeight = FontWeight.Bold, color = Blue)
                     Text(
                         formatPhoneNumber(pedido.telefone),
                         fontWeight = FontWeight.W300,
@@ -90,12 +91,12 @@ fun OrderCard(
 
             Row(Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("Status do pedido", fontWeight = FontWeight.Bold, color = Blue)
+                    Text(stringResource(R.string.label_order_status), fontWeight = FontWeight.Bold, color = Blue)
                     Text(pedido.status, fontWeight = FontWeight.W300, color = Blue)
                 }
                 Spacer(modifier = Modifier.width(16.dp))
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("Data entrega", fontWeight = FontWeight.Bold, color = Blue)
+                    Text(stringResource(R.string.label_order_delivery_date), fontWeight = FontWeight.Bold, color = Blue)
                     Text(pedido.dataEntrega ?: "", fontWeight = FontWeight.W300, color = Blue)
                 }
             }
@@ -200,7 +201,7 @@ fun OrderCard(
 
     if (showInfoDialog) {
         InfoDialog(
-            message = "Este pedido foi ${pedido.status} e não pode mais ser editado.",
+            message = stringResource(R.string.order_info_msg, pedido.status),
             onDismiss = { showInfoDialog = false }
         )
     }

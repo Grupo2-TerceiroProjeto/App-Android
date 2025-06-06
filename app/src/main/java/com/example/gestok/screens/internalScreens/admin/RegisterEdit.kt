@@ -31,10 +31,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gestok.R
 import com.example.gestok.components.InputLabel
 import com.example.gestok.screens.internalScreens.admin.data.RegisterData
 import com.example.gestok.screens.internalScreens.admin.data.RegisterEditData
@@ -102,7 +104,7 @@ fun RegisterEdit(
                     }
 
                     Text(
-                        "Editar Funcionário",
+                        stringResource(R.string.administration_edit_employee_text),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W600,
                         color = Black,
@@ -122,7 +124,7 @@ fun RegisterEdit(
 
                     Column {
                         InputLabel(
-                            text = "Nome",
+                            text = stringResource(R.string.label_name),
                             value = editNome,
                             onValueChange = {
                                 val filtered = it.filter { char -> char.isLetter() || char.isWhitespace() }
@@ -136,7 +138,7 @@ fun RegisterEdit(
 
                     Column {
                         InputLabel(
-                            text = "Email",
+                            text = stringResource(R.string.label_email),
                             value = editEmail,
                             onValueChange = { editEmail = (it) },
                             keyboardType = androidx.compose.ui.text.input.KeyboardType.Email,
@@ -147,12 +149,13 @@ fun RegisterEdit(
 
                     Column {
                         SelectOption(
-                            text = "Cargo",
+                            text = stringResource(R.string.label_position),
                             value = editCargo,
                             onValueChange = { editCargo = it },
                             list = listOf(
                                 "ADMIN",
-                                "SUPERVISOR"
+                                "SUPERVISOR",
+                                "COLABORADOR"
                             ),
                             erro = viewModel.cargoErro
                         )
@@ -160,7 +163,7 @@ fun RegisterEdit(
 
                     Column {
                         InputLabel(
-                            text = "Senha",
+                            text =  stringResource(R.string.label_password),
                             value = editSenha,
                             onValueChange = {
                                 editSenha = (it)
@@ -204,7 +207,7 @@ fun RegisterEdit(
                             tint = White
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Salvar", color = White, fontSize = 16.sp)
+                        Text(stringResource(R.string.button_save_text), color = White, fontSize = 16.sp)
                     }
 
                     if (viewModel.edicaoErro != null) {

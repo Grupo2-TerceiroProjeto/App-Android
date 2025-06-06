@@ -18,12 +18,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.gestok.MainActivity
+import com.example.gestok.R
 import com.example.gestok.components.Input
 import com.example.gestok.components.PrimaryButton
 import com.example.gestok.ui.theme.LightBlue
@@ -57,7 +59,7 @@ fun Login(navController: NavController, viewModel: LoginApiViewModel) {
             ) {
 
                 Input(
-                    "E-mail",
+                    stringResource(R.string.label_email),
                     Modifier
                         .padding(top = 12.dp)
                         .align(Alignment.Start)
@@ -73,7 +75,7 @@ fun Login(navController: NavController, viewModel: LoginApiViewModel) {
                 )
 
                 Input(
-                    "Senha",
+                    stringResource(R.string.label_password),
                     Modifier
                         .padding(top = 12.dp)
                         .align(Alignment.Start)
@@ -88,7 +90,7 @@ fun Login(navController: NavController, viewModel: LoginApiViewModel) {
                 )
 
                 Text(
-                    text = "Esqueci minha senha",
+                    text =  stringResource(R.string.forgot_password_text),
                     color = LightBlue,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
@@ -98,7 +100,7 @@ fun Login(navController: NavController, viewModel: LoginApiViewModel) {
                         .padding(top = 12.dp, bottom = 30.dp)
                 )
 
-        PrimaryButton("Entrar") {
+        PrimaryButton(stringResource(R.string.button_login_text)) {
             viewModel.login(email, senha)
         }
 

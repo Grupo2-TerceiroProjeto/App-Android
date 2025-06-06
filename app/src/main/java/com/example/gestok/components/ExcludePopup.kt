@@ -20,11 +20,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.gestok.R
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.White
@@ -52,13 +54,13 @@ fun ExcludeConfirmationDialog(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Text("Excluir", fontWeight = W600, color = Blue, fontSize = 25.sp)
+                        Text(stringResource(R.string.title_delete), fontWeight = W600, color = Blue, fontSize = 25.sp)
                     }
 
                     Row(   Modifier.fillMaxWidth().padding(20.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center){
-                        Text("Você tem certeza que deseja excluir?", textAlign = TextAlign.Center)
+                        Text(stringResource(R.string.delete_msg), textAlign = TextAlign.Center)
                     }
                     Spacer(modifier = Modifier.height(5.dp))
 
@@ -76,7 +78,7 @@ fun ExcludeConfirmationDialog(
                                 tint = White,
 
                                 )
-                            Text("Não")
+                            Text(stringResource(R.string.button_delete_cancel))
                         }
                         Button(
                             onClick = {onConfirm()},
@@ -88,7 +90,7 @@ fun ExcludeConfirmationDialog(
                                 tint = White,
 
                                 )
-                            Text("Sim")
+                            Text(stringResource(R.string.button_delete_confirm))
                         }
                     }
                 }
