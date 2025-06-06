@@ -31,9 +31,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gestok.R
 import com.example.gestok.components.LineChartScreen
 import com.example.gestok.components.PieChartScreen
 import com.example.gestok.screens.internalScreens.dashboard.data.OrderStatus
@@ -107,7 +109,7 @@ fun Dashboard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        "Dashboard",
+                        stringResource(R.string.title_dashboard),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W600,
                         color = Black,
@@ -154,7 +156,7 @@ fun Dashboard(
 
                             Row {
                                 Text(
-                                    "Pedido em aberto para os próximos 7 dias",
+                                    stringResource(R.string.kpi_dashboard_open_orders),
                                     fontWeight = FontWeight.Bold,
                                     color = Black
                                 )
@@ -202,7 +204,7 @@ fun Dashboard(
                             verticalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                "Média de Avaliação",
+                                stringResource(R.string.kpi_dashboard_evaluation),
                                 fontWeight = FontWeight.Bold,
                                 color = White
                             )
@@ -275,8 +277,7 @@ fun Dashboard(
                             Row {
 
                                 Text(
-                                    "Valor médio dos pedidos (R$)",
-
+                                    stringResource(R.string.kpi_dashboard_average_order_value),
                                     fontWeight = FontWeight.Bold,
                                     color = Black
                                 )
@@ -332,8 +333,7 @@ fun Dashboard(
                             Row {
 
                                 Text(
-                                    "Faturamento do mês atual (R$)",
-
+                                    stringResource(R.string.kpi_dashboard_current_revenue),
                                     fontWeight = FontWeight.Bold,
                                     color = Black
                                 )
@@ -402,7 +402,7 @@ fun Dashboard(
                     ) {
 
                         Text(
-                            "Quantidade de Pedidos por Status",
+                            stringResource(R.string.order_chart_by_status),
                             color = Black,
                             fontWeight = FontWeight.Bold
                         )
@@ -454,7 +454,7 @@ fun Dashboard(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            "Valor faturado por Mês (R$)",
+                            stringResource(R.string.monthly_billed_value_graph),
                             color = Black,
                             fontWeight = FontWeight.Bold
                         )
@@ -503,7 +503,7 @@ fun Dashboard(
                     ) {
 
                         Text(
-                            "Quantidade de pedidos por mês",
+                            stringResource(R.string.order_quantity_by_month_chart),
                             color = Black,
                             fontWeight = FontWeight.Bold
                         )

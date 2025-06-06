@@ -20,9 +20,11 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gestok.R
 import com.example.gestok.components.orderpage.OrderCard
 import com.example.gestok.screens.internalScreens.order.data.OrderData
 import com.example.gestok.ui.theme.Black
@@ -66,16 +68,17 @@ fun OrderContent(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        "Pedidos",
+                        stringResource(R.string.title_orders),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W600,
                         color = Black
                     )
                     Button(
                         onClick = { currentPage.value = "createOrder" },
+                        enabled =  viewModel.sessaoUsuario.cargo == "ADMIN",
                         colors = ButtonDefaults.buttonColors(containerColor = Blue)
                     ) {
-                        Text("Cadastrar pedido", color = White)
+                        Text(stringResource(R.string.order_register_text), color = White)
                     }
                 }
 
@@ -128,7 +131,7 @@ fun OrderContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            "Nenhum pedido cadastrado",
+                            stringResource(R.string.no_orders_msg),
                             fontSize = 16.sp,
                             color = Black
                         )
@@ -145,7 +148,8 @@ fun OrderContent(
                                 pedido = pedido,
                                 currentPage = currentPage,
                                 selectedOrder = selectedOrder,
-                                viewModel = viewModel
+                                viewModel = viewModel,
+                                editarHabilitado = viewModel.sessaoUsuario.cargo in listOf("ADMIN", "SUPERVISOR")
                             )
                         }
                 }

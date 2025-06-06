@@ -17,7 +17,6 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
@@ -34,7 +34,6 @@ import com.example.gestok.R
 import com.example.gestok.components.ExcludeConfirmationDialog
 import com.example.gestok.components.productpage.popups.NutritionalDataDialog
 import com.example.gestok.screens.internalScreens.product.data.CategoryData
-import com.example.gestok.screens.internalScreens.product.data.IngredientsRecipe
 import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightGray
@@ -46,7 +45,10 @@ fun ProductCard(
     categorias: List<CategoryData>,
     currentPage: MutableState<String>,
     selectedProduct: MutableState<ProductData?>,
-    viewModel: ProductApiViewModel
+    viewModel: ProductApiViewModel,
+    excluirHabilitado: Boolean,
+    editarHabilitado: Boolean,
+    producaoHabilitado: Boolean
 ){
 
     var showNutritionalDialog by remember { mutableStateOf(false) }
@@ -93,28 +95,45 @@ fun ProductCard(
                         onClick = {
                             selectedProduct.value = produto
                             currentPage.value = "editProduct"},
+                        enabled = editarHabilitado,
                         modifier = Modifier
                             .height(50.dp)
 
 
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.edicao_f),
-                            contentDescription = "Editar",
-                        )
+                        if(!editarHabilitado) {
+                            Image(
+                                painter = painterResource(id = R.drawable.edicao_disable),
+                                contentDescription = "Editar",
+                            )
+                        }else {
+                            Image(
+                                painter = painterResource(id = R.drawable.edicao_f),
+                                contentDescription = "Editar"
+                            )
+                        }
                     }
 
                     IconButton(
                         onClick = {showExcludeConfirmDialog = true},
+                        enabled = excluirHabilitado,
                         modifier = Modifier
                             .height(50.dp)
 
 
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.trashcan_f),
-                            contentDescription = "Excluir",
-                        )
+                        if(!excluirHabilitado) {
+                            Image(
+                                painter = painterResource(id = R.drawable.trashcan_disable),
+                                contentDescription = "Excluir",
+                            )
+                        }else {
+
+                            Image(
+                                painter = painterResource(id = R.drawable.trashcan_f),
+                                contentDescription = "Excluir",
+                            )
+                        }
                     }
 
                 }
@@ -129,7 +148,7 @@ fun ProductCard(
 
             Row (Modifier.padding(top = 16.dp)){
                 Column (Modifier.padding(end = 30.dp)){
-                    Text("Estoque",
+                    Text(stringResource(R.string.button_product_stock),
                         fontWeight = FontWeight.Bold,
                         color = Blue)
 
@@ -139,11 +158,11 @@ fun ProductCard(
                 }
 
                 Column {
-                    Text("Categoria",
+                    Text(stringResource(R.string.label_product_categories),
                         fontWeight = FontWeight.Bold,
                         color = Blue)
 
-                    val nomeCategoria = categorias.find { it.id == produto.categoria }?.nome ?: "Categoria desconhecida"
+                    val nomeCategoria = categorias.find { it.id == produto.categoria }?.nome ?: "N/A"
 
                     Text(text = nomeCategoria,
                         fontWeight = FontWeight.W300,
@@ -152,6 +171,9 @@ fun ProductCard(
 
             }
 
+            val isAtualizando = viewModel.isUpdatingMap[produto.id] ?: false
+            val habilitado = producaoHabilitado && !isAtualizando
+
             Row(
                 modifier = Modifier.padding(top = 25.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -159,8 +181,12 @@ fun ProductCard(
 
                 Switch(
                     checked = produto.emProducao,
-                    onCheckedChange = {viewModel.atualizarProducao(produto)},
-                    enabled = !(viewModel.isUpdatingMap[produto.id] ?: false),
+                    onCheckedChange = {
+                        if (habilitado) {
+                            viewModel.atualizarProducao(produto)
+                        }
+                    },
+                    enabled = habilitado,
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = LightGray,
                         checkedTrackColor = Blue,
@@ -170,8 +196,8 @@ fun ProductCard(
                 )
 
                 Text(when(produto.emProducao){
-                    true -> "Disponível"
-                    else -> "Não disponível"},
+                    true -> stringResource(R.string.in_production_product_txt)
+                    else -> stringResource(R.string.no_production_product_txt)},
                     color = Blue,
                     fontWeight = W600,
                     modifier = Modifier.padding(start = 16.dp)

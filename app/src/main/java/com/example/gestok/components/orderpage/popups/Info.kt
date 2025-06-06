@@ -20,11 +20,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.gestok.R
 import com.example.gestok.ui.theme.Blue
 import com.example.gestok.ui.theme.LightBlue
 import com.example.gestok.ui.theme.White
@@ -51,7 +53,7 @@ fun InfoDialog(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Text("Edição indisponível", fontWeight = W600, color = Blue, fontSize = 22.sp)
+                        Text(stringResource(R.string.order_title_info), fontWeight = W600, color = Blue, fontSize = 22.sp)
                     }
 
                     Row(   Modifier.fillMaxWidth().padding(20.dp),
@@ -76,7 +78,7 @@ fun InfoDialog(
 
                                 )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Fechar")
+                            Text(stringResource(R.string.button_order_info_close_text))
                         }
                     }
                 }

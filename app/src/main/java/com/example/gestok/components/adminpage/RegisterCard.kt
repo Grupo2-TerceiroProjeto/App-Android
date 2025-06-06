@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.gestok.R
@@ -39,7 +40,8 @@ fun RegisterCard(
     currentPage: MutableState<String>,
     selectedRegister: MutableState<RegisterData?>,
     viewModel: AdminApiViewModel,
-    excluirHabilitado: Boolean
+    excluirHabilitado: Boolean,
+    editarHabilitado: Boolean
 ) {
 
     var showExcludeConfirmDialog by remember { mutableStateOf(false) }
@@ -72,14 +74,22 @@ fun RegisterCard(
                             selectedRegister.value = funcionario
                             currentPage.value = "editRegister"
                         },
+                        enabled = editarHabilitado,
                         modifier = Modifier
                             .size(50.dp)
 
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.edicao_f),
-                            contentDescription = "Editar"
-                        )
+                        if(!editarHabilitado) {
+                            Image(
+                                painter = painterResource(id = R.drawable.edicao_disable),
+                                contentDescription = "Editar",
+                            )
+                        }else {
+                            Image(
+                                painter = painterResource(id = R.drawable.edicao_f),
+                                contentDescription = "Editar"
+                            )
+                        }
 
                     }
 
@@ -116,7 +126,7 @@ fun RegisterCard(
 
             Row (Modifier.padding(top = 16.dp)){
                 Column(Modifier.weight(0.5F)){
-                    Text("Cargo",
+                    Text( stringResource(R.string.label_position),
                         fontWeight = FontWeight.Bold,
                         color = Blue
                     )
@@ -133,7 +143,7 @@ fun RegisterCard(
                 }
 
                 Column(Modifier.weight(0.6F)) {
-                    Text("Email",
+                    Text(stringResource(R.string.label_email),
                     fontWeight = FontWeight.Bold,
                     color = Blue
                 )

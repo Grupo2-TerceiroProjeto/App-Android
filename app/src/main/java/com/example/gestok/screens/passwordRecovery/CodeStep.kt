@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -26,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.gestok.R
 import com.example.gestok.components.Input
 import com.example.gestok.components.PrimaryButton
 import com.example.gestok.components.SecundaryButton
@@ -63,7 +65,7 @@ fun CodeStep(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            "O código de verificação foi enviado para seu E-mail",
+            stringResource(R.string.password_recovery_code_step_msg),
             color = Black,
             fontSize = 14.sp,
             modifier = Modifier
@@ -198,13 +200,13 @@ fun CodeStep(
                 .padding(top = if (viewModel.codigoErro == null) 90.dp else 50.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            SecundaryButton("Reenviar código") {
+            SecundaryButton(stringResource(R.string.button_code_step_resend_code_text)) {
                 val email = viewModel.emailResponse.value?.email
                 if (email != null) {
                     viewModel.enviarEmail(email) {}
                 }
             }
-            PrimaryButton("Validar") {
+            PrimaryButton(stringResource(R.string.button_code_step_validate_text)) {
                 val recebido = viewModel.emailResponse.value?.codigo
                 if (codigoCompleto == recebido) {
                     navController.navigate("newPasswordStep")

@@ -31,10 +31,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gestok.R
 import com.example.gestok.components.InputLabel
 import com.example.gestok.screens.internalScreens.admin.data.RegisterCreateData
 import com.example.gestok.ui.theme.Black
@@ -53,7 +55,7 @@ fun RegisterCreate(
 
     var nome by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
-    var cargo by remember { mutableStateOf("Selecione um opção") }
+    var cargo by remember { mutableStateOf("Selecione uma opção") }
     var senha by remember { mutableStateOf("") }
 
     val novoFuncionario = RegisterCreateData(
@@ -98,7 +100,7 @@ fun RegisterCreate(
                     }
 
                     Text(
-                        "Cadastrar Funcionário",
+                        stringResource(R.string.administration_register_employee_text),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W600,
                         color = Black,
@@ -118,7 +120,7 @@ fun RegisterCreate(
 
                     Column {
                         InputLabel(
-                            text = "Nome",
+                            text = stringResource(R.string.label_name),
                             value = nome,
                             onValueChange = {
                                 val filtered = it.filter { char -> char.isLetter() || char.isWhitespace() }
@@ -132,7 +134,7 @@ fun RegisterCreate(
 
                     Column {
                         InputLabel(
-                            text = "Email",
+                            text = stringResource(R.string.label_email),
                             value = email,
                             onValueChange = { email = (it) },
                             keyboardType = androidx.compose.ui.text.input.KeyboardType.Email,
@@ -143,12 +145,13 @@ fun RegisterCreate(
 
                     Column {
                         SelectOption(
-                            text = "Cargo",
+                            text = stringResource(R.string.label_position),
                             value = cargo,
                             onValueChange = { cargo = it },
                             list = listOf(
                                 "ADMIN",
-                                "SUPERVISOR"
+                                "SUPERVISOR",
+                                "COLABORADOR"
                             ),
                             erro = viewModel.cargoErro
                         )
@@ -156,7 +159,7 @@ fun RegisterCreate(
 
                     Column {
                         InputLabel(
-                            text = "Senha",
+                            text =  stringResource(R.string.label_password),
                             value = senha,
                             onValueChange = {
                                senha = (it)
@@ -200,7 +203,7 @@ fun RegisterCreate(
                             tint = White
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Salvar", color = White, fontSize = 16.sp)
+                        Text(stringResource(R.string.button_save_text), color = White, fontSize = 16.sp)
                     }
 
                     if (viewModel.cadastroErro != null) {

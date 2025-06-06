@@ -5,6 +5,8 @@ import com.example.gestok.screens.internalScreens.order.data.RecipeData
 import com.example.gestok.screens.internalScreens.product.data.CategoryData
 import com.example.gestok.screens.internalScreens.product.data.IngredientsBody
 import com.example.gestok.screens.internalScreens.product.data.IngredientsData
+import com.example.gestok.screens.internalScreens.product.data.NutrientesBody
+import com.example.gestok.screens.internalScreens.product.data.NutrientesResponse
 import com.example.gestok.screens.internalScreens.product.data.ProductCreateData
 import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.screens.internalScreens.product.data.ProductEditData
@@ -57,6 +59,9 @@ interface ProductService {
 
     @GET("nutrientes/pegar-todos/{idIngrediente}")
     suspend fun getNutrientes(@Path("idIngrediente") idIngrediente: Int): Response<ResponseBody>
+
+    @POST("nutrientes/{idIngrediente}")
+    suspend fun postNutrientes(@Body nutriente: NutrientesBody, @Path("idIngrediente") idIngrediente: Int): NutrientesResponse
 
     @GET("categorias/all")
     suspend fun getCategorias(): List<CategoryData>

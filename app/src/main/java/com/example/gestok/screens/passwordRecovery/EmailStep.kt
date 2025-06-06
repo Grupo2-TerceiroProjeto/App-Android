@@ -18,11 +18,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.gestok.R
 import com.example.gestok.components.Input
 import com.example.gestok.components.PrimaryButton
 import com.example.gestok.components.SecundaryButton
@@ -51,7 +52,7 @@ fun EmailStep(
     ) {
 
         Text(
-            "Insira o seu E-mail para receber o código de validação",
+            stringResource(R.string.password_recovery_email_step_msg),
             color = Black,
             fontSize = 14.sp,
             modifier = Modifier
@@ -60,7 +61,7 @@ fun EmailStep(
         )
 
         Input(
-            text = "Email",
+            text = stringResource(R.string.label_email),
             modifier = Modifier
                 .padding(top = 24.dp,  bottom = if (viewModel.emailNaoEncontrado == null) 80.dp else 5.dp)
                 .align(Alignment.Start)
@@ -93,9 +94,9 @@ fun EmailStep(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                SecundaryButton("Voltar") { mainNavController.navigate("login") }
+                SecundaryButton(stringResource(R.string.button_back_text)) { mainNavController.navigate("login") }
                 Spacer(modifier = Modifier.width(24.dp))
-                PrimaryButton("Enviar Código") {
+                PrimaryButton(stringResource(R.string.button_email_step_send_code_text)) {
                     viewModel.enviarEmail(email) {
                         navController.navigate("codeStep")
                     }

@@ -20,9 +20,11 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gestok.R
 import com.example.gestok.components.productpage.ProductCard
 import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.ui.theme.Black
@@ -67,7 +69,7 @@ fun ProductContent(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        "Produtos",
+                        stringResource(R.string.title_product),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W600,
                         color = Black
@@ -75,16 +77,18 @@ fun ProductContent(
 
                     Button(
                         onClick = {currentPage.value = "stockAdd"},
+                        enabled =  viewModel.sessaoUsuario.cargo in listOf("ADMIN", "SUPERVISOR"),
                         colors = ButtonDefaults.buttonColors(containerColor = Blue)
                     ) {
-                        Text("Add Estoque", color = White)
+                        Text(stringResource(R.string.button_product_stock), color = White)
                     }
 
                     Button(
                         onClick = {currentPage.value = "createProduct"},
+                        enabled =  viewModel.sessaoUsuario.cargo in listOf("ADMIN", "SUPERVISOR"),
                         colors = ButtonDefaults.buttonColors(containerColor = Blue)
                     ) {
-                        Text("Novo produto", color = White)
+                        Text(stringResource(R.string.button_product_register), color = White)
                     }
                 }
 
@@ -146,7 +150,7 @@ fun ProductContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            "Nenhum produto cadastrado",
+                            stringResource(R.string.no_products_msg),
                             fontSize = 16.sp,
                             color = Black
                         )
@@ -161,7 +165,10 @@ fun ProductContent(
                             categorias = categorias,
                             currentPage = currentPage,
                             selectedProduct = selectedProduct,
-                            viewModel = viewModel
+                            viewModel = viewModel,
+                            excluirHabilitado = viewModel.sessaoUsuario.cargo in listOf("ADMIN", "SUPERVISOR"),
+                            editarHabilitado = viewModel.sessaoUsuario.cargo in listOf("ADMIN", "SUPERVISOR"),
+                            producaoHabilitado = viewModel.sessaoUsuario.cargo in listOf("ADMIN", "SUPERVISOR")
                         )
                     }
 
