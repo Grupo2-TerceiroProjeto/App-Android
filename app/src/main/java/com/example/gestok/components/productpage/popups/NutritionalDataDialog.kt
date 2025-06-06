@@ -15,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,10 +28,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.gestok.R
 import com.example.gestok.components.InputLabelDisable
 import com.example.gestok.screens.internalScreens.product.data.IngredientsRecipe
 import com.example.gestok.screens.internalScreens.product.data.NutrientesResponse
@@ -78,7 +79,7 @@ fun NutritionalDataDialog(
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        "Info - ${product.nome}",
+                        stringResource(R.string.title_product_nutritional_data, product.nome),
                         modifier = Modifier.weight(0.6f),
                         fontWeight = FontWeight.Bold,
                         color = Blue,
@@ -107,7 +108,7 @@ fun NutritionalDataDialog(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Carregando informações...",
+                            text = stringResource(R.string.loading_product_nutritional_data),
                             fontSize = 14.sp,
                             color = Color.Gray
                         )
@@ -121,7 +122,7 @@ fun NutritionalDataDialog(
                         ) {
 
                             Text(
-                                "Ingredientes",
+                                stringResource(R.string.product_ingredients_text),
                                 fontWeight = FontWeight.Bold,
                                 color = Blue,
                                 modifier = Modifier
@@ -129,14 +130,14 @@ fun NutritionalDataDialog(
                             )
 
                             Text(
-                                text = "Nenhum ingrediente encontrado",
+                                text = stringResource(R.string.no_ingredients_nutritional_data_msg),
                                 fontSize = 14.sp,
                                 color = Color.Gray
                             )
                         }
                     } else {
                         InputLabelDisable(
-                            text = "Ingredientes",
+                            text =  stringResource(R.string.product_ingredients_text),
                             value = ingredients.joinToString(", ") { it.nome },
                             singleLine = false,
                             icon = false
@@ -146,7 +147,7 @@ fun NutritionalDataDialog(
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Text(
-                        "Tabela Nutricional",
+                        stringResource(R.string.title_table_nutritional_data_txt),
                         fontWeight = FontWeight.Bold,
                         color = Blue,
                         fontSize = 14.sp
@@ -160,7 +161,7 @@ fun NutritionalDataDialog(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = "Não há dados nutricionais para este produto",
+                                text =   stringResource(R.string.no_nutritional_data_msg),
                                 fontSize = 14.sp,
                                 color = Color.Gray
                             )

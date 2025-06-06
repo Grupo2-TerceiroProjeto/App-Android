@@ -101,7 +101,7 @@ fun IngredientCreate(
                 )
 
                 Text(
-                    "Novo Ingrediente",
+                    stringResource(R.string.title_ingredient),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.W600,
                     color = Black,
@@ -121,7 +121,7 @@ fun IngredientCreate(
 
                 Column {
                     InputLabel(
-                        text = "Nome",
+                        text = stringResource(R.string.label_name),
                         value = nome,
                         onValueChange = {
                             val filtered =
@@ -136,7 +136,7 @@ fun IngredientCreate(
 
                 Column {
                     InputLabel(
-                        text = "Quantidade",
+                        text = stringResource(R.string.label_ingredient_amount),
                         value = quantidadeTexto,
                         onValueChange = {
                             quantidadeTexto = it
@@ -150,8 +150,8 @@ fun IngredientCreate(
 
                 Column {
                     SelectOption(
-                        text = "Medida",
-                        value = if (medidaSelecionada.isEmpty()) "Selecione uma opção" else medidaSelecionada,
+                        text = stringResource(R.string.label_ingredient_measure),
+                        value = if (medidaSelecionada.isEmpty()) stringResource(R.string.label_select_option) else medidaSelecionada,
                         onValueChange = { selectedMedida ->
                             medidaSelecionada = selectedMedida
                             val idSelecionado =
@@ -204,7 +204,7 @@ fun IngredientCreate(
                                 tint = White
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Criar Ingrediente", color = White, fontSize = 16.sp)
+                            Text(stringResource(R.string.button_ingredient_register_txt), color = White, fontSize = 16.sp)
                         }
 
 

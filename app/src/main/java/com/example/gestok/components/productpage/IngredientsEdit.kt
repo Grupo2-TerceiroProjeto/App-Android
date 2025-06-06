@@ -99,7 +99,7 @@ fun IngredientsEdit(
                 )
 
                 Text(
-                    "Editar Ingrediente",
+                    stringResource(R.string.tile_ingredient_edit),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.W600,
                     color = Black,
@@ -119,7 +119,7 @@ fun IngredientsEdit(
 
                 Column {
                     InputLabel(
-                        text = "Nome",
+                        text = stringResource(R.string.label_name),
                         value = nome,
                         onValueChange = {
                             val filtered =
@@ -134,7 +134,7 @@ fun IngredientsEdit(
 
                 Column {
                     InputLabel(
-                        text = "Quantidade",
+                        text = stringResource(R.string.label_ingredient_amount),
                         value = quantidadeTexto,
                         onValueChange = {
                             quantidadeTexto = it
@@ -150,7 +150,7 @@ fun IngredientsEdit(
                     var medidaSelecionada = medidasMap[medida.toInt()] ?: ""
 
                     SelectOption(
-                        text = "Medida",
+                        text = stringResource(R.string.label_ingredient_measure),
                         value = medidaSelecionada,
                         onValueChange = { selectedMedida ->
                             medidaSelecionada = selectedMedida
@@ -198,7 +198,7 @@ fun IngredientsEdit(
                                 tint = White
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Editar Ingrediente", color = White, fontSize = 16.sp)
+                            Text(stringResource(R.string.button_ingredient_edit_txt), color = White, fontSize = 16.sp)
                         }
 
 

@@ -11,6 +11,7 @@
     <string name="button_back_text">Voltar</string>
     <string name="button_save_text">Salvar</string>
     <string name="to_add_text">Adicionar</string>
+    <string name="label_select_option">Selecione uma opção</string>
 
     <!-- POP UP DE EXCLUSÃO -->
     <string name="title_delete">Excluir</string>
@@ -75,9 +76,41 @@
 
     <!-- PRODUTOS -->
     <string name="title_product">Produtos</string>
+    <string name="button_product_register">Novo Produto</string>
+    <string name="button_product_stock">Estoque</string>
+    <string name="button_product_register_ingredient">+ Ingrediente</string>
     <string name="loading_products">Carregando Produtos...</string>
     <string name="no_products_msg">Nenhum produto cadastrado</string>
+    <string name="title_register_product">Cadastrar Produto</string>
+    <string name="title_edit_product">Editar Produto</string>
+    <string name="title_update_stock">Atualizar Estoque</string>
+    <string name="label_product_photo">Foto do Produto</string>
+    <string name="loading_product_photo">Carregando...</string>
+    <string name="loading_product_recipe">Carregando Receita...</string>
+    <string name="loading_product_ingredients">Carregando Ingredientes...</string>
+    <string name="button_product_change_image">Trocar Imagem</string>
+    <string name="button_product_choose_image">Escolher Imagem</string>
+    <string name="label_product_price">Preço</string>
+    <string name="label_product_stock">Estoque</string>
+    <string name="label_product_categories">Categoria</string>
+    <string name="label_product_sub_categories">Sub Categoria</string>
+    <string name="product_ingredients_text">Ingredientes</string>
+    <string name="empty_products_msg">Para salvar o produto, é necessário adicionar pelo menos um ingrediente</string>
+    <string name="stock_add_empty_products_msg">Selecione produtos para atualizar sua quantidade em estoque</string>
+    <string name="in_production_product_txt">Disponível</string>
+    <string name="no_production_product_txt">Não disponível</string>
+    <string name="title_product_nutritional_data">Info - %1$s</string>
+    <string name="loading_product_nutritional_data">Carregando Informações...</string>
+    <string name="no_ingredients_nutritional_data_msg">Nenhum ingrediente encontrado</string>
+    <string name="title_table_nutritional_data_txt">Tabela Nutricional</string>
+    <string name="no_nutritional_data_msg">Não há dados nutricionais para este produto</string>
 
-
+    <!-- INGREDIENTES -->
+    <string name="title_ingredient">Novo Ingrediente</string>
+    <string name="tile_ingredient_edit">Editar Ingrediente</string>
+    <string name="label_ingredient_amount">Quantidade</string>
+    <string name="label_ingredient_measure">Medida</string>
+    <string name="button_ingredient_register_txt">Criar Ingrediente</string>
+    <string name="button_ingredient_edit_txt">Editar Ingrediente</string>
 
 </resources>

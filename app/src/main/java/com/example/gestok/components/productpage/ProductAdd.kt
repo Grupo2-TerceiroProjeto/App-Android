@@ -32,10 +32,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gestok.R
 import com.example.gestok.screens.internalScreens.product.data.ProductData
 import com.example.gestok.ui.theme.Black
 import com.example.gestok.ui.theme.Blue
@@ -73,7 +75,7 @@ fun ProductAdd(
         ) {
 
             Text(
-                "Produtos",
+                stringResource(R.string.title_product),
                 Modifier.padding(start = 20.dp),
                 color = Blue,
                 fontWeight = W600,
@@ -109,7 +111,7 @@ fun ProductAdd(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         CircularProgressIndicator()
                         Spacer(modifier = Modifier.height(10.dp))
-                        Text("Carregando Produtos...", color = MediumGray)
+                        Text(stringResource(R.string.loading_products), color = MediumGray)
                     }
                 }
             }
@@ -121,7 +123,7 @@ fun ProductAdd(
                         .fillMaxHeight()
                         .wrapContentSize(Alignment.Center)
                 ) {
-                    Text("Nenhum produto cadastrado", color = MediumGray)
+                    Text(stringResource(R.string.no_products_msg), color = MediumGray)
                 }
             }
 
@@ -176,7 +178,7 @@ fun ProductAdd(
                     colors = ButtonDefaults.buttonColors(Blue),
                     modifier = Modifier.width(150.dp)
                 ) {
-                    Text("Adicionar", color = White)
+                    Text(stringResource(R.string.to_add_text), color = White)
                 }
             }
         }
