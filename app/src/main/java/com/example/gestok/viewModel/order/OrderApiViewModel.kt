@@ -60,7 +60,6 @@ class OrderApiViewModel(private val api: OrderService, override val sessaoUsuari
                 }
                 _carregouPedidos = true
                 Log.d("API", "Quantidade de pedidos encontrados: ${pedidos.size}")
-                Log.d("API", "PEDIDOS: ${pedidos}")
 
             } catch (e: HttpException) {
 

@@ -13,9 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gestok.R
 import com.example.gestok.components.InputLabelDisable
 import com.example.gestok.screens.login.data.UserSession
 import com.example.gestok.ui.theme.Black
@@ -48,7 +50,7 @@ fun Profile(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        "Perfil",
+                        stringResource(R.string.title_profile),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W600,
                         color = Black
@@ -73,7 +75,7 @@ fun Profile(
                 InputLabelDisable(
                     modifierText = Modifier.padding(start = 20.dp, top = 30.dp),
                     modifierInput = Modifier.padding(horizontal = 15.dp),
-                    text = "Nome",
+                    text =  stringResource(R.string.label_name),
                     value = sessaoUsuario.nome
                 )
 
@@ -81,7 +83,7 @@ fun Profile(
                 InputLabelDisable(
                     modifierText = Modifier.padding(start = 20.dp, top = 30.dp),
                     modifierInput = Modifier.padding(horizontal = 15.dp),
-                    text = "Email",
+                    text = stringResource(R.string.label_email),
                     value = sessaoUsuario.login
                 )
 
@@ -90,7 +92,7 @@ fun Profile(
                 InputLabelDisable(
                     modifierText = Modifier.padding(start = 20.dp,top = 30.dp),
                     modifierInput = Modifier.padding(horizontal = 15.dp).padding(bottom = 30.dp),
-                    text = "Cargo",
+                    text =  stringResource(R.string.label_position),
                     value = sessaoUsuario.cargo
                 )
 

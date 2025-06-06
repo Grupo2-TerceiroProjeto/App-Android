@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
@@ -147,7 +148,7 @@ fun ProductCard(
 
             Row (Modifier.padding(top = 16.dp)){
                 Column (Modifier.padding(end = 30.dp)){
-                    Text("Estoque",
+                    Text(stringResource(R.string.button_product_stock),
                         fontWeight = FontWeight.Bold,
                         color = Blue)
 
@@ -157,11 +158,11 @@ fun ProductCard(
                 }
 
                 Column {
-                    Text("Categoria",
+                    Text(stringResource(R.string.label_product_categories),
                         fontWeight = FontWeight.Bold,
                         color = Blue)
 
-                    val nomeCategoria = categorias.find { it.id == produto.categoria }?.nome ?: "Categoria desconhecida"
+                    val nomeCategoria = categorias.find { it.id == produto.categoria }?.nome ?: "N/A"
 
                     Text(text = nomeCategoria,
                         fontWeight = FontWeight.W300,
@@ -195,8 +196,8 @@ fun ProductCard(
                 )
 
                 Text(when(produto.emProducao){
-                    true -> "Disponível"
-                    else -> "Não disponível"},
+                    true -> stringResource(R.string.in_production_product_txt)
+                    else -> stringResource(R.string.no_production_product_txt)},
                     color = Blue,
                     fontWeight = W600,
                     modifier = Modifier.padding(start = 16.dp)

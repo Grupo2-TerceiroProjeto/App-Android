@@ -1,5 +1,116 @@
 <resources>
+    <!-- ACTIVITIES -->
     <string name="app_name">Gestok</string>
     <string name="title_activity_auth">AuthActivity</string>
+
+    <!-- COMPARTILHADOS -->
+    <string name="label_email">E-mail</string>
+    <string name="label_password">Senha</string>
+    <string name="label_name">Nome</string>
+    <string name="label_position">Cargo</string>
+    <string name="button_back_text">Voltar</string>
+    <string name="button_save_text">Salvar</string>
+    <string name="to_add_text">Adicionar</string>
+    <string name="label_select_option">Selecione uma opção</string>
+
+    <!-- POP UP DE EXCLUSÃO -->
+    <string name="title_delete">Excluir</string>
+    <string name="delete_msg">Você tem certeza que deseja excluir?</string>
+    <string name="button_delete_confirm">Sim</string>
+    <string name="button_delete_cancel">Não</string>
+
+
+    <!-- LOGIN -->
     <string name="title_login">Faça seu login</string>
+    <string name="forgot_password_text">Esqueci minha senha</string>
+    <string name="button_login_text">Entrar</string>
+    <string name="gretting_user_text">Olá %1$s</string>
+
+    <!-- REDEFINIÇÃO DE SENHA -->
+    <string name="title_password_recovery">Recuperar senha</string>
+    <string name="password_recovery_email_step_msg">Insira o seu E-mail para receber o código de validação</string>
+    <string name="button_email_step_send_code_text">Enviar Código</string>
+    <string name="password_recovery_code_step_msg">O código de verificação foi enviado para seu E-mail</string>
+    <string name="button_code_step_resend_code_text">Reenviar código</string>
+    <string name="button_code_step_validate_text">Validar</string>
+    <string name="label_new_password">Nova senha</string>
+    <string name="label_confirm_password">Confirmar senha</string>
+    <string name="button_new_password_step_conclude_text">Concluir</string>
+
+    <!-- DASHBOARD -->
+    <string name="title_dashboard">Dashboard</string>
+    <string name="kpi_dashboard_open_orders">Pedidos em abertos para os próximos 7 dias</string>
+    <string name="kpi_dashboard_evaluation">Média de Avaliação</string>
+    <string name="kpi_dashboard_average_order_value">Valor médio dos pedidos (R$)</string>
+    <string name="kpi_dashboard_current_revenue">Faturamento do Mês Atual (R$)</string>
+    <string name="order_chart_by_status">Quantidade de Pedidos por Status</string>
+    <string name="monthly_billed_value_graph">Valor Faturado por Mês (R$)</string>
+    <string name="order_quantity_by_month_chart">Quantidade de Pedidos por Mês</string>
+
+    <!-- PERFIL -->
+    <string name="title_profile">Perfil</string>
+
+    <!-- ADMINISTRAÇÃO -->
+    <string name="title_administration">Administração</string>
+    <string name="administration_register_employee_text">Cadastrar Colaborador</string>
+    <string name="administration_edit_employee_text">Editar Colaborador</string>
+    <string name="administration_no_employees_msg">Nenhum colaborador cadastrado</string>
+
+    <!-- PEDIDOS -->
+    <string name="title_orders">Pedidos</string>
+    <string name="order_register_text">Cadastrar Pedido</string>
+    <string name="order_edit_text">Editar Pedido</string>
+    <string name="no_orders_msg">Nenhum pedido cadastrado</string>
+    <string name="label_order_applicant">Solicitante</string>
+    <string name="label_order_contact">Contato</string>
+    <string name="label_order_status">Status do Pedido</string>
+    <string name="label_order_delivery_date">Data de Entrega</string>
+    <string name="label_order_value">Valor</string>
+    <string name="order_items_text">Itens</string>
+    <string name="order_empty_products_text">Para salvar o pedido, é necessário adicionar pelo menos um produto</string>
+    <string name="order_title_info">Edição indisponível</string>
+    <string name="order_info_msg">"Este pedido foi %1$s e não pode mais ser editado</string>
+    <string name="button_order_info_close_text">Fechar</string>
+    <string name="order_recipe_text">Lista de Ingredientes</string>
+    <string name="order_recipe_no_ingredients">Nenhuma receita encontrada</string>
+
+    <!-- PRODUTOS -->
+    <string name="title_product">Produtos</string>
+    <string name="button_product_register">Novo Produto</string>
+    <string name="button_product_stock">Estoque</string>
+    <string name="button_product_register_ingredient">+ Ingrediente</string>
+    <string name="loading_products">Carregando Produtos...</string>
+    <string name="no_products_msg">Nenhum produto cadastrado</string>
+    <string name="title_register_product">Cadastrar Produto</string>
+    <string name="title_edit_product">Editar Produto</string>
+    <string name="title_update_stock">Atualizar Estoque</string>
+    <string name="label_product_photo">Foto do Produto</string>
+    <string name="loading_product_photo">Carregando...</string>
+    <string name="loading_product_recipe">Carregando Receita...</string>
+    <string name="loading_product_ingredients">Carregando Ingredientes...</string>
+    <string name="button_product_change_image">Trocar Imagem</string>
+    <string name="button_product_choose_image">Escolher Imagem</string>
+    <string name="label_product_price">Preço</string>
+    <string name="label_product_stock">Estoque</string>
+    <string name="label_product_categories">Categoria</string>
+    <string name="label_product_sub_categories">Sub Categoria</string>
+    <string name="product_ingredients_text">Ingredientes</string>
+    <string name="empty_products_msg">Para salvar o produto, é necessário adicionar pelo menos um ingrediente</string>
+    <string name="stock_add_empty_products_msg">Selecione produtos para atualizar sua quantidade em estoque</string>
+    <string name="in_production_product_txt">Disponível</string>
+    <string name="no_production_product_txt">Não disponível</string>
+    <string name="title_product_nutritional_data">Info - %1$s</string>
+    <string name="loading_product_nutritional_data">Carregando Informações...</string>
+    <string name="no_ingredients_nutritional_data_msg">Nenhum ingrediente encontrado</string>
+    <string name="title_table_nutritional_data_txt">Tabela Nutricional</string>
+    <string name="no_nutritional_data_msg">Não há dados nutricionais para este produto</string>
+
+    <!-- INGREDIENTES -->
+    <string name="title_ingredient">Novo Ingrediente</string>
+    <string name="tile_ingredient_edit">Editar Ingrediente</string>
+    <string name="label_ingredient_amount">Quantidade</string>
+    <string name="label_ingredient_measure">Medida</string>
+    <string name="button_ingredient_register_txt">Criar Ingrediente</string>
+    <string name="button_ingredient_edit_txt">Editar Ingrediente</string>
+
 </resources>

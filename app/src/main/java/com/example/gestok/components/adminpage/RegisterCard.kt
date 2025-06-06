@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.gestok.R
@@ -125,7 +126,7 @@ fun RegisterCard(
 
             Row (Modifier.padding(top = 16.dp)){
                 Column(Modifier.weight(0.5F)){
-                    Text("Cargo",
+                    Text( stringResource(R.string.label_position),
                         fontWeight = FontWeight.Bold,
                         color = Blue
                     )
@@ -142,7 +143,7 @@ fun RegisterCard(
                 }
 
                 Column(Modifier.weight(0.6F)) {
-                    Text("Email",
+                    Text(stringResource(R.string.label_email),
                     fontWeight = FontWeight.Bold,
                     color = Blue
                 )
