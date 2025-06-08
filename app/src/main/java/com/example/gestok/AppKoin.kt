@@ -1,8 +1,8 @@
 package com.example.gestok
 
 import android.app.Application
-import com.example.gestok.di.moduloApi
-import com.example.gestok.di.moduloGeral
+import com.example.gestok.application.di.moduloApi
+import com.example.gestok.application.di.moduloGeral
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
