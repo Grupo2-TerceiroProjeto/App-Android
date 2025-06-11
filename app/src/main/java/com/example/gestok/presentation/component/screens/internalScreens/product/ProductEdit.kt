@@ -148,7 +148,7 @@ fun ProductEdit(
         categoria = subCategoria,
         preco = preco,
         quantidade = estoque,
-        imagem = publicId ?: "",
+        imagem = publicId ?: product.imagem,
         emProducao = product.emProducao,
         ingredientes = ingredientes
     )
